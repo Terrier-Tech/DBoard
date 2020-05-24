@@ -1,7 +1,7 @@
-import * as React from 'react';
-import Schema from '../model/schema';
-import Config from './config';
-import EntityView from './entity_view';
+import * as React from 'react'
+import Schema from '../model/schema'
+import Config from './config'
+import EntityView from './entity_view'
 
 interface Props {
 	config: Config
@@ -16,6 +16,7 @@ class SchemaView extends React.Component<Props> {
 
 	render() {
 		const config = this.props.config
+		const theme = config.theme
 		const schema = this.props.schema
 		const entities = schema.mapEntities(entity =>  {
 			return <EntityView key={entity.id} config={this.props.config} entity={entity}/>
@@ -27,6 +28,21 @@ class SchemaView extends React.Component<Props> {
 			text-anchor: middle;
 			dominant-baseline: middle;
 		}
+		.attribute-name {
+			font: ${config.fontSize}px sans-serif;
+			fill: ${theme.fgColor};
+			text-anchor: start;
+			dominant-baseline: middle;
+		}
+		.attribute-type {
+			font: ${config.fontSize}px sans-serif;
+			fill: ${theme.hintColor};
+			text-anchor: end;
+			dominant-baseline: middle;
+		}
+		.attribute.required .attribute-name {
+			font: bold ${config.fontSize}px sans-serif;
+		}
 		`
 		return <svg xmlns="http://www.w3.org/2000/svg" width='3000' height='3000'>
 			<style>{style}</style>
@@ -37,4 +53,4 @@ class SchemaView extends React.Component<Props> {
 	}
 }
 	
-	export default SchemaView
+export default SchemaView

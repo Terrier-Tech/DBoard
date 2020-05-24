@@ -23,7 +23,6 @@ class Schema extends ModelBase<SchemaState> {
     }
 
     mapEntities<T>(fun: (e: Entity.Model) => T) : Array<T> {
-        console.log(`iterating over ${Object.keys(this.entities).length} entities`)
         return Object.entries(this.entities).map((kv) => {
             return fun(kv[1])
         })

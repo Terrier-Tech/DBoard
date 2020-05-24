@@ -20,7 +20,17 @@ class Entity extends ModelBase<EntityState> {
     }
 
     newAttribute(raw: string) : Attribute.Model {
-        return new Attribute.Model(this, raw)
+        return Attribute.Model.fromRaw(this, raw)
+    }
+
+    mapAttributes<T>(fun: (e: Attribute.Model) => T) : Array<T> {
+        const attrs = Object.entries(this.attributes)
+        attrs.sort((a1, a2) => {
+            return a1[1].state.name > a2[1].state.name ? 1 : -1
+        })
+        return attrs.map((kv) => {
+            return fun(kv[1])
+        })
     }
 }
 

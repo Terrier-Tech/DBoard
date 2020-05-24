@@ -1,7 +1,7 @@
-import * as React from 'react';
-import Schema from '../model/schema';
-import Config from './config';
-import * as Entity from '../model/entity';
+import * as React from 'react'
+import Config from './config'
+import * as Entity from '../model/entity'
+import AttributeView from './attribute_view'
 
 interface Props {
 	config: Config
@@ -19,14 +19,21 @@ class EntityView extends React.Component<Props> {
         const entity = this.props.entity
         const state = entity.state
         let x = state.x
-        let y = state.y
-        const lineHeight = config.computeLineHeight()
+        const lineHeight = config.lineHeight
         const color = config.theme.color(state.color)
-        console.log(`color ${state.color} is ${color}`)
+        let y = state.y
+        let index = 0
+        const attributes = entity.mapAttributes(attr => {
+            y += lineHeight
+            index += 1
+            return <AttributeView key={attr.id} config={config} y={y} index={index} attribute={attr}/>
+        })
+        y = state.y
 		return <g id={entity.id}>
 			<rect x={x} y={y} width={state.width} height={state.height} stroke='transparent' fill='#ffffff'/>
             <rect x={x} y={y} width={state.width} height={lineHeight} stroke='transparent' fill={color}/>
             <text className='entity-name' x={state.x + state.width/2} y={y + lineHeight/2}>{state.name}</text>
+            {attributes}
         </g>
 	}
 }

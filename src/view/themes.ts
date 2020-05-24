@@ -27,6 +27,11 @@ class Theme {
     color(name: ColorName) : string {
         return this.colors[name]
     }
+
+    fgColor = '#333333'
+    oddBgColor = '#f8f8f8'
+    evenBgColor = '#ffffff'
+    hintColor = '#aaa'
 }
 
 const LightTheme = new Theme()
