@@ -1,0 +1,28 @@
+@import "_shared";
+
+#logobar {
+    position: fixed;
+    top: $tool-pad;
+    left: $tool-pad;
+    height: $tool-height;
+}
+
+#sourcebar {
+    position: fixed;
+    top: $tool-pad;
+    right: $tool-pad;
+    height: $tool-height;
+}
+
+.tool {
+    box-shadow: 0 2px 8px -3px rgba(#000, 0.2);
+    border-radius: 4px;
+}
+
+@each $theme, $colors in $theme-colors {
+    #app.theme-#{$theme} {
+        .tool {
+            background-color: map-get($colors, "tool-bg");
+        }
+    }
+}

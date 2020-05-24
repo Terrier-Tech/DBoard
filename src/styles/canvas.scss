@@ -1,0 +1,31 @@
+@import "_shared";
+
+$grid-sizes: 10, 20, 30, 40;
+
+#viewport {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    .canvas {
+        width: 3000px;
+        height: 3000px;
+    }
+}
+
+@each $theme, $colors in $theme-colors {
+    #app.theme-#{$theme} {
+        .canvas {
+            background-color: map-get($colors, "canvas-bg");
+            background-image: radial-gradient(map-get($colors, "grid") 1px, transparent 0);
+        }
+        @each $size in $grid-sizes {
+            .canvas.grid-#{$size} {
+                background-size: #{$size}px #{$size}px;
+            }
+        }
+    }
+}
