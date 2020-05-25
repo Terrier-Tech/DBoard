@@ -1,6 +1,6 @@
 @import "_shared";
 
-$grid-sizes: 10, 20, 30, 40;
+$grid-sizes: 10, 15, 20;
 
 #viewport {
     position: fixed;
@@ -25,6 +25,7 @@ $grid-sizes: 10, 20, 30, 40;
         @each $size in $grid-sizes {
             .canvas.grid-#{$size} {
                 background-size: #{$size}px #{$size}px;
+                background-position: #{$size/2}px #{$size/2}px;
             }
         }
     }

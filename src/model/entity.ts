@@ -19,6 +19,10 @@ class Entity extends ModelBase<EntityState> {
         delete this.attributes[id]
     }
 
+    numAttributes() : number {
+        return Object.entries(this.attributes).length
+    }
+
     newAttribute(raw: string) : Attribute.Model {
         return Attribute.Model.fromRaw(this, raw)
     }
@@ -38,8 +42,6 @@ class EntityState {
     readonly name: string = ""
     readonly x: number = 0
     readonly y: number = 0
-    readonly width: number = 100
-    readonly height: number = 100
     readonly color: themes.ColorName = themes.ColorName.blue
 }
 

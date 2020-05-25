@@ -23,22 +23,19 @@ class App extends React.Component<Props> {
 
     const foo = this.schema.newEntity({
       name: "Foo",
-      x: 70,
-      y: 70,
-      width: 200,
-      height: 300,
+      x: 75,
+      y: 75,
       color: themes.ColorName.blue
     })
     foo.newAttribute("first name*")
     foo.newAttribute("last name")
     foo.newAttribute("created at : datetime")
+    foo.newAttribute("address")
 
     const bar = this.schema.newEntity({
       name: "Bar",
-      x: 350,
-      y: 90,
-      width: 180,
-      height: 200,
+      x: 340,
+      y: 80,
       color: themes.ColorName.green
     })
     bar.newAttribute("time : datetime")

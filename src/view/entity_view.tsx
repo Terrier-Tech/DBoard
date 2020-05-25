@@ -12,9 +12,25 @@ class EntityView extends React.Component<Props> {
 
 	constructor(props: Props) {
 		super(props)
-	}
+    }
+    
+    // computes the minimum width and height to render all attributes
+    computeSize(): [number, number] {
+        const config = this.props.config
+        const state = this.props.entity.state
+        let width = config.measureText(state.name).width + 2*config.padding
+        this.props.entity.mapAttributes(attr => {
+            // one padding on each end and two between the name and type = 4*padding
+            let w = config.measureText(attr.state.name).width + config.measureText(attr.state.type).width + 4*config.padding
+            width = Math.max(width, w)
+        })
+        const height = (this.props.entity.numAttributes() + 1) *  config.lineHeight
+        return [width, height]
+    }
 
 	render() {
+        const [width, height] = this.computeSize()
+
         const config = this.props.config
         const entity = this.props.entity
         const state = entity.state
@@ -26,13 +42,13 @@ class EntityView extends React.Component<Props> {
         const attributes = entity.mapAttributes(attr => {
             y += lineHeight
             index += 1
-            return <AttributeView key={attr.id} config={config} y={y} index={index} attribute={attr}/>
+            return <AttributeView key={attr.id} config={config} width={width} y={y} index={index} attribute={attr}/>
         })
         y = state.y
 		return <g id={entity.id}>
-			<rect x={x} y={y} width={state.width} height={state.height} stroke='transparent' fill='#ffffff'/>
-            <rect x={x} y={y} width={state.width} height={lineHeight} stroke='transparent' fill={color}/>
-            <text className='entity-name' x={state.x + state.width/2} y={y + lineHeight/2}>{state.name}</text>
+			<rect x={x} y={y} width={width} height={height} stroke='transparent' fill='#ffffff'/>
+            <rect x={x} y={y} width={width} height={lineHeight} stroke='transparent' fill={color}/>
+            <text className='entity-name' x={state.x + width/2} y={y + lineHeight/2}>{state.name}</text>
             {attributes}
         </g>
 	}
