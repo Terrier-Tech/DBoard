@@ -1,8 +1,7 @@
 import * as React from 'react'
 
 import Config from './view/config'
-import Sourcebar from './view/sourcebar'
-import Logobar from './view/logobar'
+import Topbar from './view/topbar'
 import Viewport from './view/viewport'
 import Schema from './model/schema'
 import * as themes from './view/themes'
@@ -24,7 +23,7 @@ class App extends React.Component<Props> {
     const foo = this.schema.newEntity({
       name: "Foo",
       x: 75,
-      y: 75,
+      y: 40,
       color: themes.ColorName.blue
     })
     foo.newAttribute("first name*")
@@ -35,19 +34,29 @@ class App extends React.Component<Props> {
     const bar = this.schema.newEntity({
       name: "Bar",
       x: 400,
-      y: 80,
+      y: 40,
       color: themes.ColorName.green
     })
     bar.newAttribute("time : datetime")
     bar.newAttribute("number* : integer")
     bar.newAttribute("description")
+
+    const baz = this.schema.newEntity({
+      name: "Baz",
+      x: 75,
+      y: 300,
+      color: themes.ColorName.orange
+    })
+    baz.newAttribute("name*")
+    baz.newAttribute("width: integer")
+    baz.newAttribute("height: integer")
   }
 
   render() {
     const { name } = this.props;
     return <div>
       <Viewport config={this.config} schema={this.schema}/>
-      <Logobar/><Sourcebar/>
+      <Topbar/>
     </div>;
   }
 }

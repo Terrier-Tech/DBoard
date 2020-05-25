@@ -9,11 +9,13 @@ class Config {
 
     theme: themes.Base = themes.Light
 
-    readonly utilCanvas: OffscreenCanvas
-    readonly utilContext: OffscreenCanvasRenderingContext2D
+    readonly fontFamily = 'Verdana, Geneva, sans-serif'
+
+    readonly utilCanvas: HTMLCanvasElement
+    readonly utilContext: CanvasRenderingContext2D
 
     constructor() {
-        this.utilCanvas = new OffscreenCanvas(100, 100)
+        this.utilCanvas = document.createElement("canvas")
         this.utilContext = this.utilCanvas.getContext('2d')!
         this.utilContext.font = `${this.fontSize}px sans-serif`
     }

@@ -23,25 +23,25 @@ class SchemaView extends React.Component<Props> {
 		})
 		const style = `
 		.entity-name {
-			font: bold ${config.fontSize}px sans-serif;
+			font: bold ${config.fontSize}px ${config.fontFamily};
 			fill: #ffffff;
 			text-anchor: middle;
 			dominant-baseline: middle;
 		}
 		.attribute-name {
-			font: ${config.fontSize}px sans-serif;
+			font: ${config.fontSize}px ${config.fontFamily};
 			fill: ${theme.fgColor};
 			text-anchor: start;
 			dominant-baseline: middle;
 		}
 		.attribute-type {
-			font: ${config.fontSize}px sans-serif;
+			font: ${config.fontSize}px ${config.fontFamily};
 			fill: ${theme.hintColor};
 			text-anchor: end;
 			dominant-baseline: middle;
 		}
 		.attribute.required .attribute-name {
-			font: bold ${config.fontSize}px sans-serif;
+			font: bold ${config.fontSize}px ${config.fontSize};
 		}
 		`
 		return <svg xmlns="http://www.w3.org/2000/svg" width='3000' height='3000'>

@@ -4,7 +4,7 @@ $grid-sizes: 10, 15, 20;
 
 #viewport {
     position: fixed;
-    top: 0;
+    top: $bar-height;
     left: 0;
     right: 0;
     bottom: 0;
