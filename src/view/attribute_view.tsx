@@ -5,6 +5,7 @@ import * as Attribute from '../model/attribute'
 interface Props {
 	config: Config
     attribute: Attribute.Model
+    x: number
     y: number
     width: number
     index: number
@@ -22,7 +23,7 @@ class AttributeView extends React.Component<Props> {
         const attr = this.props.attribute
         const width = this.props.width
         const state = attr.state
-        const x = attr.entity.state.x
+        const x = this.props.x
         const y = this.props.y
         const requiredClass = state.isRequired ? 'required' : ''
         const bgColor = this.props.index % 2 == 0 ? theme.evenBgColor : theme.oddBgColor

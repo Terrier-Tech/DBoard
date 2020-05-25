@@ -34,7 +34,7 @@ class App extends React.Component<Props> {
 
     const bar = this.schema.newEntity({
       name: "Bar",
-      x: 340,
+      x: 400,
       y: 80,
       color: themes.ColorName.green
     })

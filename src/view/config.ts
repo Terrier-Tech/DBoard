@@ -22,6 +22,21 @@ class Config {
         return this.utilContext.measureText(text)
     }
 
+    // snaps the number to nearest grid interval
+    snapNearest(n : number) : number {
+        return Math.round(n/this.gridSize) * this.gridSize
+    }
+
+    // snaps the number to next higher grid interval
+    snapUp(n : number) : number {
+        return Math.ceil(n/this.gridSize) * this.gridSize
+    }
+
+    // snaps the number to next higher even grid interval
+    snapUpEven(n : number) : number {
+        return Math.ceil(n/(2*this.gridSize)) * this.gridSize * 2
+    }
+
 }
 
 

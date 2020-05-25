@@ -25,7 +25,8 @@ class EntityView extends React.Component<Props> {
             width = Math.max(width, w)
         })
         const height = (this.props.entity.numAttributes() + 1) *  config.lineHeight
-        return [width, height]
+        // snap the size up to the next even grid spacing so that they can be center-aligned at whole grid spaces
+        return [config.snapUpEven(width), config.snapUpEven(height)]
     }
 
 	render() {
@@ -34,17 +35,17 @@ class EntityView extends React.Component<Props> {
         const config = this.props.config
         const entity = this.props.entity
         const state = entity.state
-        let x = state.x
+        const x = config.snapNearest(state.x)
+        const y = config.snapNearest(state.y)
         const lineHeight = config.lineHeight
         const color = config.theme.color(state.color)
-        let y = state.y
         let index = 0
+        let yAttr = y
         const attributes = entity.mapAttributes(attr => {
-            y += lineHeight
+            yAttr += lineHeight
             index += 1
-            return <AttributeView key={attr.id} config={config} width={width} y={y} index={index} attribute={attr}/>
+            return <AttributeView key={attr.id} config={config} width={width} x={x} y={yAttr} index={index} attribute={attr}/>
         })
-        y = state.y
 		return <g id={entity.id}>
 			<rect x={x} y={y} width={width} height={height} stroke='transparent' fill='#ffffff'/>
             <rect x={x} y={y} width={width} height={lineHeight} stroke='transparent' fill={color}/>
