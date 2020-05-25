@@ -16,13 +16,11 @@ class Selection {
 
     readonly mode: Mode = Mode.Replace
 
-    private callback?: () => void
-
     entities: Record<string,Entity.Model> = {}
 
     clear() {
         this.entities = {}
-        this.changed()
+        this.ui.requestRender(UI.RenderType.Overlay)
     }
 
     numEntites() : number {
@@ -34,7 +32,7 @@ class Selection {
             this.entities = {}
         }
         this.entities[entity.id] = entity
-        this.changed()
+        this.ui.requestRender(UI.RenderType.Overlay)
     }
 
     mapEntities<T>(fun: (e: Entity.Model) => T) : Array<T> {
@@ -43,15 +41,6 @@ class Selection {
         })
     }
 
-    onChange(fun: () => void) {
-        this.callback = fun
-    }
-
-    changed() {
-        if (this.callback) {
-            this.callback()
-        }
-    }
 
 }
 

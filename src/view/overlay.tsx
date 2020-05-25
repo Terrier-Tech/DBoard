@@ -12,11 +12,7 @@ class Overlay extends React.Component<Props> {
 	constructor(props: Props) {
         super(props)
         
-        this.state = this.props.ui
-        this.props.ui.selection.onChange(() => {
-            console.log(`re-rendering overlay since the selection changed`)
-            this.forceUpdate()
-        })
+        this.props.ui.listenForRender(UI.RenderType.Overlay, this)
     }
 
     renderSelection() : JSX.Element[] {
