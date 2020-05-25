@@ -13,6 +13,28 @@ $grid-sizes: 10, 15, 20;
     .canvas {
         width: 3000px;
         height: 3000px;
+        .document-plane {
+            font-size: 0;
+            line-height: 0;
+        }
+        svg {
+            text {
+                user-select: none;
+                cursor: default;
+            }
+        }
+        .overlay-plane {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            pointer-events: none;
+            .entity-overlay {
+                position: absolute;
+                border: 2px solid $overlay-color;
+            }
+        }
     }
 }
 

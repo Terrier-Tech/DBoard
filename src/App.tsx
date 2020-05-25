@@ -5,6 +5,7 @@ import Topbar from './view/topbar'
 import Viewport from './view/viewport'
 import Schema from './model/schema'
 import * as themes from './view/themes'
+import UI from './ui/ui'
 
 interface Props {
    name: string
@@ -12,12 +13,14 @@ interface Props {
 
 class App extends React.Component<Props> {
   config: Config
+  ui: UI
   schema: Schema
 
   constructor(props: Props) {
     super(props);
 
     this.config = new Config()
+    this.ui = new UI(this)
     this.schema = new Schema()
 
     const foo = this.schema.newEntity({
@@ -55,7 +58,7 @@ class App extends React.Component<Props> {
   render() {
     const { name } = this.props;
     return <div>
-      <Viewport config={this.config} schema={this.schema}/>
+      <Viewport config={this.config} ui={this.ui} schema={this.schema}/>
       <Topbar/>
     </div>;
   }

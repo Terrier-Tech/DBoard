@@ -2,10 +2,12 @@ import * as React from 'react'
 import Schema from '../model/schema'
 import Config from './config'
 import EntityView from './entity_view'
+import UI from '../ui/ui'
 
 interface Props {
 	config: Config
 	schema: Schema
+	ui: UI
 }
 
 class SchemaView extends React.Component<Props> {
@@ -19,7 +21,7 @@ class SchemaView extends React.Component<Props> {
 		const theme = config.theme
 		const schema = this.props.schema
 		const entities = schema.mapEntities(entity =>  {
-			return <EntityView key={entity.id} config={this.props.config} entity={entity}/>
+			return <EntityView key={entity.id} config={this.props.config} ui={this.props.ui} entity={entity}/>
 		})
 		const style = `
 		.entity-name {

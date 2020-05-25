@@ -1,9 +1,11 @@
 import * as React from 'react'
 import Config from './config'
 import * as Attribute from '../model/attribute'
+import UI from '../ui/ui'
 
 interface Props {
-	config: Config
+    config: Config
+    ui: UI
     attribute: Attribute.Model
     x: number
     y: number
@@ -28,12 +30,18 @@ class AttributeView extends React.Component<Props> {
         const requiredClass = state.isRequired ? 'required' : ''
         const bgColor = this.props.index % 2 == 0 ? theme.evenBgColor : theme.oddBgColor
         
-		return <g className={`attribute ${requiredClass}`} id={attr.id}>
+		return <g className={`attribute ${requiredClass}`} id={attr.id} onClick={this.onClicked.bind(this)}>
             <rect x={x} y={y} width={width} height={config.lineHeight} stroke='transparent' fill={bgColor}/>
             <text className='attribute-name' x={x + config.padding} y={y + config.lineHeight/2}>{state.name}</text>
             <text className='attribute-type' x={x + width - config.padding} y={y + config.lineHeight/2}>{state.type}</text>
         </g>
 	}
+    
+    onClicked(evt: React.MouseEvent<SVGElement, MouseEvent>) {
+        console.log(`attribute clicked`)
+        evt.stopPropagation()
+        this.props.ui.interactor.onAttributeClicked(this.props.attribute, evt)
+    }
 }
 	
 export default AttributeView
