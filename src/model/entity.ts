@@ -48,6 +48,12 @@ class Entity extends ModelBase<EntityState> {
             return fun(kv[1])
         })
     }
+
+    isWithin(xRange: [number, number], yRange: [number, number]) : boolean {
+        return this.state.x >= xRange[0] && this.state.y >= yRange[0] &&
+        (this.state.x + this.size[0]) <= xRange[1] &&
+        (this.state.y + this.size[1]) <= yRange[1]
+    }
 }
 
 class EntityState {

@@ -27,6 +27,10 @@ class Selection {
         return Object.entries(this.entities).length
     }
 
+    isEntitySelected(entity: Entity.Model) : boolean {
+        return this.entities[entity.id] != undefined
+    }
+
     add(entity: Entity.Model, append=false) {
         if (!append && this.mode == Mode.Replace) {
             this.entities = {}
@@ -41,6 +45,19 @@ class Selection {
         })
     }
 
+    render() : JSX.Element {
+        const entities = this.mapEntities(entity => {
+            const size = entity.size
+            const style = {
+                width: size[0],
+                height: size[1],
+                top: entity.state.y,
+                left: entity.state.x
+            }
+            return <div className='entity-overlay' key={entity.id} style={style}></div>
+        })
+        return <div className='selection'>{entities}</div>
+    }
 
 }
 

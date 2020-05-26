@@ -15,26 +15,12 @@ class Overlay extends React.Component<Props> {
         this.props.ui.listenForRender(UI.RenderType.Overlay, this)
     }
 
-    renderSelection() : JSX.Element[] {
-        const selection = this.props.ui.selection
-        console.log(`rendering overlay for ${selection.numEntites()} enties`)
-        const entities = selection.mapEntities(entity => {
-            const size = entity.size
-            const style = {
-                width: size[0],
-                height: size[1],
-                top: entity.state.y,
-                left: entity.state.x
-            }
-            return <div className='entity-overlay' key={entity.id} style={style}></div>
-        })
-        return entities
-    }
     
     render() {
         const ui = this.props.ui
         return <div className='overlay-plane'>
-            {this.renderSelection()}
+            {ui.selection.render()}
+            {ui.interactor.render()}
         </div>
     }
 

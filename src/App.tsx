@@ -20,8 +20,8 @@ class App extends React.Component<Props> {
     super(props);
 
     this.config = new Config()
-    this.ui = new UI(this)
     this.schema = new Schema()
+    this.ui = new UI(this)
 
     const foo = this.schema.newEntity({
       name: "Foo",
