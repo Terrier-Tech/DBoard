@@ -2,6 +2,8 @@ import Schema from "./schema"
 import ModelBase from "./model_base"
 import * as Attribute from "./attribute"
 import * as themes from '../view/themes'
+import * as geom from "../util/geom"
+
 
 class Entity extends ModelBase<EntityState> {
     constructor(schema: Schema, state: EntityState = new EntityState()) {
@@ -49,10 +51,9 @@ class Entity extends ModelBase<EntityState> {
         })
     }
 
-    isWithin(xRange: [number, number], yRange: [number, number]) : boolean {
-        return this.state.x >= xRange[0] && this.state.y >= yRange[0] &&
-        (this.state.x + this.size[0]) <= xRange[1] &&
-        (this.state.y + this.size[1]) <= yRange[1]
+    isWithin(outer: geom.Rect) : boolean {
+        const rect = new geom.Rect(this.state.x, this.state.y, this.size[0], this.size[1])
+        return rect.isWithin(outer)
     }
 }
 

@@ -4,6 +4,7 @@ import * as Entity from "../model/entity"
 import * as Attribute from "../model/attribute"
 import UI from './ui'
 import Selection from './selection'
+import * as geom from "../util/geom"
 
 
 class SelectInteractor extends Interactor {
@@ -69,9 +70,8 @@ interface InteractorProxy {
 
 class RubberBand implements InteractorProxy {
 
-    private initialPos: [number, number]
-    private xRange: [number, number]
-    private yRange: [number, number]
+    private initialPos: geom.Point
+    private range: geom.Rect
     private selection: Selection
 
     constructor(readonly interactor: SelectInteractor, evt: React.MouseEvent) {
@@ -83,32 +83,24 @@ class RubberBand implements InteractorProxy {
         }
 
         this.initialPos = this.interactor.eventRelativePosition(evt)
-        this.xRange = [this.initialPos[0], this.initialPos[0]]
-        this.yRange = [this.initialPos[1], this.initialPos[1]]
+        this.range = geom.Rect.fromPoints(this.initialPos, this.initialPos)
     }
 
-    private updateRanges(evt: React.MouseEvent) {
+    private updateRange(evt: React.MouseEvent) {
         const pos = this.interactor.eventRelativePosition(evt)
-        this.xRange = [
-            Math.min(this.initialPos[0], pos[0]),
-            Math.max(this.initialPos[0], pos[0]),
-        ]
-        this.yRange = [
-            Math.min(this.initialPos[1], pos[1]),
-            Math.max(this.initialPos[1], pos[1]),
-        ]
+        this.range = geom.Rect.fromPoints(pos, this.initialPos)
     }
 
     onMouseMove(evt: React.MouseEvent<HTMLDivElement, MouseEvent>): void {
-        this.updateRanges(evt)
+        this.updateRange(evt)
     }
     
     onMouseUp(evt: React.MouseEvent<HTMLDivElement, MouseEvent>): void {
         console.log(`rubber band mouse up`, evt)
-        this.updateRanges(evt)
+        this.updateRange(evt)
 
         this.interactor.ui.schema.mapEntities(entity => {
-            if (entity.isWithin(this.xRange, this.yRange)) {
+            if (entity.isWithin(this.range)) {
                 this.selection.add(entity, true)
             }
         })
@@ -116,10 +108,10 @@ class RubberBand implements InteractorProxy {
     
     render(): JSX.Element {
         const style = {
-            left: this.xRange[0],
-            top: this.yRange[0],
-            width: (this.xRange[1] - this.xRange[0]),
-            height: (this.yRange[1] - this.yRange[0])
+            left: this.range.x,
+            top: this.range.y,
+            width: this.range.width,
+            height: this.range.height
         }
         return <div className='select-interactor rubber-band' style={style}></div>
     }
