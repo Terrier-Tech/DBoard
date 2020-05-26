@@ -15,6 +15,13 @@ interface State {
 }
 
 class Viewport extends React.Component<Props, State> {
+
+	constructor(props: Props) {
+		super(props)
+
+		this.props.ui.listenForRender(UI.RenderType.Viewport, this)
+	}
+
 	render() {
 		const config = this.props.config
 		const schema = this.props.schema

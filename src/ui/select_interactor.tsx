@@ -119,12 +119,30 @@ class RubberBand implements InteractorProxy {
 
 class EntityDrag implements InteractorProxy {
 
+    selection: Selection
+
+    initialStates: Record<string, Entity.State> = {}
+
+    diffPos: geom.Point
+
     constructor(readonly interactor: SelectInteractor, evt: React.MouseEvent) {
         console.log('new EntityDrag')
+        this.selection = interactor.ui.selection
+
+        this.selection.mapEntities(entity => {
+            this.initialStates[entity.id] = {...entity.state}
+        })
+
+        this.diffPos = new geom.Point(0, 0)
     }
 
     onMouseMove(evt: React.MouseEvent<HTMLDivElement, MouseEvent>): void {
-        console.log(`entity drag mouse move`, evt)
+        this.diffPos = this.diffPos.add(evt.movementX, evt.movementY)
+        this.selection.mapEntities(entity => {
+            let initial = this.initialStates[entity.id]
+            entity.moveTo(initial.x + this.diffPos.x, initial.y + this.diffPos.y)
+        })
+        this.interactor.ui.requestRender(UI.RenderType.Viewport)
     }
 
     onMouseUp(evt: React.MouseEvent<HTMLDivElement, MouseEvent>): void {

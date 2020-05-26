@@ -58,8 +58,7 @@ module UI {
     export enum RenderType {
         None = 0,
         Overlay,
-        Document,
-        Canvas,
+        Viewport,
         App
     }
 } 

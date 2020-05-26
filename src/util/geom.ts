@@ -1,6 +1,15 @@
 
 export class Point {
     constructor(readonly x: number, readonly y: number) {}
+
+    add(dx: number | Point, dy: number = 0) : Point {
+        if (typeof dx == 'number')
+            return new Point(this.x + dx, this.y + dy)
+        else if (typeof dx == 'object')
+            return new Point(this.x + dx.x, this.y + dx.y)
+        else
+            throw `Can't add Point with ${typeof dx}`
+    }
 }
 
 export class Rect {
