@@ -1,6 +1,6 @@
 # dboard
 
-Empty project.
+This is still in very early stages and doesn't work, for any practical purposes. 
 
 ## Building and running on localhost
 
