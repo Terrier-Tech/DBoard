@@ -1,7 +1,7 @@
 import Selection from './selection'
 import App from '../App'
 import Config from '../view/config'
-import Interactor from './interactor'
+import {Interactor} from './interactor'
 import SelectInteractor from './select_interactor'
 import Schema from '../model/schema'
 
@@ -13,17 +13,11 @@ class UI {
 
     readonly selection: Selection
     readonly interactor: Interactor
-    readonly schema: Schema
 
-    private config: Config
-
-
-    constructor(readonly app: App) {
+    constructor(readonly app: App, private config: Config, public schema: Schema) {
         this.selection = new Selection(this)
-        this.config = this.app.config
-        this.schema = this.app.schema
 
-        this.interactor = new SelectInteractor(this)
+        this.interactor = new SelectInteractor(this, config)
     }
 
     private nextRenderType: UI.RenderType = UI.RenderType.None
@@ -43,7 +37,7 @@ class UI {
         this.renderListeners.push(new RenderListener(type, component))
     }
 
-    onAnimationFrame() {
+    private onAnimationFrame() {
         for (let listener of this.renderListeners) {
             if (listener.type <= this.nextRenderType) {
                 listener.component.forceUpdate()

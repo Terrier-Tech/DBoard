@@ -16,7 +16,7 @@ class Theme {
         blue: '#2980b9',
         green: '#27ae60',
         purple: '#8e44ad',
-        cyan: '#00d2d3',
+        cyan: '#079992',
         magenta: '#f368e0',
         gray: '#bdc3c7',
         orange: '#f39c12',

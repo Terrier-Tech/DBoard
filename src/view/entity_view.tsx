@@ -37,7 +37,6 @@ class EntityView extends React.Component<Props> {
         const config = this.props.config
         const entity = this.props.entity
         const state = entity.state
-        entity.moveTo(config.snapNearest(state.x), config.snapNearest(state.y))
         const lineHeight = config.lineHeight
         const color = config.theme.color(state.color)
         let index = 0

@@ -3,11 +3,12 @@ import UI from "./ui"
 import * as Attribute from "../model/attribute"
 import * as React from "react"
 import * as geom from "../util/geom"
+import Config from "../view/config"
 
 // base class for all classes that handle user interaction for the various interaction modes
-abstract class Interactor {
+export abstract class Interactor {
 
-    constructor(readonly ui: UI) {
+    constructor(readonly ui: UI, readonly config: Config) {
         
     }
 
@@ -45,4 +46,13 @@ abstract class Interactor {
     }
 }
 
-export default Interactor
+
+// interface for interactor proxies that handle the interaction temporarily for the main interactor
+export interface InteractorProxy {
+
+    onMouseMove(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) : void
+
+    onMouseUp(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) : void
+
+    render() : JSX.Element
+}

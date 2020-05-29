@@ -3,7 +3,12 @@ import ModelBase from "./model_base"
 import * as Attribute from "./attribute"
 import * as themes from '../view/themes'
 import * as geom from "../util/geom"
+import Config from "../view/config"
 
+export type PositionType = 'left' | 'right' | 'horizontalCenter' | 'top' | 'bottom' | 'verticalCenter'
+
+export const HorizontalPositionTypes: Array<PositionType> = ['left', 'right', 'horizontalCenter']
+export const VerticalPositionTypes: Array<PositionType> = ['top', 'bottom', 'verticalCenter']
 
 class Entity extends ModelBase<EntityState> {
     constructor(schema: Schema, state: EntityState = new EntityState()) {
@@ -19,6 +24,51 @@ class Entity extends ModelBase<EntityState> {
     moveTo(x: number, y: number) {
         this.state.x = x
         this.state.y = y
+    }
+
+    get left(): number {
+        return this.state.x
+    }
+
+    get right(): number {
+        return this.state.x + this.size[0]
+    }
+
+    get horizontalCenter(): number {
+        return this.state.x + this.size[0]/2
+    }
+
+    get top(): number {
+        return this.state.y
+    }
+
+    get bottom(): number {
+        return this.state.y + this.size[1]
+    }
+
+    get verticalCenter(): number {
+        return this.state.y + this.size[1]/2
+    }
+
+    getPosition(type: PositionType) : number {
+        switch (type) {
+            case 'left':
+                return this.left
+            case 'right':
+                return this.right
+            case 'horizontalCenter':
+                return this.horizontalCenter
+            case 'top':
+                return this.top
+            case 'bottom':
+                return this.bottom
+            case 'verticalCenter':
+                return this.verticalCenter
+        }
+    }
+
+    snapPosition(config: Config) {
+        this.moveTo(config.snapNearest(this.state.x), config.snapNearest(this.state.y))
     }
 
     registerAttribute(attr: Attribute.Model) {
