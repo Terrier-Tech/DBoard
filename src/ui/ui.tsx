@@ -4,7 +4,8 @@ import Config from '../view/config'
 import {Interactor} from './interactor'
 import SelectInteractor from './select_interactor'
 import Schema from '../model/schema'
-import ActionHistory from '../actions/history'
+import * as Actions from './actions'
+import Keymap from './keymap'
 
 class RenderListener {
     constructor(readonly type: UI.RenderType, readonly component: React.Component) {}
@@ -14,14 +15,16 @@ class UI {
 
     readonly selection: Selection
     readonly interactor: Interactor
-    readonly history: ActionHistory
+    readonly history: Actions.History
+    readonly keymap: Keymap
 
     constructor(readonly app: App, private config: Config, public schema: Schema) {
         this.selection = new Selection(this)
 
         this.interactor = new SelectInteractor(this, config)
 
-        this.history = new ActionHistory(this, config)
+        this.history = new Actions.History(this, config)
+        this.keymap = new Keymap(this, config)
     }
 
     private nextRenderType: UI.RenderType = UI.RenderType.None

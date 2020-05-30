@@ -139,12 +139,13 @@ class EntityDrag implements InteractorProxy {
     }
 
     onMouseUp(evt: React.MouseEvent<HTMLDivElement, MouseEvent>): void {
-        console.log(`entity drag mouse up`, evt)
-        this.selection.mapEntities(entity => {
+        const changeActions = this.selection.mapEntities(entity => {
             entity.snapPosition(this.interactor.config)
+            return new Entity.ChangeAction(entity, this.initialStates[entity.id], entity.state)
         })
         this.guides = []
-        this.interactor.ui.requestRender(UI.RenderType.Viewport)
+
+        this.interactor.ui.history.pushActions(changeActions)
     }
 
     render(): JSX.Element {
@@ -162,42 +163,34 @@ class EntityDrag implements InteractorProxy {
             return !this.selection.isEntitySelected(e)
         })
 
-        const types = {
-            vertical: Entity.HorizontalPositionTypes,
-            horizontal: Entity.VerticalPositionTypes
+        for (let t of Entity.PositionTypes) {
+            let selectedVals = this.selection.mapEntities(entity => {
+                return this.interactor.config.snapNearest(entity.getPosition(t))
+            })
+            selectedVals = [...new Set(selectedVals)]
+            notSelected.forEach((e) => {
+                const val = e.getPosition(t)
+                if (selectedVals.indexOf(val)>-1) {
+                    this.guides.push({positionType: t, xy: val})
+                }
+            })
         }
-        Object.entries(types).forEach((dirAndTypes) => {
-            const dir = dirAndTypes[0]
-            const dirTypes = dirAndTypes[1]
-            for (let t of dirTypes) {
-                let selectedVals = this.selection.mapEntities(entity => {
-                    return this.interactor.config.snapNearest(entity.getPosition(t))
-                })
-                selectedVals = [...new Set(selectedVals)]
-                notSelected.forEach((e) => {
-                    const val = e.getPosition(t)
-                    if (selectedVals.indexOf(val)>-1) {
-                        this.guides.push({direction: dir, xy: val})
-                    }
-                })
-            }
-        })
         
     }
 }
 
 interface GuideProps {
-    direction: string
+    positionType: Entity.PositionType
     xy: number
 }
 
 class Guide extends React.Component<GuideProps> {
     
     render(): JSX.Element {
-        const dir = this.props.direction
-        const xyKey = dir=='vertical' ? 'left' : 'top'
+        const t = this.props.positionType
+        const xyKey = Entity.PositionTypes.indexOf(t)<3 ? 'left' : 'top'
         const style: any = {}
         style[xyKey] = this.props.xy
-        return <div className={`guide ${dir}`} style={style}></div>
+        return <div className={`guide ${t}`} style={style}></div>
     }
 }

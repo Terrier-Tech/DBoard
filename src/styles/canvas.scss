@@ -41,12 +41,12 @@ $grid-sizes: 10, 15, 20;
             .guide {
                 background-color: $guide-color;
                 position: absolute;
-                &.horizontal {
+                &.top, &.bottom, &.verticalCenter {
                     height: 1px;
                     left: 0;
                     right: 0;
                 }
-                &.vertical {
+                &.left, &.right, &.horizontalCenter {
                     width: 1px;
                     top: 0;
                     bottom: 0;

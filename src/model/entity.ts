@@ -4,11 +4,11 @@ import * as Attribute from "./attribute"
 import * as themes from '../view/themes'
 import * as geom from "../util/geom"
 import Config from "../view/config"
+import * as Actions from "../ui/actions"
 
 export type PositionType = 'left' | 'right' | 'horizontalCenter' | 'top' | 'bottom' | 'verticalCenter'
 
-export const HorizontalPositionTypes: Array<PositionType> = ['left', 'right', 'horizontalCenter']
-export const VerticalPositionTypes: Array<PositionType> = ['top', 'bottom', 'verticalCenter']
+export const PositionTypes: Array<PositionType> = ['left', 'right', 'horizontalCenter', 'top', 'bottom', 'verticalCenter']
 
 class Entity extends ModelBase<EntityState> {
     constructor(schema: Schema, state: EntityState = new EntityState()) {
@@ -112,6 +112,23 @@ class EntityState {
     x: number = 0
     y: number = 0
     readonly color: themes.ColorName = themes.ColorName.blue
+}
+
+
+export class ChangeAction extends Actions.Base {
+
+    constructor(readonly entity: Entity, readonly fromState: EntityState, readonly toState: EntityState) {
+        super()
+    }
+
+    apply(): void {
+        this.entity.state = this.toState
+    }
+
+    unapply(): void {
+        const x = this.entity.state.x
+        this.entity.state = this.fromState
+    } 
 }
 
 export {Entity as Model}

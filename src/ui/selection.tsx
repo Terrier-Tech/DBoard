@@ -39,6 +39,13 @@ class Selection {
         this.ui.requestRender(UI.RenderType.Overlay)
     }
 
+    selectAll() {
+        this.ui.schema.mapEntities((e) => {
+            this.entities[e.id] = e
+        })
+        this.ui.requestRender(UI.RenderType.Overlay)
+    }
+
     mapEntities<T>(fun: (e: Entity.Model) => T) : Array<T> {
         return Object.entries(this.entities).map((kv) => {
             return fun(kv[1])
