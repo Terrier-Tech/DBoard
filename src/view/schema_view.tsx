@@ -43,7 +43,7 @@ class SchemaView extends React.Component<Props> {
 			dominant-baseline: middle;
 		}
 		.attribute.required .attribute-name {
-			font: bold ${config.fontSize}px ${config.fontSize};
+			font: bold ${config.fontSize}px ${config.fontFamily};
 		}
 		`
 		return <svg xmlns="http://www.w3.org/2000/svg" width='3000' height='3000'>

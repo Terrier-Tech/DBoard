@@ -134,7 +134,6 @@ export class ChangeAction extends Actions.Base {
     }
 
     unapply(): void {
-        const x = this.entity.state.x
         this.entity.state = this.fromState
     }
 

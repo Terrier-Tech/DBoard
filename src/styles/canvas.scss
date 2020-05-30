@@ -61,7 +61,9 @@ $grid-sizes: 10, 15, 20;
                     top: 0;
                     bottom: 0;
                     right: 0;
-                    display: block
+                    display: block;
+                    padding: 0 8px;
+                    font-size: 15px;
                 }
                 &.entity-name-field {
                     input[type=text] {

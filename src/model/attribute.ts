@@ -1,5 +1,7 @@
-import ModelBase from "./model_base";
-import * as Entity from '../model/entity';
+import ModelBase from "./model_base"
+import * as Entity from '../model/entity'
+import * as geom from '../util/geom'
+import * as Actions from "../ui/actions"
 
 
 class Attribute extends ModelBase<AttributeState> {
@@ -13,6 +15,12 @@ class Attribute extends ModelBase<AttributeState> {
         const state = AttributeState.fromRaw(raw)
         return new Attribute(entity, state)
     }
+
+    get raw(): string {
+        return AttributeState.toRaw(this.state)
+    }
+
+    position: geom.Point = new geom.Point(0,0) // computed when rendered, not part of the state
 }
 
 class AttributeState {
@@ -20,7 +28,7 @@ class AttributeState {
 
     }
 
-    static fromRaw(raw: String) : AttributeState {
+    static fromRaw(raw: string) : AttributeState {
         const comps = raw.split(':')
         let name = comps[0].trim()
         let type = 'text'
@@ -33,6 +41,30 @@ class AttributeState {
             name = name.replace(/\*/g, '')
         }
         return new AttributeState(name, type, isRequired)
+    }
+
+    static toRaw(state: AttributeState): string {
+        const required = state.isRequired ? '*' : ''
+        return `${state.name}${required}: ${state.type}`
+    }
+}
+
+export class ChangeAction extends Actions.Base {
+
+    constructor(readonly attribute: Attribute, readonly fromState: AttributeState, readonly toState: AttributeState) {
+        super()
+    }
+
+    apply(): void {
+        this.attribute.state = this.toState
+    }
+
+    unapply(): void {
+        this.attribute.state = this.fromState
+    }
+
+    hasChanges(): boolean {
+        return AttributeState.toRaw(this.fromState) != AttributeState.toRaw(this.toState)
     }
 }
 

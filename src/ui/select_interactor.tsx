@@ -61,6 +61,13 @@ class SelectInteractor extends Interactor {
         evt.stopPropagation()
     }
 
+    onAttributeDoubleClicked(attr: Attribute.Model, evt: React.MouseEvent<SVGElement, MouseEvent>) {
+        if (this.proxy) {
+            this.clearProxy()
+        }
+        this.proxy = new AttributeField(this, attr)
+        evt.stopPropagation()
+    }
 
     render() : JSX.Element {
         if (this.proxy) {
@@ -232,20 +239,11 @@ class EntityNameField extends InteractorProxy {
 	constructor(readonly interactor: SelectInteractor, readonly entity: Entity.Model) {
 		super()
     }
-    
-    onMouseMove(evt: React.MouseEvent<HTMLDivElement, MouseEvent>): boolean {
-        return false
-    }
-    
-    onMouseUp(evt: React.MouseEvent<HTMLDivElement, MouseEvent>): boolean {
-        return false
-    }
 
     onKeyPress(evt: React.KeyboardEvent<HTMLInputElement>) {
         switch (evt.key) {
             case 'Enter':
-                const name = evt.currentTarget.value
-                this.commit(name)
+                this.commit(evt.currentTarget.value)
                 return
             case 'Escape':
                 this.interactor.clearProxy()
@@ -271,9 +269,9 @@ class EntityNameField extends InteractorProxy {
             height: config.lineHeight
         }
         const inputStyle = {
-            width: this.entity.width
+            width: '100%'
         }
-        return <div className='entity-name-field text-field' style={style}>
+        return <div className='entity-name-field text-field' key={`edit-${this.entity.id}`} style={style}>
             <input type='text' ref={this.input} defaultValue={this.entity.state.name} style={inputStyle} onKeyPress={this.onKeyPress.bind(this)} onKeyDown={this.onKeyDown.bind(this)}/>
         </div>
     }
@@ -287,6 +285,69 @@ class EntityNameField extends InteractorProxy {
         newState.name = newName.trim()
         if (newState.name.length > 0 && newState.name != this.entity.state.name) {
             const action = new Entity.ChangeAction(this.entity, this.entity.state, newState)
+            this.interactor.ui.history.pushAction(action)
+        }
+        this.interactor.clearProxy()
+    }
+
+}
+
+// allows the user to edit an attribute
+class AttributeField extends InteractorProxy {
+
+    private input = React.createRef<HTMLInputElement>()
+
+	constructor(readonly interactor: SelectInteractor, readonly attribute: Attribute.Model) {
+		super()
+    }
+
+    onKeyPress(evt: React.KeyboardEvent<HTMLInputElement>) {
+        switch (evt.key) {
+            case 'Enter':
+                this.commit(evt.currentTarget.value)
+                return
+            case 'Escape':
+                this.interactor.clearProxy()
+                return
+        }
+    }
+
+    onKeyDown(evt: React.KeyboardEvent<HTMLInputElement>) {
+        switch (evt.key) {
+            case 'Escape':
+                evt.preventDefault()
+                this.interactor.clearProxy()
+                return
+        }
+    }
+
+    render(): JSX.Element {
+        const config = this.interactor.config
+        const entity = this.attribute.entity
+        const pos = this.attribute.position
+        const style = {
+            left: pos.x,
+            top: pos.y,
+            width: entity.width,
+            height: config.lineHeight
+        }
+        const inputStyle = {
+            width: '100%'
+        }
+        const raw = this.attribute.raw
+        return <div className='attribute-field text-field' key={`edit-${this.attribute.id}`} style={style}>
+            <input type='text' ref={this.input} defaultValue={raw} style={inputStyle} onKeyPress={this.onKeyPress.bind(this)} onKeyDown={this.onKeyDown.bind(this)}/>
+        </div>
+    }
+
+    afterRender() {
+        this.input.current!.focus()
+    }
+
+    commit(newRaw: string) {
+        const newState = Attribute.State.fromRaw(newRaw)
+        if (newRaw.trim().length) {
+            const action = new Attribute.ChangeAction(this.attribute, this.attribute.state, newState)
             this.interactor.ui.history.pushAction(action)
         }
         this.interactor.clearProxy()

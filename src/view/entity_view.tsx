@@ -41,6 +41,7 @@ class EntityView extends React.Component<Props> {
         const color = config.theme.color(state.color)
         let index = 0
         let yAttr = state.y
+        const yName = state.y + config.lineHeight/2 + 1 // need to bring it down just slightly
         const attributes = entity.mapAttributes(attr => {
             yAttr += lineHeight
             index += 1
@@ -49,7 +50,7 @@ class EntityView extends React.Component<Props> {
 		return <g id={entity.id} onClick={this.onClicked.bind(this)} onDoubleClick={this.onDoubleClicked.bind(this)} onMouseDown={this.onMouseDown.bind(this)}>
 			<rect x={state.x} y={state.y} width={width} height={height} stroke='transparent' fill='#ffffff'/>
             <rect x={state.x} y={state.y} width={width} height={lineHeight} stroke='transparent' fill={color}/>
-            <text className='entity-name' x={state.x + width/2} y={state.y + lineHeight/2}>{state.name}</text>
+            <text className='entity-name' x={state.x + width/2} y={yName}>{state.name}</text>
             {attributes}
         </g>
     }
