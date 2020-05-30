@@ -8,6 +8,9 @@ import Config from "../view/config"
 // base class for all classes that handle user interaction for the various interaction modes
 export abstract class Interactor {
 
+    // this will handle mouse interaction for special things like rubber band selection and dragging entities
+    protected proxy?: InteractorProxy
+
     constructor(readonly ui: UI, readonly config: Config) {
         
     }
@@ -19,6 +22,9 @@ export abstract class Interactor {
     }
 
     onCanvasMouseUp(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    }
+
+    onCanvasDoubleClicked(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     }
 
     onEntityClicked(entity: Entity.Model, evt: React.MouseEvent<SVGElement, MouseEvent>) {
@@ -33,8 +39,17 @@ export abstract class Interactor {
     onAttributeClicked(attr: Attribute.Model, evt: React.MouseEvent<SVGElement, MouseEvent>) {
     }
 
+    onAttributeDoubleClicked(attr: Attribute.Model, evt: React.MouseEvent<SVGElement, MouseEvent>) {
+    }
+
     render() : JSX.Element {
         return <div></div>
+    }
+
+    afterRender() {
+        if (this.proxy) {
+            this.proxy.afterRender()
+        }
     }
 
     eventRelativePosition(evt: React.MouseEvent) : geom.Point {
@@ -44,15 +59,32 @@ export abstract class Interactor {
             evt.clientY - rect.top
         )
     }
+
+    clearProxy() {
+        if (this.proxy) {
+            this.proxy = undefined
+            this.ui.requestRender(UI.RenderType.Overlay)
+        }
+    }
 }
 
 
 // interface for interactor proxies that handle the interaction temporarily for the main interactor
-export interface InteractorProxy {
+export abstract class InteractorProxy {
 
-    onMouseMove(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) : void
+    // return true if the proxy is done handling interactions
+    onMouseMove(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) : boolean {
+        return false
+    }
 
-    onMouseUp(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) : void
+    // return true if the proxy is done handling interactions
+    onMouseUp(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) : boolean {
+        return false
+    }
 
-    render() : JSX.Element
+    abstract render() : JSX.Element
+
+    afterRender() {
+
+    }
 }

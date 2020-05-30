@@ -51,6 +51,7 @@ class UI {
             }
         }
         this.nextRenderType = UI.RenderType.None
+        this.interactor.afterRender()
     }
     
 }

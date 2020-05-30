@@ -11,10 +11,7 @@ interface Props {
 	ui: UI
 }
 
-interface State {
-}
-
-class Viewport extends React.Component<Props, State> {
+class Viewport extends React.Component<Props> {
 
 	constructor(props: Props) {
 		super(props)
@@ -26,7 +23,7 @@ class Viewport extends React.Component<Props, State> {
 		const config = this.props.config
 		const schema = this.props.schema
 		return <div id='viewport'>
-			<div className={`canvas grid-${config.gridSize}`} onMouseDown={this.onMouseDown.bind(this)} onMouseMove={this.onMouseMove.bind(this)} onMouseUp={this.onMouseUp.bind(this)}>
+			<div className={`canvas grid-${config.gridSize}`} onMouseDown={this.onMouseDown.bind(this)} onMouseMove={this.onMouseMove.bind(this)} onMouseUp={this.onMouseUp.bind(this)} onDoubleClick={this.onDoubleClicked.bind(this)}>
 				<div className='document-plane'>
 					<SchemaView config={config} ui={this.props.ui} schema={schema} />
 				</div>
@@ -46,6 +43,11 @@ class Viewport extends React.Component<Props, State> {
 	onMouseUp(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 		this.props.ui.interactor.onCanvasMouseUp(evt)
 	}
+
+    onDoubleClicked(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+		this.props.ui.interactor.onCanvasDoubleClicked(evt)
+    }
+
 }
 
 export default Viewport;

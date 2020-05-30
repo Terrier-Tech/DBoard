@@ -30,7 +30,7 @@ class AttributeView extends React.Component<Props> {
         const requiredClass = state.isRequired ? 'required' : ''
         const bgColor = this.props.index % 2 == 0 ? theme.evenBgColor : theme.oddBgColor
         
-		return <g className={`attribute ${requiredClass}`} id={attr.id} onClick={this.onClicked.bind(this)}>
+		return <g className={`attribute ${requiredClass}`} id={attr.id} onClick={this.onClicked.bind(this)} onDoubleClick={this.onDoubleClicked.bind(this)}>
             <rect x={x} y={y} width={width} height={config.lineHeight} stroke='transparent' fill={bgColor}/>
             <text className='attribute-name' x={x + config.padding} y={y + config.lineHeight/2}>{state.name}</text>
             <text className='attribute-type' x={x + width - config.padding} y={y + config.lineHeight/2}>{state.type}</text>
@@ -41,6 +41,12 @@ class AttributeView extends React.Component<Props> {
         console.log(`attribute clicked`)
         evt.stopPropagation()
         this.props.ui.interactor.onAttributeClicked(this.props.attribute, evt)
+    }
+    
+    onDoubleClicked(evt: React.MouseEvent<SVGElement, MouseEvent>) {
+        console.log(`attribute double clicked`)
+        evt.stopPropagation()
+        this.props.ui.interactor.onAttributeDoubleClicked(this.props.attribute, evt)
     }
 }
 	

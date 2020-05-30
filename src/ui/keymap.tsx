@@ -4,7 +4,10 @@ import Config from "../view/config"
 class Keymap {
     constructor(readonly ui: UI, private config: Config) {
         document.addEventListener('keydown', (evt) => {
-            console.log(`keydown event`, evt)
+            const targetTag = (evt.target as any).tagName
+            if (targetTag == 'INPUT') { // don't override events on inputs
+                return
+            }
             if (evt.metaKey || evt.ctrlKey) {
                 if (this.onCommandKey(evt.key, evt.shiftKey)) {
                     evt.preventDefault()
@@ -12,7 +15,7 @@ class Keymap {
             }
         })
         document.addEventListener('keypress', (evt) => {
-            console.log(`keypress event`, evt)
+            
         })
     }
 

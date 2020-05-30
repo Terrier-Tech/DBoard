@@ -52,6 +52,24 @@ $grid-sizes: 10, 15, 20;
                     bottom: 0;
                 }
             }
+            .text-field {
+                position: absolute;
+                pointer-events: all;
+                input[type=text] {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    bottom: 0;
+                    right: 0;
+                    display: block
+                }
+                &.entity-name-field {
+                    input[type=text] {
+                        text-align: center;
+                        font-weight: bold;
+                    }
+                }
+            }
         }
     }
 }

@@ -21,6 +21,14 @@ class Entity extends ModelBase<EntityState> {
     // this is computed, not a part of the entity's state
     size: [number, number] = [0, 0]
 
+    get width(): number {
+        return this.size[0]
+    }
+
+    get height(): number {
+        return this.size[1]
+    }
+
     moveTo(x: number, y: number) {
         this.state.x = x
         this.state.y = y
@@ -128,7 +136,13 @@ export class ChangeAction extends Actions.Base {
     unapply(): void {
         const x = this.entity.state.x
         this.entity.state = this.fromState
-    } 
+    }
+
+    hasChanges(): boolean {
+        return this.fromState.x != this.toState.x || 
+            this.fromState.y != this.toState.y || 
+            this.fromState.name != this.toState.name
+    }
 }
 
 export {Entity as Model}
