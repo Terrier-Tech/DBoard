@@ -55,6 +55,11 @@ $grid-sizes: 10, 15, 20;
             .text-field {
                 position: absolute;
                 pointer-events: all;
+                input:focus {
+                    border: 2px solid $overlay-color;
+                    outline: none;
+                    background: lighten($overlay-color, 30%);
+                }
                 input[type=text] {
                     position: absolute;
                     left: 0;

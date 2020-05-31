@@ -69,6 +69,60 @@ class SelectInteractor extends Interactor {
         evt.stopPropagation()
     }
 
+    editFirstAttribute(entity: Entity.Model) {
+        let attr = entity.firstAttribute()
+        if (attr) {
+            this.proxy = new AttributeField(this, attr)
+        }
+        else {
+            // TODO: new attribute
+        }
+        this.ui.requestRender(UI.RenderType.Viewport)
+    }
+
+    editLastAttribute(entity: Entity.Model) {
+        let attr = entity.lastAttribute()
+        if (attr) {
+            this.proxy = new AttributeField(this, attr)
+        }
+        else {
+            this.proxy = new EntityNameField(this, entity)
+        }
+        this.ui.requestRender(UI.RenderType.Viewport)
+    }
+
+    editPreviousAttribute(currentAttr: Attribute.Model) {
+        let attr = currentAttr.entity.previousAttribute(currentAttr)
+        if (attr) {
+            this.proxy = new AttributeField(this, attr)
+        }
+        else {
+            this.proxy = new EntityNameField(this, currentAttr.entity)
+        }
+        this.ui.requestRender(UI.RenderType.Viewport)
+    }
+
+    editNextAttribute(currentAttr: Attribute.Model) {
+        let attr = currentAttr.entity.nextAttribute(currentAttr)
+        if (attr) {
+            this.proxy = new AttributeField(this, attr)
+        }
+        else {
+            this.onNewAttributeClicked(currentAttr.entity)
+        }
+        this.ui.requestRender(UI.RenderType.Viewport)
+    }
+
+    addNewAttribute(entity: Entity.Model) {
+        this.proxy = new NewAttributeField(this, entity)
+        this.ui.requestRender(UI.RenderType.Viewport)
+    }
+
+    onNewAttributeClicked(entity: Entity.Model) {
+        console.log(`new attribute clicked`)
+        this.addNewAttribute(entity)
+    }
+
     render() : JSX.Element {
         if (this.proxy) {
             return this.proxy.render()
@@ -168,14 +222,14 @@ class EntityDrag extends InteractorProxy {
     }
 
     onMouseUp(evt: React.MouseEvent<HTMLDivElement, MouseEvent>): boolean {
-        const changeActions = this.selection.mapEntities(entity => {
+        const UpdateActions = this.selection.mapEntities(entity => {
             entity.snapPosition(this.interactor.config)
-            return new Entity.ChangeAction(entity, this.initialStates[entity.id], entity.state)
+            return new Entity.UpdateAction(entity, this.initialStates[entity.id], entity.state)
         })
         this.guides = []
 
-        if (changeActions.map((a) => {return a.hasChanges()}).includes(true)) {
-            this.interactor.ui.history.pushActions(changeActions)
+        if (UpdateActions.map((a) => {return a.hasChanges()}).includes(true)) {
+            this.interactor.ui.history.pushActions(UpdateActions)
         }
         else {
             this.interactor.ui.requestRender(UI.RenderType.Viewport)
@@ -257,6 +311,14 @@ class EntityNameField extends InteractorProxy {
                 evt.preventDefault()
                 this.interactor.clearProxy()
                 return
+            case 'ArrowUp':
+                evt.preventDefault()
+                // this.interactor.editPreviousAttribute()
+                return
+            case 'ArrowDown':
+                evt.preventDefault()
+                this.interactor.editFirstAttribute(this.entity)
+                return
         }
     }
 
@@ -284,10 +346,11 @@ class EntityNameField extends InteractorProxy {
         const newState = {...this.entity.state}
         newState.name = newName.trim()
         if (newState.name.length > 0 && newState.name != this.entity.state.name) {
-            const action = new Entity.ChangeAction(this.entity, this.entity.state, newState)
+            const action = new Entity.UpdateAction(this.entity, this.entity.state, newState)
             this.interactor.ui.history.pushAction(action)
         }
         this.interactor.clearProxy()
+        this.interactor.editFirstAttribute(this.entity)
     }
 
 }
@@ -318,6 +381,14 @@ class AttributeField extends InteractorProxy {
                 evt.preventDefault()
                 this.interactor.clearProxy()
                 return
+            case 'ArrowUp':
+                evt.preventDefault()
+                this.interactor.editPreviousAttribute(this.attribute)
+                return
+            case 'ArrowDown':
+                evt.preventDefault()
+                this.interactor.editNextAttribute(this.attribute)
+                return
         }
     }
 
@@ -347,10 +418,85 @@ class AttributeField extends InteractorProxy {
     commit(newRaw: string) {
         const newState = Attribute.State.fromRaw(newRaw)
         if (newRaw.trim().length) {
-            const action = new Attribute.ChangeAction(this.attribute, this.attribute.state, newState)
-            this.interactor.ui.history.pushAction(action)
+            const action = new Attribute.UpdateAction(this.attribute, this.attribute.state, newState)
+            if (action.hasChanges()) {
+                this.interactor.ui.history.pushAction(action)
+            }
         }
         this.interactor.clearProxy()
+        this.interactor.editNextAttribute(this.attribute)
+    }
+
+}
+
+// allows the user to enter a new attribute
+class NewAttributeField extends InteractorProxy {
+
+    private input = React.createRef<HTMLInputElement>()
+
+	constructor(readonly interactor: SelectInteractor, readonly entity: Entity.Model) {
+		super()
+    }
+
+    onKeyPress(evt: React.KeyboardEvent<HTMLInputElement>) {
+        switch (evt.key) {
+            case 'Enter':
+                this.commit(evt.currentTarget.value)
+                return
+            case 'Escape':
+                this.interactor.clearProxy()
+                return
+        }
+    }
+
+    onKeyDown(evt: React.KeyboardEvent<HTMLInputElement>) {
+        switch (evt.key) {
+            case 'Escape':
+                evt.preventDefault()
+                this.interactor.clearProxy()
+                return
+            case 'ArrowUp':
+                evt.preventDefault()
+                this.interactor.editLastAttribute(this.entity)
+                return
+            case 'ArrowDown':
+                evt.preventDefault()
+                this.interactor.addNewAttribute(this.entity)
+                return
+        }
+    }
+
+    render(): JSX.Element {
+        const config = this.interactor.config
+        const entity = this.entity
+        const style = {
+            left: entity.left,
+            top: entity.bottom - config.lineHeight,
+            width: entity.width,
+            height: config.lineHeight
+        }
+        const inputStyle = {
+            width: '100%'
+        }
+        const key = `new-attribute-${entity.id}-${(new Date()).getUTCMilliseconds()}`
+        return <div className='attribute-field text-field' key={key} style={style}>
+            <input type='text' ref={this.input} defaultValue={''} placeholder='name: type' style={inputStyle} onKeyPress={this.onKeyPress.bind(this)} onKeyDown={this.onKeyDown.bind(this)}/>
+        </div>
+    }
+
+    afterRender() {
+        this.input.current!.focus()
+    }
+
+    commit(newRaw: string) {
+        const action = new Attribute.NewAction(this.entity, newRaw)
+        if (action.hasChanges()) {
+            this.interactor.ui.history.pushAction(action)
+            this.interactor.addNewAttribute(this.entity)
+        }
+        else {
+            this.interactor.clearProxy()
+        }
     }
 
 }

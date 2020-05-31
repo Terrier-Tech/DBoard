@@ -42,6 +42,9 @@ export abstract class Interactor {
     onAttributeDoubleClicked(attr: Attribute.Model, evt: React.MouseEvent<SVGElement, MouseEvent>) {
     }
 
+    onNewAttributeClicked(entity: Entity.Model) {
+    }
+
     render() : JSX.Element {
         return <div></div>
     }

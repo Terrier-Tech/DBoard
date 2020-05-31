@@ -38,12 +38,21 @@ class SchemaView extends React.Component<Props> {
 		}
 		.attribute-type {
 			font: ${config.fontSize}px ${config.fontFamily};
-			fill: ${theme.hintColor};
+			fill: ${theme.hintFgColor};
 			text-anchor: end;
 			dominant-baseline: middle;
 		}
 		.attribute.required .attribute-name {
 			font: bold ${config.fontSize}px ${config.fontFamily};
+		}
+		.new-attribute rect {
+			fill: ${theme.hintBgColor};
+		}
+		.new-attribute text.plus {
+			font: bold ${config.fontSize}px ${config.fontFamily};
+			fill: ${theme.hintFgColor};
+			text-anchor: middle;
+			dominant-baseline: middle;
 		}
 		`
 		return <svg xmlns="http://www.w3.org/2000/svg" width='3000' height='3000'>

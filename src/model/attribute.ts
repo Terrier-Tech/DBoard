@@ -49,7 +49,7 @@ class AttributeState {
     }
 }
 
-export class ChangeAction extends Actions.Base {
+export class UpdateAction extends Actions.Base {
 
     constructor(readonly attribute: Attribute, readonly fromState: AttributeState, readonly toState: AttributeState) {
         super()
@@ -65,6 +65,29 @@ export class ChangeAction extends Actions.Base {
 
     hasChanges(): boolean {
         return AttributeState.toRaw(this.fromState) != AttributeState.toRaw(this.toState)
+    }
+}
+
+export class NewAction extends Actions.Base {
+
+    private attribute: Attribute | undefined
+
+    constructor(readonly entity: Entity.Model, readonly raw: string) {
+        super()
+    }
+
+    apply(): void {
+        this.attribute = this.entity.newAttribute(this.raw)
+    }
+
+    unapply(): void {
+        if (this.attribute) {
+            this.entity.removeAttribute(this.attribute.id)
+        }
+    }
+
+    hasChanges(): boolean {
+        return this.raw.length > 0
     }
 }
 

@@ -3,6 +3,7 @@ import Config from './config'
 import * as Entity from '../model/entity'
 import AttributeView from './attribute_view'
 import UI from '../ui/ui'
+import NewAttributeView from './new_attribute_view'
 
 interface Props {
 	config: Config
@@ -26,7 +27,7 @@ class EntityView extends React.Component<Props> {
             let w = config.measureText(attr.state.name).width + config.measureText(attr.state.type).width + 4*config.padding
             width = Math.max(width, w)
         })
-        const height = (this.props.entity.numAttributes() + 1) *  config.lineHeight
+        const height = (this.props.entity.numAttributes() + 2) *  config.lineHeight
         // snap the size up to the next even grid spacing so that they can be center-aligned at whole grid spaces
         return this.props.entity.size = [config.snapUpEven(width), config.snapUpEven(height)]
     }
@@ -47,11 +48,13 @@ class EntityView extends React.Component<Props> {
             index += 1
             return <AttributeView key={attr.id} config={config} ui={this.props.ui} width={width} x={state.x} y={yAttr} index={index} attribute={attr}/>
         })
+        yAttr += lineHeight
 		return <g id={entity.id} onClick={this.onClicked.bind(this)} onDoubleClick={this.onDoubleClicked.bind(this)} onMouseDown={this.onMouseDown.bind(this)}>
 			<rect x={state.x} y={state.y} width={width} height={height} stroke='transparent' fill='#ffffff'/>
             <rect x={state.x} y={state.y} width={width} height={lineHeight} stroke='transparent' fill={color}/>
             <text className='entity-name' x={state.x + width/2} y={yName}>{state.name}</text>
             {attributes}
+            <NewAttributeView config={config} ui={this.props.ui} width={width} x={state.x} y={yAttr} entity={entity}/>
         </g>
     }
     

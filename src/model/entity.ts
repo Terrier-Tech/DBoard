@@ -99,14 +99,44 @@ class Entity extends ModelBase<EntityState> {
         return this.attributes[id]
     }
 
-    mapAttributes<T>(fun: (e: Attribute.Model) => T) : Array<T> {
+    attributesInOrder(): Array<Attribute.Model> {
         const attrs = Object.entries(this.attributes)
-        attrs.sort((a1, a2) => {
+        return attrs.sort((a1, a2) => {
             return a1[1].state.name > a2[1].state.name ? 1 : -1
-        })
-        return attrs.map((kv) => {
-            return fun(kv[1])
-        })
+        }).map((kv) => {return kv[1]})
+    }
+
+    mapAttributes<T>(fun: (e: Attribute.Model) => T) : Array<T> {
+        return this.attributesInOrder().map(fun)
+    }
+
+    firstAttribute(): Attribute.Model | undefined {
+        return this.attributesInOrder()[0]
+    }
+
+    lastAttribute(): Attribute.Model | undefined {
+        const attrs = this.attributesInOrder()
+        return attrs[attrs.length-1]
+    }
+
+    previousAttribute(attr: Attribute.Model): Attribute.Model | undefined {
+        let prevAttr: Attribute.Model | undefined = undefined
+        this.attributesInOrder().reverse().forEach(a => {
+            if (!prevAttr && a.state.name < attr.state.name) {
+                prevAttr = a
+            }
+        });
+        return prevAttr
+    }
+
+    nextAttribute(attr: Attribute.Model): Attribute.Model | undefined {
+        let nextAttr: Attribute.Model | undefined = undefined
+        this.attributesInOrder().forEach(a => {
+            if (!nextAttr && a.state.name > attr.state.name) {
+                nextAttr = a
+            }
+        });
+        return nextAttr
     }
 
     isWithin(outer: geom.Rect) : boolean {
@@ -123,7 +153,7 @@ class EntityState {
 }
 
 
-export class ChangeAction extends Actions.Base {
+export class UpdateAction extends Actions.Base {
 
     constructor(readonly entity: Entity, readonly fromState: EntityState, readonly toState: EntityState) {
         super()

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import Config from './config'
 import * as Attribute from '../model/attribute'
-import UI from '../ui/ui'
 import * as geom from '../util/geom'
+import UI from '../ui/ui'
 
 interface Props {
     config: Config

@@ -31,7 +31,8 @@ class Theme {
     fgColor = '#333333'
     oddBgColor = '#f8f8f8'
     evenBgColor = '#ffffff'
-    hintColor = '#aaa'
+    hintFgColor = '#aaa'
+    hintBgColor = '#eee'
 }
 
 const LightTheme = new Theme()
