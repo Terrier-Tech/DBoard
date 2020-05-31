@@ -2,7 +2,7 @@ import Schema from "./schema"
 import ModelBase from "./model_base"
 import * as Attribute from "./attribute"
 import * as themes from '../view/themes'
-import * as geom from "../util/geom"
+import * as Geom from "../util/geom"
 import Config from "../view/config"
 import * as Actions from "../ui/actions"
 
@@ -10,8 +10,8 @@ export type PositionType = 'left' | 'right' | 'horizontalCenter' | 'top' | 'bott
 
 export const PositionTypes: Array<PositionType> = ['left', 'right', 'horizontalCenter', 'top', 'bottom', 'verticalCenter']
 
-class Entity extends ModelBase<EntityState> {
-    constructor(schema: Schema, state: EntityState = new EntityState()) {
+export class Model extends ModelBase<State> implements Geom.IRect {
+    constructor(schema: Schema, state: State = new State()) {
         super("entity", state)
         schema.registerEntity(this)
     }
@@ -20,6 +20,19 @@ class Entity extends ModelBase<EntityState> {
 
     // this is computed, not a part of the entity's state
     size: [number, number] = [0, 0]
+
+    // computes the minimum width and height to render all attributes
+    computeSize(config: Config): [number, number] {
+        let width = config.measureText(this.state.name).width + 2*config.padding
+        this.mapAttributes(attr => {
+            // one padding on each end and two between the name and type = 4*padding
+            let w = config.measureText(attr.state.name).width + config.measureText(attr.state.type).width + 4*config.padding
+            width = Math.max(width, w)
+        })
+        const height = (this.numAttributes() + 2) *  config.lineHeight
+        // snap the size up to the next even grid spacing so that they can be center-aligned at whole grid spaces
+        return this.size = [config.snapUpEven(width), config.snapUpEven(height)]
+    }
 
     get width(): number {
         return this.size[0]
@@ -139,13 +152,13 @@ class Entity extends ModelBase<EntityState> {
         return nextAttr
     }
 
-    isWithin(outer: geom.Rect) : boolean {
-        const rect = new geom.Rect(this.state.x, this.state.y, this.size[0], this.size[1])
+    isWithin(outer: Geom.Rect) : boolean {
+        const rect = new Geom.Rect(this.state.x, this.state.y, this.size[0], this.size[1])
         return rect.isWithin(outer)
     }
 }
 
-class EntityState {
+export class State {
     readonly name: string = ""
     x: number = 0
     y: number = 0
@@ -155,7 +168,7 @@ class EntityState {
 
 export class UpdateAction extends Actions.Base {
 
-    constructor(readonly entity: Entity, readonly fromState: EntityState, readonly toState: EntityState) {
+    constructor(readonly entity: Model, readonly fromState: State, readonly toState: State) {
         super()
     }
 
@@ -173,6 +186,3 @@ export class UpdateAction extends Actions.Base {
             this.fromState.name != this.toState.name
     }
 }
-
-export {Entity as Model}
-export {EntityState as State}

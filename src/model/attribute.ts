@@ -4,31 +4,31 @@ import * as geom from '../util/geom'
 import * as Actions from "../ui/actions"
 
 
-class Attribute extends ModelBase<AttributeState> {
+export class Model extends ModelBase<State> {
 
-    constructor(public entity: Entity.Model, state: AttributeState) {
+    constructor(public entity: Entity.Model, state: State) {
         super("attribute", state)
         entity.registerAttribute(this)
     }
 
-    static fromRaw(entity: Entity.Model, raw: string) : Attribute {
-        const state = AttributeState.fromRaw(raw)
-        return new Attribute(entity, state)
+    static fromRaw(entity: Entity.Model, raw: string) : Model {
+        const state = State.fromRaw(raw)
+        return new Model(entity, state)
     }
 
     get raw(): string {
-        return AttributeState.toRaw(this.state)
+        return State.toRaw(this.state)
     }
 
     position: geom.Point = new geom.Point(0,0) // computed when rendered, not part of the state
 }
 
-class AttributeState {
+export class State {
     constructor(readonly name: string, readonly type: string = 'text', readonly isRequired: boolean = false) {
 
     }
 
-    static fromRaw(raw: string) : AttributeState {
+    static fromRaw(raw: string) : State {
         const comps = raw.split(':')
         let name = comps[0].trim()
         let type = 'text'
@@ -40,10 +40,10 @@ class AttributeState {
             isRequired = true
             name = name.replace(/\*/g, '')
         }
-        return new AttributeState(name, type, isRequired)
+        return new State(name, type, isRequired)
     }
 
-    static toRaw(state: AttributeState): string {
+    static toRaw(state: State): string {
         const required = state.isRequired ? '*' : ''
         return `${state.name}${required}: ${state.type}`
     }
@@ -51,7 +51,7 @@ class AttributeState {
 
 export class UpdateAction extends Actions.Base {
 
-    constructor(readonly attribute: Attribute, readonly fromState: AttributeState, readonly toState: AttributeState) {
+    constructor(readonly attribute: Model, readonly fromState: State, readonly toState: State) {
         super()
     }
 
@@ -64,13 +64,13 @@ export class UpdateAction extends Actions.Base {
     }
 
     hasChanges(): boolean {
-        return AttributeState.toRaw(this.fromState) != AttributeState.toRaw(this.toState)
+        return State.toRaw(this.fromState) != State.toRaw(this.toState)
     }
 }
 
 export class NewAction extends Actions.Base {
 
-    private attribute: Attribute | undefined
+    private attribute: Model | undefined
 
     constructor(readonly entity: Entity.Model, readonly raw: string) {
         super()
@@ -95,7 +95,7 @@ export class DeleteAction extends Actions.Base {
 
     private entity: Entity.Model
 
-    constructor(private attribute: Attribute) {
+    constructor(private attribute: Model) {
         super()
         this.entity = attribute.entity
     }
@@ -112,6 +112,3 @@ export class DeleteAction extends Actions.Base {
         return true
     }
 }
-
-export {Attribute as Model}
-export {AttributeState as State}

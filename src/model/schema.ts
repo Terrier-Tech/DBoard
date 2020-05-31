@@ -1,5 +1,6 @@
 import ModelBase from "./model_base"
 import * as Entity from './entity';
+import * as Association from './association'
 
 
 class Schema extends ModelBase<SchemaState> {
@@ -12,6 +13,10 @@ class Schema extends ModelBase<SchemaState> {
 
     registerEntity(entity: Entity.Model) {
         this.entities[entity.id] = entity
+    }
+
+    getEntity(id: string): Entity.Model {
+        return this.entities[id]
     }
 
     removeEntity(id: string) {
@@ -34,6 +39,44 @@ class Schema extends ModelBase<SchemaState> {
 
     mapEntities<T>(fun: (e: Entity.Model) => T) : Array<T> {
         return Object.entries(this.entities).map((kv) => {
+            return fun(kv[1])
+        })
+    }
+
+    private associations : Record<string,Association.Model> = {}
+
+    registerAssociation(entity: Association.Model) {
+        this.associations[entity.id] = entity
+    }
+
+    getAssociation(id: string): Association.Model {
+        return this.associations[id]
+    }
+
+    removeAssociation(id: string) {
+        delete this.associations[id]
+    }
+
+    newAssociation(state: Association.State) : Association.Model {
+        return new Association.Model(this, state)
+    }
+
+    buildAssociation(): Association.Builder {
+        return new Association.Builder(this)
+    }
+
+    allAssociations() : Array<Association.Model> {
+        return Object.entries(this.associations).map((kv) => {return kv[1]})
+    }
+
+    filterAssociations(fun: (e: Association.Model) => boolean) : Array<Association.Model> {
+        return Object.entries(this.associations).filter((kv) => {
+            return fun(kv[1])
+        }).map((kv) => {return kv[1]})
+    }
+
+    mapAssociations<T>(fun: (e: Association.Model) => T) : Array<T> {
+        return Object.entries(this.associations).map((kv) => {
             return fun(kv[1])
         })
     }

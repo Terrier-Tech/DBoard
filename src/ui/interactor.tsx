@@ -3,7 +3,7 @@ import * as Entity from "../model/entity"
 import * as Attribute from "../model/attribute"
 import UI from './ui'
 import Selection from './selection'
-import * as geom from "../util/geom"
+import * as Geom from "../util/geom"
 import Config from '../view/config'
 
 export class Interactor {
@@ -152,10 +152,10 @@ export class Interactor {
         }
     }
 
-    eventRelativePosition(evt: React.MouseEvent) : geom.Point {
+    eventRelativePosition(evt: React.MouseEvent) : Geom.Point {
         const target = evt.currentTarget as HTMLElement
         const rect = target.getBoundingClientRect()
-        return new geom.Point(evt.clientX - rect.left,
+        return new Geom.Point(evt.clientX - rect.left,
             evt.clientY - rect.top
         )
     }
@@ -197,8 +197,8 @@ export abstract class InteractorProxy {
 // when they release, anything inside the rectangle is selected
 class RubberBand extends InteractorProxy {
 
-    private initialPos: geom.Point
-    private range: geom.Rect
+    private initialPos: Geom.Point
+    private range: Geom.Rect
     private selection: Selection
 
     constructor(readonly interactor: Interactor, evt: React.MouseEvent) {
@@ -210,12 +210,12 @@ class RubberBand extends InteractorProxy {
         }
 
         this.initialPos = this.interactor.eventRelativePosition(evt)
-        this.range = geom.Rect.fromPoints(this.initialPos, this.initialPos)
+        this.range = Geom.Rect.fromPoints(this.initialPos, this.initialPos)
     }
 
     private updateRange(evt: React.MouseEvent) {
         const pos = this.interactor.eventRelativePosition(evt)
-        this.range = geom.Rect.fromPoints(pos, this.initialPos)
+        this.range = Geom.Rect.fromPoints(pos, this.initialPos)
     }
 
     onMouseMove(evt: React.MouseEvent<HTMLDivElement, MouseEvent>): boolean {
@@ -253,7 +253,7 @@ class EntityDrag extends InteractorProxy {
 
     initialStates: Record<string, Entity.State> = {}
 
-    diffPos: geom.Point
+    diffPos: Geom.Point
 
     guides: Array<GuideProps> = []
 
@@ -265,11 +265,11 @@ class EntityDrag extends InteractorProxy {
             this.initialStates[entity.id] = {...entity.state}
         })
 
-        this.diffPos = new geom.Point(0, 0)
+        this.diffPos = new Geom.Point(0, 0)
     }
 
     onMouseMove(evt: React.MouseEvent<HTMLDivElement, MouseEvent>): boolean {
-        this.diffPos = this.diffPos.add(evt.movementX, evt.movementY)
+        this.diffPos =  Geom.addPoints(this.diffPos, {x: evt.movementX, y: evt.movementY})
         this.selection.mapEntities(entity => {
             let initial = this.initialStates[entity.id]
             entity.moveTo(initial.x + this.diffPos.x, initial.y + this.diffPos.y)
@@ -406,7 +406,7 @@ abstract class TextField extends InteractorProxy {
     abstract onUp(): void
     abstract onDown(): void
 
-    abstract get position(): geom.Point
+    abstract get position(): Geom.Point
     abstract get className(): string
     abstract get key(): string
     abstract get defaultValue(): string
@@ -424,8 +424,8 @@ class EntityNameField extends TextField {
 		super(interactor, entity)
     }
 
-    get position(): geom.Point {
-        return new geom.Point(this.entity.left, this.entity.top)
+    get position(): Geom.Point {
+        return new Geom.Point(this.entity.left, this.entity.top)
     }
 
     get className(): string {
@@ -468,7 +468,7 @@ class EditAttributeField extends TextField {
 		super(interactor, attribute.entity)
     }
 
-    get position(): geom.Point {
+    get position(): Geom.Point {
         return this.attribute.position
     }
 
@@ -521,8 +521,8 @@ class NewAttributeField extends TextField {
 		super(interactor, entity)
     }
 
-    get position(): geom.Point {
-        return new geom.Point(this.entity.left, this.entity.bottom - this.interactor.config.lineHeight)
+    get position(): Geom.Point {
+        return new Geom.Point(this.entity.left, this.entity.bottom - this.interactor.config.lineHeight)
     }
 
     get className(): string {

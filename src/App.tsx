@@ -26,7 +26,7 @@ class App extends React.Component<Props> {
     const foo = this.schema.newEntity({
       name: "Foo",
       x: 75,
-      y: 40,
+      y: 60,
       color: themes.ColorName.blue
     })
     foo.newAttribute("first name*")
@@ -37,8 +37,8 @@ class App extends React.Component<Props> {
 
     const bar = this.schema.newEntity({
       name: "Bar",
-      x: 400,
-      y: 40,
+      x: 500,
+      y: 60,
       color: themes.ColorName.blue
     })
     bar.newAttribute("time : datetime")
@@ -49,7 +49,7 @@ class App extends React.Component<Props> {
     const baz = this.schema.newEntity({
       name: "Baz",
       x: 75,
-      y: 300,
+      y: 400,
       color: themes.ColorName.green
     })
     baz.newAttribute("name*")
@@ -59,14 +59,24 @@ class App extends React.Component<Props> {
 
     const fizz = this.schema.newEntity({
       name: "Fizz",
-      x: 400,
-      y: 300,
+      x: 500,
+      y: 400,
       color: themes.ColorName.purple
     })
     fizz.newAttribute("name*")
     fizz.newAttribute("width: integer")
     fizz.newAttribute("height: integer")
     fizz.snapPosition(this.config)
+
+    this.schema.buildAssociation()
+      .add(foo, 'one')
+      .add(bar, 'many')
+      .build()
+
+    this.schema.buildAssociation()
+      .add(foo, 'one')
+      .add(baz, 'many')
+      .build()
   }
 
   render() {

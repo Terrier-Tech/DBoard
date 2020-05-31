@@ -15,29 +15,13 @@ interface Props {
 class EntityView extends React.Component<Props> {
 
 	constructor(props: Props) {
-		super(props)
-    }
-    
-    // computes the minimum width and height to render all attributes
-    computeSize(): [number, number] {
-        const config = this.props.config
-        const state = this.props.entity.state
-        let width = config.measureText(state.name).width + 2*config.padding
-        this.props.entity.mapAttributes(attr => {
-            // one padding on each end and two between the name and type = 4*padding
-            let w = config.measureText(attr.state.name).width + config.measureText(attr.state.type).width + 4*config.padding
-            width = Math.max(width, w)
-        })
-        const height = (this.props.entity.numAttributes() + 2) *  config.lineHeight
-        // snap the size up to the next even grid spacing so that they can be center-aligned at whole grid spaces
-        return this.props.entity.size = [config.snapUpEven(width), config.snapUpEven(height)]
+        super(props)
     }
 
 	render() {
-        const [width, height] = this.computeSize()
-
         const config = this.props.config
         const entity = this.props.entity
+        const [width, height] = entity.size
         const state = entity.state
         const lineHeight = config.lineHeight
         const color = config.theme.color(state.color)

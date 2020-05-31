@@ -3,6 +3,8 @@ import Schema from '../model/schema'
 import Config from './config'
 import EntityView from './entity_view'
 import UI from '../ui/ui'
+import AssociationView from './association_view'
+import * as Layout from './layout'
 
 interface Props {
 	config: Config
@@ -21,7 +23,21 @@ class SchemaView extends React.Component<Props> {
 		const theme = config.theme
 		const schema = this.props.schema
 		const entities = schema.mapEntities(entity =>  {
+			entity.computeSize(config)
 			return <EntityView key={entity.id} config={this.props.config} ui={this.props.ui} entity={entity}/>
+		})
+
+		// layout all associations first, then render them
+		const layout = new Layout.Lines()
+		schema.mapAssociations(ass =>  {
+			const entities = ass.entities
+			layout.addLine(ass.id, entities[0], entities[1])
+		})
+		const assPaths = layout.layout()
+		const associations = assPaths.map((path) => {
+			const ass = schema.getAssociation(path.id)
+			const sides = ass.sides
+			return <AssociationView key={ass.id} config={this.props.config} ui={this.props.ui} path={path} fromSide={sides[0]} toSide={sides[1]}/>
 		})
 		const style = `
 		.entity-name {
@@ -54,11 +70,19 @@ class SchemaView extends React.Component<Props> {
 			text-anchor: middle;
 			dominant-baseline: middle;
 		}
+		.association polyline.main {
+			fill: none;
+			stroke: ${theme.fgColor};
+			stroke-width: 2px;
+		}
 		`
 		return <svg xmlns="http://www.w3.org/2000/svg" width='3000' height='3000'>
 			<style>{style}</style>
 			<g id='entities'>
 				{entities}
+			</g>
+			<g id='associations'>
+				{associations}
 			</g>
 		</svg>
 	}
