@@ -91,5 +91,27 @@ export class NewAction extends Actions.Base {
     }
 }
 
+export class DeleteAction extends Actions.Base {
+
+    private entity: Entity.Model
+
+    constructor(private attribute: Attribute) {
+        super()
+        this.entity = attribute.entity
+    }
+
+    apply(): void {
+        this.entity.removeAttribute(this.attribute.id)
+    }
+
+    unapply(): void {
+        this.attribute = this.entity.newAttribute(this.attribute.raw)
+    }
+
+    hasChanges(): boolean {
+        return true
+    }
+}
+
 export {Attribute as Model}
 export {AttributeState as State}

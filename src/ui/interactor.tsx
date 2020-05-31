@@ -504,6 +504,10 @@ class EditAttributeField extends TextField {
                 this.interactor.ui.history.pushAction(action)
             }
         }
+        else {
+            const action = new Attribute.DeleteAction(this.attribute)
+            this.interactor.ui.history.pushAction(action)
+        }
         this.interactor.clearProxy()
         this.interactor.editNextAttribute(this.attribute)
     }
