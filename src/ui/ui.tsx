@@ -1,8 +1,8 @@
 import Selection from './selection'
 import App from '../App'
 import Config from '../view/config'
-import {Interactor} from './interactor'
-import SelectInteractor from './select_interactor'
+import Interactor from './interactor'
+import SelectInteractor from './interactor'
 import Schema from '../model/schema'
 import * as Actions from './actions'
 import Keymap from './keymap'
@@ -21,7 +21,7 @@ class UI {
     constructor(readonly app: App, private config: Config, public schema: Schema) {
         this.selection = new Selection(this)
 
-        this.interactor = new SelectInteractor(this, config)
+        this.interactor = new Interactor(this, config)
 
         this.history = new Actions.History(this, config)
         this.keymap = new Keymap(this, config)
