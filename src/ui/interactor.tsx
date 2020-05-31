@@ -6,8 +6,7 @@ import Selection from './selection'
 import * as geom from "../util/geom"
 import Config from '../view/config'
 
-
-class Interactor {
+export class Interactor {
     
     // this will handle mouse interaction for special things like rubber band selection and dragging entities
     protected proxy?: InteractorProxy
@@ -78,14 +77,14 @@ class Interactor {
         if (this.proxy) {
             this.clearProxy()
         }
-        this.proxy = new AttributeField(this, attr)
+        this.proxy = new EditAttributeField(this, attr)
         evt.stopPropagation()
     }
 
     editFirstAttribute(entity: Entity.Model) {
         let attr = entity.firstAttribute()
         if (attr) {
-            this.proxy = new AttributeField(this, attr)
+            this.proxy = new EditAttributeField(this, attr)
         }
         else {
             // TODO: new attribute
@@ -96,7 +95,7 @@ class Interactor {
     editLastAttribute(entity: Entity.Model) {
         let attr = entity.lastAttribute()
         if (attr) {
-            this.proxy = new AttributeField(this, attr)
+            this.proxy = new EditAttributeField(this, attr)
         }
         else {
             this.proxy = new EntityNameField(this, entity)
@@ -107,7 +106,7 @@ class Interactor {
     editPreviousAttribute(currentAttr: Attribute.Model) {
         let attr = currentAttr.entity.previousAttribute(currentAttr)
         if (attr) {
-            this.proxy = new AttributeField(this, attr)
+            this.proxy = new EditAttributeField(this, attr)
         }
         else {
             this.proxy = new EntityNameField(this, currentAttr.entity)
@@ -118,7 +117,7 @@ class Interactor {
     editNextAttribute(currentAttr: Attribute.Model) {
         let attr = currentAttr.entity.nextAttribute(currentAttr)
         if (attr) {
-            this.proxy = new AttributeField(this, attr)
+            this.proxy = new EditAttributeField(this, attr)
         }
         else {
             this.onNewAttributeClicked(currentAttr.entity)
@@ -134,6 +133,10 @@ class Interactor {
     onNewAttributeClicked(entity: Entity.Model) {
         console.log(`new attribute clicked`)
         this.addNewAttribute(entity)
+    }
+
+    onNewAssociationPressed(entity: Entity.Model) {
+        console.log(`new associated pressed for entity ${entity.id}`)
     }
 
     render() : JSX.Element {
@@ -340,13 +343,13 @@ class Guide extends React.Component<GuideProps> {
 }
 
 
-// allows the user to change the entity name
-class EntityNameField extends InteractorProxy {
+// base class for proxies that present a text input
+abstract class TextField extends InteractorProxy {
 
-    private input = React.createRef<HTMLInputElement>()
+    protected input = React.createRef<HTMLInputElement>()
 
-	constructor(readonly interactor: Interactor, readonly entity: Entity.Model) {
-		super()
+    constructor(readonly interactor: Interactor, readonly entity: Entity.Model) {
+        super()
     }
 
     onKeyPress(evt: React.KeyboardEvent<HTMLInputElement>) {
@@ -368,33 +371,81 @@ class EntityNameField extends InteractorProxy {
                 return
             case 'ArrowUp':
                 evt.preventDefault()
-                // this.interactor.editPreviousAttribute()
+                this.onUp()
                 return
             case 'ArrowDown':
                 evt.preventDefault()
-                this.interactor.editFirstAttribute(this.entity)
+                this.onDown()
                 return
         }
     }
 
+    afterRender() {
+        this.input.current?.focus()
+    }
+
     render(): JSX.Element {
         const config = this.interactor.config
+        const pos = this.position
         const style = {
-            left: this.entity.left,
-            top: this.entity.top,
+            left: pos.x,
+            top: pos.y,
             width: this.entity.width,
             height: config.lineHeight
         }
         const inputStyle = {
             width: '100%'
         }
-        return <div className='entity-name-field text-field' key={`edit-${this.entity.id}`} style={style}>
-            <input type='text' ref={this.input} defaultValue={this.entity.state.name} style={inputStyle} onKeyPress={this.onKeyPress.bind(this)} onKeyDown={this.onKeyDown.bind(this)}/>
+        return <div className={this.className} key={this.key} style={style}>
+            <input type='text' ref={this.input} defaultValue={this.defaultValue} placeholder={this.placeholder} style={inputStyle} onKeyPress={this.onKeyPress.bind(this)} onKeyDown={this.onKeyDown.bind(this)}/>
         </div>
     }
 
-    afterRender() {
-        this.input.current?.focus()
+    abstract commit(newName: string): void
+
+    abstract onUp(): void
+    abstract onDown(): void
+
+    abstract get position(): geom.Point
+    abstract get className(): string
+    abstract get key(): string
+    abstract get defaultValue(): string
+
+    get placeholder(): string {
+        return ''
+    }
+}
+
+
+// allows the user to change the entity name
+class EntityNameField extends TextField {
+
+    constructor(interactor: Interactor, readonly entity: Entity.Model) {
+		super(interactor, entity)
+    }
+
+    get position(): geom.Point {
+        return new geom.Point(this.entity.left, this.entity.top)
+    }
+
+    get className(): string {
+        return 'entity-name-field text-field'
+    }
+
+    get key(): string {
+        return `edit-${this.entity.id}`
+    }
+
+    get defaultValue(): string {
+        return this.entity.state.name
+    }
+
+    onUp() {
+        this.interactor.addNewAttribute(this.entity)
+    }
+
+    onDown() {
+        this.interactor.editFirstAttribute(this.entity)
     }
 
     commit(newName: string) {
@@ -411,63 +462,38 @@ class EntityNameField extends InteractorProxy {
 }
 
 // allows the user to edit an attribute
-class AttributeField extends InteractorProxy {
+class EditAttributeField extends TextField {
 
-    private input = React.createRef<HTMLInputElement>()
-
-	constructor(readonly interactor: Interactor, readonly attribute: Attribute.Model) {
-		super()
+	constructor(interactor: Interactor, readonly attribute: Attribute.Model) {
+		super(interactor, attribute.entity)
     }
 
-    onKeyPress(evt: React.KeyboardEvent<HTMLInputElement>) {
-        switch (evt.key) {
-            case 'Enter':
-                this.commit(evt.currentTarget.value)
-                return
-            case 'Escape':
-                this.interactor.clearProxy()
-                return
-        }
+    get position(): geom.Point {
+        return this.attribute.position
     }
 
-    onKeyDown(evt: React.KeyboardEvent<HTMLInputElement>) {
-        switch (evt.key) {
-            case 'Escape':
-                evt.preventDefault()
-                this.interactor.clearProxy()
-                return
-            case 'ArrowUp':
-                evt.preventDefault()
-                this.interactor.editPreviousAttribute(this.attribute)
-                return
-            case 'ArrowDown':
-                evt.preventDefault()
-                this.interactor.editNextAttribute(this.attribute)
-                return
-        }
+    get className(): string {
+        return 'attribute-field text-field'
     }
 
-    render(): JSX.Element {
-        const config = this.interactor.config
-        const entity = this.attribute.entity
-        const pos = this.attribute.position
-        const style = {
-            left: pos.x,
-            top: pos.y,
-            width: entity.width,
-            height: config.lineHeight
-        }
-        const inputStyle = {
-            width: '100%'
-        }
-        const raw = this.attribute.raw
-        return <div className='attribute-field text-field' key={`edit-${this.attribute.id}`} style={style}>
-            <input type='text' ref={this.input} defaultValue={raw} style={inputStyle} onKeyPress={this.onKeyPress.bind(this)} onKeyDown={this.onKeyDown.bind(this)}/>
-        </div>
+    get key(): string {
+        return `edit-${this.attribute.id}`
     }
 
-    afterRender() {
-        this.input.current!.focus()
+    get defaultValue(): string {
+        return this.attribute.raw
+    }
+
+    get placeholder(): string {
+        return 'name: type'
+    }
+
+    onUp() {
+        this.interactor.editPreviousAttribute(this.attribute)
+    }
+
+    onDown() {
+        this.interactor.editNextAttribute(this.attribute)
     }
 
     commit(newRaw: string) {
@@ -485,62 +511,39 @@ class AttributeField extends InteractorProxy {
 }
 
 // allows the user to enter a new attribute
-class NewAttributeField extends InteractorProxy {
+class NewAttributeField extends TextField {
 
-    private input = React.createRef<HTMLInputElement>()
-
-	constructor(readonly interactor: Interactor, readonly entity: Entity.Model) {
-		super()
+	constructor(interactor: Interactor, readonly entity: Entity.Model) {
+		super(interactor, entity)
     }
 
-    onKeyPress(evt: React.KeyboardEvent<HTMLInputElement>) {
-        switch (evt.key) {
-            case 'Enter':
-                this.commit(evt.currentTarget.value)
-                return
-            case 'Escape':
-                this.interactor.clearProxy()
-                return
-        }
+    get position(): geom.Point {
+        return new geom.Point(this.entity.left, this.entity.bottom - this.interactor.config.lineHeight)
     }
 
-    onKeyDown(evt: React.KeyboardEvent<HTMLInputElement>) {
-        switch (evt.key) {
-            case 'Escape':
-                evt.preventDefault()
-                this.interactor.clearProxy()
-                return
-            case 'ArrowUp':
-                evt.preventDefault()
-                this.interactor.editLastAttribute(this.entity)
-                return
-            case 'ArrowDown':
-                evt.preventDefault()
-                this.interactor.addNewAttribute(this.entity)
-                return
-        }
+    get className(): string {
+        return 'attribute-field text-field'
     }
 
-    render(): JSX.Element {
-        const config = this.interactor.config
-        const entity = this.entity
-        const style = {
-            left: entity.left,
-            top: entity.bottom - config.lineHeight,
-            width: entity.width,
-            height: config.lineHeight
-        }
-        const inputStyle = {
-            width: '100%'
-        }
-        const key = `new-attribute-${entity.id}-${(new Date()).getUTCMilliseconds()}`
-        return <div className='attribute-field text-field' key={key} style={style}>
-            <input type='text' ref={this.input} defaultValue={''} placeholder='name: type' style={inputStyle} onKeyPress={this.onKeyPress.bind(this)} onKeyDown={this.onKeyDown.bind(this)}/>
-        </div>
+    get key(): string {
+        // need to generate a new one each time, otherwise it will populate with the last raw entered
+        return `new-attribute-${this.entity.id}-${(new Date()).getUTCMilliseconds()}`
     }
 
-    afterRender() {
-        this.input.current!.focus()
+    get defaultValue(): string {
+        return ''
+    }
+
+    get placeholder(): string {
+        return 'name: type'
+    }
+
+    onUp() {
+        this.interactor.editLastAttribute(this.entity)
+    }
+
+    onDown() {
+        this.interactor.addNewAttribute(this.entity)
     }
 
     commit(newRaw: string) {

@@ -45,11 +45,11 @@ class SchemaView extends React.Component<Props> {
 		.attribute.required .attribute-name {
 			font: bold ${config.fontSize}px ${config.fontFamily};
 		}
-		.new-attribute rect {
+		.new-button rect {
 			fill: ${theme.hintBgColor};
 		}
-		.new-attribute text.plus {
-			font: bold ${config.fontSize}px ${config.fontFamily};
+		.new-button text {
+			font: ${config.fontSize}px ${config.fontFamily};
 			fill: ${theme.hintFgColor};
 			text-anchor: middle;
 			dominant-baseline: middle;

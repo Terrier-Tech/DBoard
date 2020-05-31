@@ -2,10 +2,13 @@ import * as themes from '../view/themes'
 import { DOMElement } from 'react'
 
 class Config {
-    gridSize: number = 15
     fontSize: number = 15
     lineHeight: number = 30
     padding: number = 10
+
+    get gridSize(): number {
+        return this.lineHeight / 2
+    }
 
     theme: themes.Base = themes.Light
 

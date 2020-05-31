@@ -10,7 +10,7 @@ interface Props {
     y: number
 }
 
-class NewAttributeView extends React.Component<Props> {
+class NewAssociationView extends React.Component<Props> {
 
 	constructor(props: Props) {
 		super(props)
@@ -20,20 +20,26 @@ class NewAttributeView extends React.Component<Props> {
         const config = this.props.config
         const entity = this.props.entity
         const width = entity.width/2
-        const x = entity.left
+        const x = entity.left + width
         const y = this.props.y
         const yText = y + config.lineHeight/2 + 1 // need to bring it down just slightly
         
-		return <g className={`new-button`} id={`${entity.id}-new-attribute`} onClick={this.onClicked.bind(this)}>
+		return <g className={`new-button`} id={`${entity.id}-new-attribute`} onMouseDown={this.onMouseDown.bind(this)} onClick={this.onClicked.bind(this)}>
             <rect x={x} y={y} width={width} height={config.lineHeight} stroke='transparent'/>
-            <text className='plus' x={x + width/2} y={yText}>+ Attr</text>
+            <text className='plus' x={x + width/2} y={yText}>+ Assc</text>
         </g>
-	}
+    }
+    
+    onMouseDown(evt: React.MouseEvent<SVGElement, MouseEvent>) {
+        evt.stopPropagation()
+        evt.preventDefault()
+        this.props.ui.interactor.onNewAssociationPressed(this.props.entity)
+    }
     
     onClicked(evt: React.MouseEvent<SVGElement, MouseEvent>) {
         evt.stopPropagation()
-        this.props.ui.interactor.onNewAttributeClicked(this.props.entity)
+        // TODO: create new association
     }
 }
 	
-export default NewAttributeView
+export default NewAssociationView

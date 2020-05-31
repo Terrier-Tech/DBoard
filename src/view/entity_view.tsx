@@ -4,6 +4,7 @@ import * as Entity from '../model/entity'
 import AttributeView from './attribute_view'
 import UI from '../ui/ui'
 import NewAttributeView from './new_attribute_view'
+import NewAssociationView from './new_association_view'
 
 interface Props {
 	config: Config
@@ -54,7 +55,8 @@ class EntityView extends React.Component<Props> {
             <rect x={state.x} y={state.y} width={width} height={lineHeight} stroke='transparent' fill={color}/>
             <text className='entity-name' x={state.x + width/2} y={yName}>{state.name}</text>
             {attributes}
-            <NewAttributeView config={config} ui={this.props.ui} width={width} x={state.x} y={yAttr} entity={entity}/>
+            <NewAttributeView config={config} ui={this.props.ui} y={yAttr} entity={entity}/>
+            <NewAssociationView config={config} ui={this.props.ui} y={yAttr} entity={entity}/>
         </g>
     }
     
