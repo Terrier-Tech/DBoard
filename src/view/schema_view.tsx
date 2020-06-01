@@ -28,7 +28,7 @@ class SchemaView extends React.Component<Props> {
 		})
 
 		// layout all associations first, then render them
-		const layout = new Layout.Lines()
+		const layout = new Layout.Lines(config)
 		schema.mapAssociations(ass =>  {
 			const entities = ass.entities
 			layout.addLine(ass.id, entities[0], entities[1])

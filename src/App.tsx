@@ -77,6 +77,16 @@ class App extends React.Component<Props> {
       .add(foo, 'one')
       .add(baz, 'many')
       .build()
+
+    this.schema.buildAssociation()
+      .add(bar, 'one')
+      .add(fizz, 'many')
+      .build()
+
+    this.schema.buildAssociation()
+      .add(baz, 'one')
+      .add(fizz, 'many')
+      .build()
   }
 
   render() {

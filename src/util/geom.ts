@@ -39,7 +39,6 @@ export function intersectLineSegments(l1: LineSegment, l2: LineSegment): Point |
     }
     const t = crossProductSum(subtractPoints(q, p), s) / denominator
     const u = crossProductSum(subtractPoints(q, p), r) / denominator
-    console.log(`t: ${t}, u: ${u}`)
     if (u >=0 && u <= 1 && t >= 0 && t <= 1) {
         return {
             x: q.x + u*s.x,
