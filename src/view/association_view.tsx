@@ -3,6 +3,7 @@ import * as Association from '../model/association'
 import UI from '../ui/ui'
 import Config from './config'
 import * as Layout from './layout'
+import * as Geom from '../util/geom'
 
 interface Props {
 	config: Config
@@ -10,15 +11,64 @@ interface Props {
     fromSide: Association.Side
     toSide: Association.Side
     path: Layout.LinePath
+    association: Association.Model | undefined
 }
 
 class AssociationView extends React.Component<Props> {
 
     render() {
         const path = this.props.path
-        return <g className='association'>
-            <polyline className='main' points={path.svgPoints} fill='none'/>
+        const fromSide = this.props.fromSide
+        const toSide = this.props.toSide
+        return <g className='association' onClick={this.onClicked.bind(this)}>
+            <polyline className='main invisible' points={path.svgPoints}/>
+            <polyline className='main line' points={path.svgPoints}/>
+            {fromSide.arity == 'many' && this.renderChickenFoot(path.firstPoint, path.fromDir)}
+            {toSide.arity == 'many' && this.renderChickenFoot(path.lastPoint, path.toDir)}
         </g>
+    }
+
+    renderChickenFoot(pos: Geom.Point, dir: Layout.Dir): JSX.Element {
+        const d = this.props.config.gridSize
+        let points: Array<Geom.Point> = []
+        switch (dir) {
+            case 'n': 
+                points = [
+                    {x: pos.x-d+1, y: pos.y},
+                    {x: pos.x, y: pos.y-d},
+                    {x: pos.x+d-1, y: pos.y}
+                ]
+                break
+            case 's': 
+                points = [
+                    {x: pos.x-d+1, y: pos.y},
+                    {x: pos.x, y: pos.y+d},
+                    {x: pos.x+d-1, y: pos.y}
+                ]
+                break
+            case 'e': 
+                points = [
+                    {x: pos.x, y: pos.y-d+1},
+                    {x: pos.x+d, y: pos.y},
+                    {x: pos.x, y: pos.y+d-1}
+                ]
+                break
+            case 'w': 
+                points = [
+                    {x: pos.x, y: pos.y-d+1},
+                    {x: pos.x-d, y: pos.y},
+                    {x: pos.x, y: pos.y+d-1}
+                ]
+                break
+        }
+        const pointString = points.map((p) => {return `${p.x},${p.y}`}).join(' ')
+        return <polyline className='foot line' key={dir}     points={pointString}/>
+    }
+
+    onClicked(evt: React.MouseEvent<SVGElement, MouseEvent>) {
+        if (this.props.association) {
+            this.props.ui.interactor.onAssociationClicked(this.props.association)
+        }
     }
 
 }

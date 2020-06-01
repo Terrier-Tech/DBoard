@@ -5,7 +5,7 @@ interface IId {
     id: string
 }
 
-type Dir = 'n' | 's' | 'e' | 'w'
+export type Dir = 'n' | 's' | 'e' | 'w'
 
 export class LinePath {
     public points: Array<Geom.Point> = []
@@ -20,6 +20,14 @@ export class LinePath {
         return this.points.map((p) => {
             return `${p.x},${p.y}`
         }).join(' ')
+    }
+
+    get firstPoint(): Geom.Point {
+        return this.points[0]
+    }
+
+    get lastPoint(): Geom.Point {
+        return this.points[this.points.length-1]
     }
 }
 
@@ -45,19 +53,24 @@ export class Lines {
     private findEdge(line: Geom.LineSegment, path: LinePath, rect: Geom.IRect, index: number): Dir | null {
         const corners = Geom.rectCorners(rect)
         let intersect: Geom.Point | null = null
+        const d = this.config.gridSize
         if (intersect = Geom.intersectLineSegments(line, [corners.nw, corners.ne])) {
+            intersect = {x: Math.min(Math.max(intersect.x, rect.left+d), rect.right-d), y: intersect.y}
             path.points[index] = intersect
             return 'n'
         }
         else if (intersect = Geom.intersectLineSegments(line, [corners.ne, corners.se])) {
+            intersect = {x: intersect.x, y: Math.min(Math.max(intersect.y, rect.top+d), rect.bottom-d)}
             path.points[index] = intersect
             return 'e'
         }
         else if (intersect = Geom.intersectLineSegments(line, [corners.se, corners.sw])) {
+            intersect = {x: Math.min(Math.max(intersect.x, rect.left+d), rect.right-d), y: intersect.y}
             path.points[index] = intersect
             return 's'
         }
         else if (intersect = Geom.intersectLineSegments(line, [corners.sw, corners.nw])) {
+            intersect = {x: intersect.x, y: Math.min(Math.max(intersect.y, rect.top+d), rect.bottom-d)}
             path.points[index] = intersect
             return 'w'
         }
@@ -103,6 +116,8 @@ export class Lines {
             }
             return
         }
+
+        // TODO: support en and es combinations
     }
 
     layout(): Array<LinePath> {
@@ -124,8 +139,7 @@ export class Lines {
             if (dir = this.findEdge(initialLine, path, toRect, 1)) {
                 path.toDir = dir
             }
-
-            
+               
             this.squareOut(path, fromRect, toRect)
         }
 

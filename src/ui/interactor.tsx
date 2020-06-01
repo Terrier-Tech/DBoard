@@ -1,6 +1,7 @@
 import * as React from 'react'
 import * as Entity from "../model/entity"
 import * as Attribute from "../model/attribute"
+import * as Association from '../model/association'
 import UI from './ui'
 import Selection from './selection'
 import * as Geom from "../util/geom"
@@ -138,6 +139,11 @@ export class Interactor {
     onNewAssociationPressed(entity: Entity.Model) {
         console.log(`new associated pressed for entity ${entity.id}`)
     }
+
+    onAssociationClicked(ass: Association.Model) {
+        console.log(`association ${ass.id} clicked`)
+    }
+
 
     render() : JSX.Element {
         if (this.proxy) {

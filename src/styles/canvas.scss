@@ -39,6 +39,21 @@ $grid-sizes: 10, 15, 20;
                     }
                 }
             }
+            g.association {
+                cursor: pointer;
+                polyline {
+                    fill: none;
+                    &.line {
+                        stroke-width: 2px;
+                    }
+                    &.invisible {
+                        stroke: transparent;
+                    }
+                }
+                &:hover polyline.line {
+                    stroke: $overlay-color;
+                }
+            }
         }
         .overlay-plane {
             position: absolute;

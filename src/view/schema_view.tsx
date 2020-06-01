@@ -37,7 +37,7 @@ class SchemaView extends React.Component<Props> {
 		const associations = assPaths.map((path) => {
 			const ass = schema.getAssociation(path.id)
 			const sides = ass.sides
-			return <AssociationView key={ass.id} config={this.props.config} ui={this.props.ui} path={path} fromSide={sides[0]} toSide={sides[1]}/>
+			return <AssociationView key={ass.id} config={this.props.config} ui={this.props.ui} path={path} fromSide={sides[0]} toSide={sides[1]} association={ass}/>
 		})
 		const style = `
 		.entity-name {
@@ -70,10 +70,11 @@ class SchemaView extends React.Component<Props> {
 			text-anchor: middle;
 			dominant-baseline: middle;
 		}
-		.association polyline.main {
-			fill: none;
+		.association polyline.line {
 			stroke: ${theme.fgColor};
-			stroke-width: 2px;
+		}
+		.association polyline.invisible {
+			stroke-width: ${config.lineHeight};
 		}
 		`
 		return <svg xmlns="http://www.w3.org/2000/svg" width='3000' height='3000'>
