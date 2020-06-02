@@ -92,32 +92,9 @@ class Selection {
             }
             return <div className='entity-overlay' key={entity.id} style={style}></div>
         })
-        const associations = this.mapAssociations(ass => {
-            if (!ass.linePath) {
-                console.log('no association line path')
-                return <div></div>
-            }
-            const path = ass.linePath
-            const sides = ass.sides
-            const sideOverlays = [
-                {side: sides[0], point: path.firstPoint, dir: path.fromDir},
-                {side: sides[1], point: path.lastPoint, dir: path.toDir}
-            ].map(data => {
-                const style = {
-                    left: data.point.x,
-                    top: data.point.y
-                }
-                return <div className='side-overlay' key={data.side.entityId} style={style} onMouseDown={(evt) => {evt.stopPropagation() ; this.onAssociationSideClicked(ass, data.side)}}></div>
-            })
-            return <div className='association-overlay' key={ass.id}>{sideOverlays}</div>
-        })
-        return <div className='selection'>{entities}{associations}</div>
+        return <div className='selection'>{entities}</div>
     }
 
-
-    onAssociationSideClicked(association: Association.Model, side: Association.Side) {
-        console.log(`clicked ${association.id} side ${side.entityId}`)
-    }
 
 }
 

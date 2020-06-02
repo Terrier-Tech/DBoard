@@ -1,7 +1,6 @@
 @import "_shared";
 
 $grid-sizes: 10, 15, 20;
-$side-size: 32px;
 
 #viewport {
     position: fixed;
@@ -80,25 +79,6 @@ $side-size: 32px;
             .entity-overlay {
                 position: absolute;
                 border: 2px solid $overlay-color;
-            }
-            .association-overlay {
-                pointer-events: all;
-                .side-overlay {
-                    pointer-events: all;
-                    position: absolute;
-                    width: $side-size;
-                    height: $side-size;
-                    border-radius: $side-size / 2;
-                    background-color: rgba($overlay-color, 0.25);
-                    transform: translate(-50%, -50%);
-                    cursor: pointer;
-                    &:hover {
-                        border: 2px solid $overlay-color;
-                    }
-                    &:active {
-                        background-color: rgba($overlay-color, 0.5);
-                    }
-                }   
             }
             .rubber-band {
                 position: absolute;

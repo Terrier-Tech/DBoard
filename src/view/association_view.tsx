@@ -24,7 +24,7 @@ class AssociationView extends React.Component<Props> {
         if (this.props.association) {
             isSelected = this.props.ui.selection.isAssociationSelected(this.props.association)
         }
-        return <g className={`association ${isSelected ? 'selected' : ''}`} onClick={this.onClicked.bind(this)}>
+        return <g className={`association ${isSelected ? 'selected' : ''}`} onMouseDown={this.onClicked.bind(this)}>
             <polyline className='main invisible' points={path.svgPoints}/>
             <polyline className='main line' points={path.svgPoints}/>
             {fromSide.arity == 'many' && this.renderChickenFoot(path.firstPoint, path.fromDir)}
@@ -71,6 +71,7 @@ class AssociationView extends React.Component<Props> {
 
     onClicked(evt: React.MouseEvent<SVGElement, MouseEvent>) {
         if (this.props.association) {
+            evt.stopPropagation()
             this.props.ui.interactor.onAssociationClicked(this.props.association)
         }
     }
