@@ -1,4 +1,5 @@
 
+// no methods here so that we can create them with object literals
 export class Point {
     constructor(readonly x: number, readonly y: number) {}
 }
@@ -9,6 +10,10 @@ export function addPoints(p1: Point, p2: Point) {
 
 export function subtractPoints(p1: Point, p2: Point) {
     return {x: p1.x - p2.x, y: p1.y - p2.y}
+}
+
+export function roundPoint(p: Point): Point {
+    return {x: Math.round(p.x), y: Math.round(p.y)}
 }
 
 export function sum(p: Point): number {
@@ -81,14 +86,6 @@ export class Rect implements IRect {
         return this.y + this.height
     }
 
-    static fromPoints(p1: Point, p2: Point) : Rect {
-        const x = Math.min(p1.x, p2.x)
-        const y = Math.min(p1.y, p2.y)
-        const width = Math.abs(p1.x - p2.x)
-        const height = Math.abs(p1.y - p2.y)
-        return new Rect(x, y, width, height)
-    }
-
     isWithin(other: Rect) {
         return this.x >= other.x && this.y >= other.y &&
         this.right <= other.right &&
@@ -101,6 +98,14 @@ export function rectCenter(rect: IRect): Point {
         x: (rect.left + rect.right)/2,
         y: (rect.top + rect.bottom)/2
     }
+}
+
+export function rectFromPoints(p1: Point, p2: Point): Rect {
+    const x = Math.min(p1.x, p2.x)
+    const y = Math.min(p1.y, p2.y)
+    const width = Math.abs(p1.x - p2.x)
+    const height = Math.abs(p1.y - p2.y)
+    return new Rect(x, y, width, height)
 }
 
 

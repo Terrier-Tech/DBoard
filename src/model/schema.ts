@@ -28,17 +28,17 @@ class Schema extends ModelBase<SchemaState> {
     }
 
     allEntities() : Array<Entity.Model> {
-        return Object.entries(this.entities).map((kv) => {return kv[1]})
+        return Object.entries(this.entities).map(kv => {return kv[1]})
     }
 
     filterEntities(fun: (e: Entity.Model) => boolean) : Array<Entity.Model> {
-        return Object.entries(this.entities).filter((kv) => {
+        return Object.entries(this.entities).filter(kv => {
             return fun(kv[1])
-        }).map((kv) => {return kv[1]})
+        }).map(kv => {return kv[1]})
     }
 
     mapEntities<T>(fun: (e: Entity.Model) => T) : Array<T> {
-        return Object.entries(this.entities).map((kv) => {
+        return Object.entries(this.entities).map(kv => {
             return fun(kv[1])
         })
     }
@@ -66,17 +66,17 @@ class Schema extends ModelBase<SchemaState> {
     }
 
     allAssociations() : Array<Association.Model> {
-        return Object.entries(this.associations).map((kv) => {return kv[1]})
+        return Object.entries(this.associations).map(kv => {return kv[1]})
     }
 
     filterAssociations(fun: (e: Association.Model) => boolean) : Array<Association.Model> {
-        return Object.entries(this.associations).filter((kv) => {
+        return Object.entries(this.associations).filter(kv => {
             return fun(kv[1])
-        }).map((kv) => {return kv[1]})
+        }).map(kv => {return kv[1]})
     }
 
     mapAssociations<T>(fun: (e: Association.Model) => T) : Array<T> {
-        return Object.entries(this.associations).map((kv) => {
+        return Object.entries(this.associations).map(kv => {
             return fun(kv[1])
         })
     }

@@ -116,7 +116,7 @@ export class Model extends ModelBase<State> implements Geom.IRect {
         const attrs = Object.entries(this.attributes)
         return attrs.sort((a1, a2) => {
             return a1[1].state.name > a2[1].state.name ? 1 : -1
-        }).map((kv) => {return kv[1]})
+        }).map(kv => {return kv[1]})
     }
 
     mapAttributes<T>(fun: (e: Attribute.Model) => T) : Array<T> {

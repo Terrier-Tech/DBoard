@@ -19,7 +19,7 @@ class Overlay extends React.Component<Props> {
     render() {
         const ui = this.props.ui
         return <div className='overlay-plane'>
-            {ui.selection.render()}
+            {ui.selection.renderOverlay()}
             {ui.interactor.render()}
         </div>
     }

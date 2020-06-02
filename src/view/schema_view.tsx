@@ -37,6 +37,7 @@ class SchemaView extends React.Component<Props> {
 		const associations = assPaths.map((path) => {
 			const ass = schema.getAssociation(path.id)
 			const sides = ass.sides
+			ass.linePath = path
 			return <AssociationView key={ass.id} config={this.props.config} ui={this.props.ui} path={path} fromSide={sides[0]} toSide={sides[1]} association={ass}/>
 		})
 		const style = `
@@ -79,11 +80,11 @@ class SchemaView extends React.Component<Props> {
 		`
 		return <svg xmlns="http://www.w3.org/2000/svg" width='3000' height='3000'>
 			<style>{style}</style>
-			<g id='entities'>
-				{entities}
-			</g>
 			<g id='associations'>
 				{associations}
+			</g>
+			<g id='entities'>
+				{entities}
 			</g>
 		</svg>
 	}

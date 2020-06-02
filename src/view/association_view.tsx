@@ -20,7 +20,11 @@ class AssociationView extends React.Component<Props> {
         const path = this.props.path
         const fromSide = this.props.fromSide
         const toSide = this.props.toSide
-        return <g className='association' onClick={this.onClicked.bind(this)}>
+        let isSelected = false
+        if (this.props.association) {
+            isSelected = this.props.ui.selection.isAssociationSelected(this.props.association)
+        }
+        return <g className={`association ${isSelected ? 'selected' : ''}`} onClick={this.onClicked.bind(this)}>
             <polyline className='main invisible' points={path.svgPoints}/>
             <polyline className='main line' points={path.svgPoints}/>
             {fromSide.arity == 'many' && this.renderChickenFoot(path.firstPoint, path.fromDir)}
@@ -34,35 +38,35 @@ class AssociationView extends React.Component<Props> {
         switch (dir) {
             case 'n': 
                 points = [
-                    {x: pos.x-d+1, y: pos.y},
+                    {x: pos.x-d+1, y: pos.y+1},
                     {x: pos.x, y: pos.y-d},
-                    {x: pos.x+d-1, y: pos.y}
+                    {x: pos.x+d-1, y: pos.y+1}
                 ]
                 break
             case 's': 
                 points = [
-                    {x: pos.x-d+1, y: pos.y},
+                    {x: pos.x-d+1, y: pos.y-1},
                     {x: pos.x, y: pos.y+d},
-                    {x: pos.x+d-1, y: pos.y}
+                    {x: pos.x+d-1, y: pos.y-1}
                 ]
                 break
             case 'e': 
                 points = [
-                    {x: pos.x, y: pos.y-d+1},
+                    {x: pos.x-1, y: pos.y-d+1},
                     {x: pos.x+d, y: pos.y},
-                    {x: pos.x, y: pos.y+d-1}
+                    {x: pos.x-1, y: pos.y+d-1}
                 ]
                 break
             case 'w': 
                 points = [
-                    {x: pos.x, y: pos.y-d+1},
+                    {x: pos.x+1, y: pos.y-d+1},
                     {x: pos.x-d, y: pos.y},
-                    {x: pos.x, y: pos.y+d-1}
+                    {x: pos.x+1, y: pos.y+d-1}
                 ]
                 break
         }
         const pointString = points.map((p) => {return `${p.x},${p.y}`}).join(' ')
-        return <polyline className='foot line' key={dir}     points={pointString}/>
+        return <polyline className='foot line' key={dir} points={pointString}/>
     }
 
     onClicked(evt: React.MouseEvent<SVGElement, MouseEvent>) {

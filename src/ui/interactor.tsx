@@ -55,7 +55,7 @@ export class Interactor {
         }
 
         // if the entity is already selected, don't clear the selection
-        this.ui.selection.add(entity, evt.shiftKey || this.ui.selection.isEntitySelected(entity))
+        this.ui.selection.addEntity(entity, evt.shiftKey || this.ui.selection.isEntitySelected(entity))
         this.proxy = new EntityDrag(this, evt)
     }
 
@@ -142,12 +142,13 @@ export class Interactor {
 
     onAssociationClicked(ass: Association.Model) {
         console.log(`association ${ass.id} clicked`)
+        this.ui.selection.clear().addAssociation(ass)
     }
 
 
     render() : JSX.Element {
         if (this.proxy) {
-            return this.proxy.render()
+            return this.proxy.renderOverlay()
         }
         return <div className='select-interactor'></div>
     }
@@ -191,7 +192,7 @@ export abstract class InteractorProxy {
         return false
     }
 
-    abstract render() : JSX.Element
+    abstract renderOverlay() : JSX.Element
 
     afterRender() {
 
@@ -206,6 +207,7 @@ class RubberBand extends InteractorProxy {
     private initialPos: Geom.Point
     private range: Geom.Rect
     private selection: Selection
+    private hasMoved: boolean = false
 
     constructor(readonly interactor: Interactor, evt: React.MouseEvent) {
         super()
@@ -216,16 +218,17 @@ class RubberBand extends InteractorProxy {
         }
 
         this.initialPos = this.interactor.eventRelativePosition(evt)
-        this.range = Geom.Rect.fromPoints(this.initialPos, this.initialPos)
+        this.range = Geom.rectFromPoints(this.initialPos, this.initialPos)
     }
 
     private updateRange(evt: React.MouseEvent) {
         const pos = this.interactor.eventRelativePosition(evt)
-        this.range = Geom.Rect.fromPoints(pos, this.initialPos)
+        this.range = Geom.rectFromPoints(pos, this.initialPos)
     }
 
     onMouseMove(evt: React.MouseEvent<HTMLDivElement, MouseEvent>): boolean {
         this.updateRange(evt)
+        this.hasMoved = true
         return false
     }
     
@@ -234,13 +237,16 @@ class RubberBand extends InteractorProxy {
 
         this.interactor.ui.schema.mapEntities(entity => {
             if (entity.isWithin(this.range)) {
-                this.selection.add(entity, true)
+                this.selection.addEntity(entity, true)
             }
         })
         return true
     }
     
-    render(): JSX.Element {
+    renderOverlay(): JSX.Element {
+        if (!this.hasMoved) {
+            return <div></div>
+        }
         const style = {
             left: this.range.x,
             top: this.range.y,
@@ -301,7 +307,7 @@ class EntityDrag extends InteractorProxy {
         return true
     }
 
-    render(): JSX.Element {
+    renderOverlay(): JSX.Element {
         return <div className='select-interactor'>
             {this.guides.map((guide, index) => {
                 return <Guide {...guide} key={`guide-${index}`}/>
@@ -390,7 +396,7 @@ abstract class TextField extends InteractorProxy {
         this.input.current?.focus()
     }
 
-    render(): JSX.Element {
+    renderOverlay(): JSX.Element {
         const config = this.interactor.config
         const pos = this.position
         const style = {

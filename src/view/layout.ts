@@ -56,22 +56,22 @@ export class Lines {
         const d = this.config.gridSize
         if (intersect = Geom.intersectLineSegments(line, [corners.nw, corners.ne])) {
             intersect = {x: Math.min(Math.max(intersect.x, rect.left+d), rect.right-d), y: intersect.y}
-            path.points[index] = intersect
+            path.points[index] = Geom.roundPoint(intersect)
             return 'n'
         }
         else if (intersect = Geom.intersectLineSegments(line, [corners.ne, corners.se])) {
             intersect = {x: intersect.x, y: Math.min(Math.max(intersect.y, rect.top+d), rect.bottom-d)}
-            path.points[index] = intersect
+            path.points[index] = Geom.roundPoint(intersect)
             return 'e'
         }
         else if (intersect = Geom.intersectLineSegments(line, [corners.se, corners.sw])) {
             intersect = {x: Math.min(Math.max(intersect.x, rect.left+d), rect.right-d), y: intersect.y}
-            path.points[index] = intersect
+            path.points[index] = Geom.roundPoint(intersect)
             return 's'
         }
         else if (intersect = Geom.intersectLineSegments(line, [corners.sw, corners.nw])) {
             intersect = {x: intersect.x, y: Math.min(Math.max(intersect.y, rect.top+d), rect.bottom-d)}
-            path.points[index] = intersect
+            path.points[index] = Geom.roundPoint(intersect)
             return 'w'
         }
         return null
