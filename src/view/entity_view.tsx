@@ -34,13 +34,15 @@ class EntityView extends React.Component<Props> {
             return <AttributeView key={attr.id} config={config} ui={this.props.ui} width={width} x={state.x} y={yAttr} index={index} attribute={attr}/>
         })
         yAttr += lineHeight
-		return <g id={entity.id} onClick={this.onClicked.bind(this)} onDoubleClick={this.onDoubleClicked.bind(this)} onMouseDown={this.onMouseDown.bind(this)}>
+		return <g className='entity' id={entity.id} onClick={this.onClicked.bind(this)} onDoubleClick={this.onDoubleClicked.bind(this)} onMouseDown={this.onMouseDown.bind(this)}>
 			<rect x={state.x} y={state.y} width={width} height={height} stroke='transparent' fill='#ffffff'/>
-            <rect x={state.x} y={state.y} width={width} height={lineHeight} stroke='transparent' fill={color}/>
+            <rect className='entity-name-bar' x={state.x} y={state.y} width={width} height={lineHeight} stroke='transparent' fill={color}/>
             <text className='entity-name' x={state.x + width/2} y={yName}>{state.name}</text>
             {attributes}
             <NewAttributeView config={config} ui={this.props.ui} y={yAttr} entity={entity}/>
             <NewAssociationView config={config} ui={this.props.ui} y={yAttr} entity={entity}/>
+            <line className='top-highlight' x1={entity.left} y1={entity.top+0.5} x2={entity.right} y2={entity.top+0.5}/>
+            <line className='bottom-highlight' x1={entity.left} y1={entity.bottom-0.5} x2={entity.right} y2={entity.bottom-0.5}/>
         </g>
     }
     

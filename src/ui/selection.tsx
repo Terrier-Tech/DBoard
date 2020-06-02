@@ -56,10 +56,10 @@ class Selection {
         const entities = this.mapEntities(entity => {
             const size = entity.size
             const style = {
-                width: size[0],
-                height: size[1],
-                top: entity.state.y,
-                left: entity.state.x
+                width: size[0]+2,
+                height: size[1]+2,
+                top: entity.top-1,
+                left: entity.left-1
             }
             return <div className='entity-overlay' key={entity.id} style={style}></div>
         })

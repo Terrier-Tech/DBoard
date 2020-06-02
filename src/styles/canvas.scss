@@ -39,6 +39,16 @@ $grid-sizes: 10, 15, 20;
                     }
                 }
             }
+            g.entity {
+                .top-highlight {
+                    stroke: rgba(#fff, 0.2);
+                    stroke-width: 1px;
+                }
+                .bottom-highlight {
+                    stroke: rgba(#000, 0.1);
+                    stroke-width: 1px;
+                }
+            }
             g.association {
                 cursor: pointer;
                 polyline {
