@@ -6,6 +6,7 @@ import Viewport from './view/viewport'
 import Schema from './model/schema'
 import * as themes from './view/themes'
 import UI from './ui/ui'
+import SelectionMenu from './view/selection_menu'
 
 interface Props {
    name: string
@@ -22,6 +23,7 @@ class App extends React.Component<Props> {
     this.config = new Config()
     this.schema = new Schema()
     this.ui = new UI(this, this.config, this.schema)
+    this.ui.listenForRender(UI.RenderType.App, this)
 
     const foo = this.schema.newEntity({
       name: "Foo",
@@ -94,6 +96,7 @@ class App extends React.Component<Props> {
     return <div>
       <Viewport config={this.config} ui={this.ui} schema={this.schema}/>
       <Topbar/>
+      <SelectionMenu config={this.config} ui={this.ui} schema={this.schema}/>
     </div>;
   }
 }

@@ -3,6 +3,7 @@ import UI from "./ui"
 import * as Entity from "../model/entity"
 import * as Association from '../model/association'
 import * as Geom from '../util/geom'
+import * as Actions from "../ui/actions"
 
 enum Mode {
     Replace,
@@ -20,7 +21,7 @@ class Selection {
     clear(): Selection {
         this.entities = {}
         this.associations = {}
-        this.ui.requestRender(UI.RenderType.Viewport)
+        this.ui.requestRender(UI.RenderType.App)
         return this
     }
 
@@ -39,20 +40,39 @@ class Selection {
             this.clear()
         }
         this.entities[entity.id] = entity
-        this.ui.requestRender(UI.RenderType.Overlay)
+        this.ui.requestRender(UI.RenderType.App)
     }
 
     selectAll() {
         this.ui.schema.mapEntities((e) => {
             this.entities[e.id] = e
         })
-        this.ui.requestRender(UI.RenderType.Overlay)
+        this.ui.requestRender(UI.RenderType.App)
     }
 
     mapEntities<T>(fun: (e: Entity.Model) => T) : Array<T> {
         return Object.entries(this.entities).map(kv => {
             return fun(kv[1])
         })
+    }
+
+    // deletes all selected entities and any attributes connected to them
+    deleteEntities() {
+        const entityIds = Object.keys(this.entities)
+        const actions: Actions.Base[] = this.mapEntities(entity => {
+            return new Entity.DeleteAction(entity)
+        })
+        for (let id of entityIds) {
+            this.ui.schema.mapAssociations(ass => {
+                for (let side of ass.sides) {
+                    if (side.entityId == id) {
+                        actions.push(new Association.DeleteAction(ass))
+                    }
+                }
+            })
+        }
+        this.ui.history.pushActions(actions)
+        this.clear()
     }
 
     associations: Record<string,Association.Model> = {}
@@ -70,7 +90,7 @@ class Selection {
             this.entities = {}
         }
         this.associations[ass.id] = ass
-        this.ui.requestRender(UI.RenderType.Viewport)
+        this.ui.requestRender(UI.RenderType.App)
     }
 
     mapAssociations<T>(fun: (e: Association.Model) => T) : Array<T> {
@@ -79,6 +99,13 @@ class Selection {
         })
     }
 
+    deleteAssociations() {
+        const actions = this.mapAssociations(ass => {
+            return new Association.DeleteAction(ass)
+        })
+        this.ui.history.pushActions(actions)
+        this.clear()
+    }
 
 
     renderOverlay() : JSX.Element {

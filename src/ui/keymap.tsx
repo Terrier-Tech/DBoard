@@ -13,6 +13,16 @@ class Keymap {
                     evt.preventDefault()
                 }
             }
+            if (evt.key == 'Backspace') {
+                if (this.ui.selection.numEntites()) {
+                    this.ui.selection.deleteEntities()
+                    evt.stopPropagation()
+                }
+                else if (this.ui.selection.numAssociations()) {
+                    this.ui.selection.deleteAssociations()
+                    evt.stopPropagation()
+                }
+            }
         })
         document.addEventListener('keypress', (evt) => {
             

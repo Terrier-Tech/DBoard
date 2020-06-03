@@ -2,13 +2,14 @@ import * as Entity from './entity'
 import ModelBase from './model_base'
 import Schema from './schema'
 import * as Layout from '../view/layout'
+import * as Actions from "../ui/actions"
 
 export class Model extends ModelBase<State> {
 
     // this is computed during the layout phase
     linePath: Layout.LinePath | null = null
 
-    constructor(private schema: Schema, state: State) {
+    constructor(readonly schema: Schema, state: State) {
         super('association', state)
         schema.registerAssociation(this)
     }
@@ -66,4 +67,80 @@ export class Builder {
         return new Model(this.schema, new State(this.sides[0], this.sides[1]))
     }
 
+}
+
+
+
+export class NewAction extends Actions.Base {
+
+    private association: Model | undefined
+
+    constructor(readonly schema: Schema, readonly state: State) {
+        super()
+    }
+
+    apply(): void {
+        if (this.association) {
+            this.schema.addAssociation(this.association)
+        }
+        else {
+            this.association = this.schema.newAssociation(this.state)
+        }
+    }
+
+    unapply(): void {
+        if (this.association) {
+            this.schema.removeAssociation(this.association.id)
+        }
+    }
+
+    hasChanges(): boolean {
+        return true
+    }
+}
+
+
+export class UpdateAction extends Actions.Base {
+
+    constructor(readonly association: Model, readonly fromState: State, readonly toState: State) {
+        super()
+    }
+
+    apply(): void {
+        this.association.state = this.toState
+    }
+
+    unapply(): void {
+        this.association.state = this.fromState
+    }
+
+    hasChanges(): boolean {
+        const {fromFirstSide, fromLastSide} = this.fromState.sides
+        const {toFirstSide, toLastSide} = this.toState.sides
+        return fromFirstSide.arity != toFirstSide.arity || 
+            fromLastSide.arity != toLastSide.arity
+    }
+}
+
+
+export class DeleteAction extends Actions.Base {
+
+    private schema: Schema
+
+    constructor(private association: Model) {
+        super()
+        this.schema = association.schema
+    }
+
+    apply(): void {
+        this.schema.removeAssociation(this.association.id)
+    }
+
+    unapply(): void {
+        this.schema.addAssociation(this.association)
+    }
+
+    hasChanges(): boolean {
+        return true
+    }
 }

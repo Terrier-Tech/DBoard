@@ -10,6 +10,10 @@ body {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Top Bar
+////////////////////////////////////////////////////////////////////////////////
+
 #topbar {
     position: fixed;
     top: 0;
@@ -19,9 +23,10 @@ body {
     background: $primary-color;
     color: #fff;
     display: flex;
+    border-top: $secondary-border-width solid $secondary-color;
     .logo {
         flex: 0 0 auto;
-        padding: 11px 16px;
+        padding: 8px 16px;
         font-size: 20px;
         font-weight: bold;
         line-height: 1;
@@ -48,5 +53,26 @@ body {
         .tool {
             background-color: map-get($colors, "tool-bg");
         }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Selection Menu
+////////////////////////////////////////////////////////////////////////////////
+
+#selection-menu {
+    position: fixed;
+    right: 0;
+    min-width: $bar-height;
+    min-height: 100px;
+    top: 50%;
+    transform: translate(0, -50%);
+    background: $secondary-color;
+    a {
+        display: block;
+        font-size: 12px;
+        color: #fff;
+        text-align: center;
     }
 }

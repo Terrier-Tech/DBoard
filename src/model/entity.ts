@@ -11,7 +11,7 @@ export type PositionType = 'left' | 'right' | 'horizontalCenter' | 'top' | 'bott
 export const PositionTypes: Array<PositionType> = ['left', 'right', 'horizontalCenter', 'top', 'bottom', 'verticalCenter']
 
 export class Model extends ModelBase<State> implements Geom.IRect {
-    constructor(schema: Schema, state: State = new State()) {
+    constructor(readonly schema: Schema, state: State = new State()) {
         super("entity", state)
         schema.registerEntity(this)
     }
@@ -166,6 +166,35 @@ export class State {
 }
 
 
+export class NewAction extends Actions.Base {
+
+    private entity: Model | undefined
+
+    constructor(readonly schema: Schema, readonly state: State) {
+        super()
+    }
+
+    apply(): void {
+        if (this.entity) {
+            this.schema.addEntity(this.entity)
+        }
+        else {
+            this.entity = this.schema.newEntity(this.state)
+        }
+    }
+
+    unapply(): void {
+        if (this.entity) {
+            this.schema.removeEntity(this.entity.id)
+        }
+    }
+
+    hasChanges(): boolean {
+        return true
+    }
+}
+
+
 export class UpdateAction extends Actions.Base {
 
     constructor(readonly entity: Model, readonly fromState: State, readonly toState: State) {
@@ -186,3 +215,27 @@ export class UpdateAction extends Actions.Base {
             this.fromState.name != this.toState.name
     }
 }
+
+
+export class DeleteAction extends Actions.Base {
+
+    private schema: Schema
+
+    constructor(private entity: Model) {
+        super()
+        this.schema = entity.schema
+    }
+
+    apply(): void {
+        this.schema.removeEntity(this.entity.id)
+    }
+
+    unapply(): void {
+        this.schema.addEntity(this.entity)
+    }
+
+    hasChanges(): boolean {
+        return true
+    }
+}
+

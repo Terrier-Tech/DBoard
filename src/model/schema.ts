@@ -19,6 +19,10 @@ class Schema extends ModelBase<SchemaState> {
         return this.entities[id]
     }
 
+    addEntity(entity: Entity.Model) {
+        this.entities[entity.id] = entity
+    }
+
     removeEntity(id: string) {
         delete this.entities[id]
     }
@@ -51,6 +55,10 @@ class Schema extends ModelBase<SchemaState> {
 
     getAssociation(id: string): Association.Model {
         return this.associations[id]
+    }
+
+    addAssociation(ass: Association.Model) {
+        this.associations[ass.id] = ass
     }
 
     removeAssociation(id: string) {
