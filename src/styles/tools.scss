@@ -1,7 +1,7 @@
 @import "_shared";
 
 body {
-    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-family: Verdana, Geneva, sans-serif;
 }
 *, *::after, *::before {
 	-webkit-box-sizing: border-box;
@@ -23,11 +23,10 @@ body {
     background: $primary-color;
     color: #fff;
     display: flex;
-    border-top: $secondary-border-width solid $secondary-color;
-    .logo {
+    a.logo {
+        display: block;
         flex: 0 0 auto;
-        padding: 8px 16px;
-        font-size: 20px;
+        font-size: 24px;
         font-weight: bold;
         line-height: 1;
     }
@@ -67,12 +66,16 @@ body {
     min-width: $bar-height;
     min-height: 100px;
     top: 50%;
-    transform: translate(0, -50%);
+    transform: translate(100%, -50%);
+    transition: transform 0.2s ease;
     background: $secondary-color;
     a {
         display: block;
         font-size: 12px;
         color: #fff;
         text-align: center;
+    }
+    &.show {
+        transform: translate(0, -50%);
     }
 }

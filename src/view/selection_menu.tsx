@@ -22,9 +22,15 @@ class SelectionMenu extends React.Component<Props> {
 
 	render() {
         console.log(`num entities: ${this.selection.numEntites()}`)
-        return <div id='selection-menu'>
-            {this.selection.numEntites()>0 && <EntitySelectionMenu {...this.props}/>}
-            {this.selection.numAssociations()>0 && <AssociationSelectionMenu {...this.props}/>}
+        let content: JSX.Element | null = null
+        if (this.selection.numEntites()) {
+            content = <EntitySelectionMenu {...this.props}/>
+        }
+        else if (this.selection.numAssociations()) {
+            content = <AssociationSelectionMenu {...this.props}/>
+        }
+        return <div id='selection-menu' className={content ? 'show' : ''}>
+            {content}
         </div>
     }
 
