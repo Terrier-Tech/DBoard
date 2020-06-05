@@ -23,14 +23,13 @@ class NewAttributeView extends React.Component<Props> {
         const width = entity.width/2
         const x = entity.left
         const y = this.props.y
-        const yText = y + config.lineHeight/2 + 1 // need to bring it down just slightly
         
         const iconSize = this.props.config.iconSize
         const buttonStyle = {
             transform: `translate(${x+width/2-iconSize/2}px,${y}px)`
         }
 
-		return <g className={`new-button`} id={`${entity.id}-new-attribute`} onClick={this.onClicked.bind(this)}>
+		return <g className={`new-button`} id={`${entity.id}-new-attribute`} onMouseDown={this.onClicked.bind(this)}>
             <rect x={x} y={y} width={width} height={config.lineHeight} stroke='transparent'/>
             <g style={buttonStyle}><Icons.PlusAttribute/></g>
         </g>

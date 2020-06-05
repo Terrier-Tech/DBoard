@@ -105,6 +105,15 @@
                     bottom: 0;
                 }
             }
+            #new-entity-proxy {
+                position: absolute;
+                svg {
+                    transform: scale(2);
+                    g {
+                        fill: $overlay-color;
+                    }
+                }
+            }
             .text-field {
                 position: absolute;
                 pointer-events: all;

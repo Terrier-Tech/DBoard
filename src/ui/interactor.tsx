@@ -6,6 +6,9 @@ import UI from './ui'
 import Selection from './selection'
 import * as Geom from "../util/geom"
 import Config from '../view/config'
+import Icons from '../view/icons'
+import * as Themes from '../view/themes'
+import Schema from '../model/schema'
 
 export class Interactor {
     
@@ -42,9 +45,7 @@ export class Interactor {
 
     onCanvasDoubleClicked(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         console.log(`canvas double clicked`)
-        if (this.proxy) {
-            this.clearProxy()
-        }
+        this.clearProxy()
         this.ui.selection.clear()
     }
 
@@ -63,11 +64,7 @@ export class Interactor {
     }
 
     onEntityDoubleClicked(entity: Entity.Model, evt: React.MouseEvent<SVGElement, MouseEvent>) {
-        console.log(`entity double clicked ${entity.id}`)
-        if (this.proxy) {
-            this.clearProxy()
-        }
-        this.proxy = new EntityNameField(this, entity)
+        this.editEntityName(entity)
         evt.stopPropagation()
     }
 
@@ -75,11 +72,18 @@ export class Interactor {
     }
 
     onAttributeDoubleClicked(attr: Attribute.Model, evt: React.MouseEvent<SVGElement, MouseEvent>) {
-        if (this.proxy) {
-            this.clearProxy()
-        }
-        this.proxy = new EditAttributeField(this, attr)
+        this.editAttribute(attr)
         evt.stopPropagation()
+    }
+
+    editEntityName(entity: Entity.Model) {
+        this.clearProxy()
+        this.proxy = new EntityNameField(this, entity)
+    }
+
+    editAttribute(attr: Attribute.Model) {
+        this.clearProxy()
+        this.proxy = new EditAttributeField(this, attr)
     }
 
     editFirstAttribute(entity: Entity.Model) {
@@ -88,7 +92,7 @@ export class Interactor {
             this.proxy = new EditAttributeField(this, attr)
         }
         else {
-            // TODO: new attribute
+            this.addNewAttribute(entity)
         }
         this.ui.requestRender(UI.RenderType.Viewport)
     }
@@ -132,7 +136,6 @@ export class Interactor {
     }
 
     onNewAttributeClicked(entity: Entity.Model) {
-        console.log(`new attribute clicked`)
         this.addNewAttribute(entity)
     }
 
@@ -141,8 +144,12 @@ export class Interactor {
     }
 
     onAssociationClicked(ass: Association.Model) {
-        console.log(`association ${ass.id} clicked`)
         this.ui.selection.clear().addAssociation(ass)
+    }
+
+    beginNewEntity() {
+        this.proxy = new NewEntity(this, this.ui.schema)
+        this.ui.requestRender(UI.RenderType.Viewport)
     }
 
 
@@ -169,8 +176,10 @@ export class Interactor {
 
     clearProxy() {
         if (this.proxy) {
+            const clearedProxy = this.proxy
             this.proxy = undefined
-            this.ui.requestRender(UI.RenderType.Overlay)
+            this.ui.requestRender(UI.RenderType.App)
+            clearedProxy.afterDone(this)
         }
     }
 
@@ -194,7 +203,13 @@ export abstract class InteractorProxy {
 
     abstract renderOverlay() : JSX.Element
 
+    // this will be called after each render
     afterRender() {
+
+    }
+
+    // this will be called once the proxy has been cleared by the interactor
+    afterDone(interactor: Interactor) {
 
     }
 }
@@ -355,6 +370,59 @@ class Guide extends React.Component<GuideProps> {
 }
 
 
+// allows the user to drag a new entity onto the canvas
+class NewEntity extends InteractorProxy {
+
+    private position: Geom.Point | null = null
+    private entity: Entity.Model | null = null
+
+    constructor(private interactor: Interactor, private schema: Schema) {
+        super()
+    }
+
+    onMouseMove(evt: React.MouseEvent<HTMLElement, MouseEvent>) {
+        this.position = this.interactor.eventRelativePosition(evt)
+        return false
+    }
+
+    onMouseUp(evt: React.MouseEvent<HTMLDivElement, MouseEvent>): boolean {
+        if (!this.position) {
+            return true
+        }
+        const config = this.interactor.config
+        const state = {
+            name: '',
+            x: config.snapNearest(this.position.x - config.minEntitySize/2),
+            y: config.snapNearest(this.position.y - config.minEntitySize/2),
+            color: Themes.ColorName.blue
+        }
+        this.entity = this.schema.newEntity(state)
+
+        return true
+    }
+    
+    renderOverlay(): JSX.Element {
+        if (!this.position) {
+            return <div id='new-entity-proxy'></div>
+        }
+        const iconSize = this.interactor.config.iconSize
+        const style = {
+            top: this.position.y-iconSize/2,
+            left: this.position.x-iconSize/2
+        }
+        return <div id='new-entity-proxy' style={style}><Icons.PlusEntity /></div>
+    }
+
+    afterDone(interactor: Interactor) {
+        if (this.entity) {
+            this.interactor.ui.selection.addEntity(this.entity, false)
+            this.interactor.editEntityName(this.entity)
+        }
+    }
+    
+}
+
+
 // base class for proxies that present a text input
 abstract class TextField extends InteractorProxy {
 
@@ -452,6 +520,10 @@ class EntityNameField extends TextField {
         return this.entity.state.name
     }
 
+    get placeholder(): string {
+        return 'Entity Name'
+    }
+
     onUp() {
         this.interactor.addNewAttribute(this.entity)
     }
@@ -534,7 +606,10 @@ class NewAttributeField extends TextField {
     }
 
     get position(): Geom.Point {
-        return new Geom.Point(this.entity.left, this.entity.bottom - this.interactor.config.lineHeight)
+        return {
+            x: this.entity.left,
+            y: this.entity.top + (this.entity.numAttributes()+1)*this.interactor.config.lineHeight
+        }
     }
 
     get className(): string {

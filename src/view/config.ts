@@ -6,6 +6,7 @@ class Config {
     lineHeight: number = 32
     padding: number = 12
     iconSize: number = 48
+    minEntitySize: number = 8 * this.gridSize
 
     get gridSize(): number {
         return this.lineHeight / 2

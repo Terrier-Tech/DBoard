@@ -1,7 +1,7 @@
 import Schema from "./schema"
 import ModelBase from "./model_base"
 import * as Attribute from "./attribute"
-import * as themes from '../view/themes'
+import * as Themes from '../view/themes'
 import * as Geom from "../util/geom"
 import Config from "../view/config"
 import * as Actions from "../ui/actions"
@@ -31,7 +31,10 @@ export class Model extends ModelBase<State> implements Geom.IRect {
         })
         const height = (this.numAttributes() + 2) *  config.lineHeight
         // snap the size up to the next even grid spacing so that they can be center-aligned at whole grid spaces
-        return this.size = [config.snapUpEven(width), config.snapUpEven(height)]
+        return this.size = [
+            Math.max(config.minEntitySize, config.snapUpEven(width)), 
+            Math.max(config.minEntitySize, config.snapUpEven(height))
+        ]
     }
 
     get width(): number {
@@ -162,7 +165,7 @@ export class State {
     readonly name: string = ""
     x: number = 0
     y: number = 0
-    readonly color: themes.ColorName = themes.ColorName.blue
+    readonly color: Themes.ColorName = Themes.ColorName.blue
 }
 
 

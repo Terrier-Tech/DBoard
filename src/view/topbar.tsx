@@ -19,8 +19,12 @@ class Topbar extends React.Component<Props> {
         <div className='file'></div>
         <a className={`action ${history.canUndo() ? '' : 'inactive'}`} onClick={() => history.undo()}><Icons.Undo/></a>
         <a className={`action ${history.canRedo() ? '' : 'inactive'}`} onClick={() => history.redo()}><Icons.Redo/></a>
-        <a className='action'><Icons.PlusEntity/></a>
+        <a className='action' onMouseDown={this.startNewEntity.bind(this)}><Icons.PlusEntity/></a>
     </div>;
+  }
+
+  startNewEntity() {
+    this.props.ui.interactor.beginNewEntity()
   }
 }
 

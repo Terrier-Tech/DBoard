@@ -34,6 +34,7 @@ class EntityView extends React.Component<Props> {
             return <AttributeView key={attr.id} config={config} ui={this.props.ui} width={width} x={state.x} y={yAttr} index={index} attribute={attr}/>
         })
         yAttr += lineHeight
+        yAttr = Math.max(yAttr, state.y + height-config.lineHeight)
 		return <g className='entity' id={entity.id} onClick={this.onClicked.bind(this)} onDoubleClick={this.onDoubleClicked.bind(this)} onMouseDown={this.onMouseDown.bind(this)}>
 			<rect className='entity-background' x={state.x} y={state.y} width={width} height={height} stroke='transparent' fill='#ffffff'/>
             <rect className='entity-name-bar' x={state.x} y={state.y} width={width} height={lineHeight} stroke='transparent' fill={color}/>

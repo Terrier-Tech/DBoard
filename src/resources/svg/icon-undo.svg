@@ -2,7 +2,7 @@
 <svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>icon-undo</title>
     <g id="icon-undo" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <polygon id="Path-5" fill="#FFFFFF" points="12 19 12 12 19 19"></polygon>
-        <path d="M24,36 C30.627417,36 36,30.627417 36,24 C36,17.372583 30.627417,12 24,12 C17.372583,12 12,17.372583 12,24" id="Oval" stroke="#FFFFFF" stroke-width="4" transform="translate(24.000000, 24.000000) rotate(45.000000) translate(-24.000000, -24.000000) "></path>
+        <polygon id="Path-5" fill="#FFFFFF" points="14 20 14 14 20 20"></polygon>
+        <path d="M24,34 C29.5228475,34 34,29.5228475 34,24 C34,18.4771525 29.5228475,14 24,14 C18.4771525,14 14,18.4771525 14,24" id="Oval" stroke="#FFFFFF" stroke-width="4" transform="translate(24.000000, 24.000000) rotate(45.000000) translate(-24.000000, -24.000000) "></path>
     </g>
 </svg>

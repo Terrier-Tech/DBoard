@@ -1,6 +1,6 @@
 import ModelBase from "./model_base"
 import * as Entity from '../model/entity'
-import * as geom from '../util/geom'
+import * as Geom from '../util/geom'
 import * as Actions from "../ui/actions"
 
 
@@ -20,7 +20,7 @@ export class Model extends ModelBase<State> {
         return State.toRaw(this.state)
     }
 
-    position: geom.Point = new geom.Point(0,0) // computed when rendered, not part of the state
+    position: Geom.Point = new Geom.Point(0,0) // computed when rendered, not part of the state
 }
 
 export class State {

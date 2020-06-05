@@ -23,7 +23,6 @@ class NewAssociationView extends React.Component<Props> {
         const width = entity.width/2
         const x = entity.left + width
         const y = this.props.y
-        const yText = y + config.lineHeight/2 + 1 // need to bring it down just slightly
 
         const iconSize = this.props.config.iconSize
         const buttonStyle = {
