@@ -1,7 +1,5 @@
 @import "_shared";
 
-$grid-sizes: 10, 15, 20;
-
 #viewport {
     position: fixed;
     top: $bar-height;
@@ -24,24 +22,29 @@ $grid-sizes: 10, 15, 20;
             }
             .new-button {
                 cursor: pointer;
+                svg g {
+                    cursor: pointer;
+                }
                 &:hover {
                     rect {
                         fill: $overlay-color;
                     }
-                    text {
+                    svg g {
                         fill: #fff;
-                        cursor: pointer;
                     }
                 }
                 &:active {
                     rect {
                         fill: $overlay-color-dark;
                     }
+                    svg g {
+                        fill: #fff;
+                    }
                 }
             }
             g.entity {
                 .top-highlight {
-                    stroke: rgba(#fff, 0.2);
+                    stroke: rgba(#fff, 0.3);
                     stroke-width: 1px;
                 }
                 .bottom-highlight {
@@ -136,12 +139,8 @@ $grid-sizes: 10, 15, 20;
         .canvas {
             background-color: map-get($colors, "canvas-bg");
             background-image: radial-gradient(map-get($colors, "grid") 1px, transparent 0);
-        }
-        @each $size in $grid-sizes {
-            .canvas.grid-#{$size} {
-                background-size: #{$size}px #{$size}px;
-                background-position: #{$size/2}px #{$size/2}px;
-            }
+            background-size: #{$grid-size} #{$grid-size};
+            background-position: #{$grid-size/2} #{$grid-size/2};
         }
     }
 }

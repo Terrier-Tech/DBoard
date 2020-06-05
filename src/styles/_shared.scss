@@ -1,14 +1,16 @@
 
 $bar-height: 48px;
 $tool-pad: 12px;
+$grid-size: 16px;
+$line-height: 32px;
 
 $primary-color: #507c6b;
 $secondary-color: #439676;
-$secondary-border-width: 5px;
 
 $overlay-color: #ffae3d;
 $overlay-color-dark: darken($overlay-color, 12%);
 $guide-color: #ffae3d;
+$hover-background: rgba(#000, 0.1);
 
 $theme-colors: (
     "light": (

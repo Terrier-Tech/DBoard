@@ -2,6 +2,7 @@ import * as React from 'react'
 import Config from './config'
 import * as Entity from '../model/entity'
 import UI from '../ui/ui'
+import Icons from './icons'
 
 interface Props {
     config: Config
@@ -24,9 +25,14 @@ class NewAttributeView extends React.Component<Props> {
         const y = this.props.y
         const yText = y + config.lineHeight/2 + 1 // need to bring it down just slightly
         
+        const iconSize = this.props.config.iconSize
+        const buttonStyle = {
+            transform: `translate(${x+width/2-iconSize/2}px,${y}px)`
+        }
+
 		return <g className={`new-button`} id={`${entity.id}-new-attribute`} onClick={this.onClicked.bind(this)}>
             <rect x={x} y={y} width={width} height={config.lineHeight} stroke='transparent'/>
-            <text className='plus' x={x + width/2} y={yText}>+ Attr</text>
+            <g style={buttonStyle}><Icons.PlusAttribute/></g>
         </g>
 	}
     

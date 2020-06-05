@@ -47,6 +47,10 @@ class ActionHistory {
         this.ui.requestRender(UI.RenderType.App)
     }
 
+    canUndo() {
+        return this.index > -1
+    }
+
     undo() : boolean {
         console.log('undo')
         if (this.index < 0) {
@@ -58,6 +62,10 @@ class ActionHistory {
         this.index -= 1
         console.log(`action history at ${this.index}`)
         return true
+    }
+
+    canRedo() {
+        return this.index < this.numActions()-1
     }
 
     redo() : boolean {

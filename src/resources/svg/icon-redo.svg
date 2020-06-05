@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-redo</title>
+    <g id="icon-redo" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Path-5" fill="#FFFFFF" transform="translate(32.500000, 15.500000) scale(-1, 1) translate(-32.500000, -15.500000) " points="29 19 29 12 36 19"></polygon>
+        <path d="M24,36 C30.627417,36 36,30.627417 36,24 C36,17.372583 30.627417,12 24,12 C17.372583,12 12,17.372583 12,24" id="Oval" stroke="#FFFFFF" stroke-width="4" transform="translate(24.000000, 24.000000) scale(-1, 1) rotate(45.000000) translate(-24.000000, -24.000000) "></path>
+    </g>
+</svg>

@@ -3,6 +3,7 @@ import Config from './config'
 import UI from '../ui/ui'
 import Schema from '../model/schema'
 import Selection from '../ui/selection'
+import Icons from './icons'
 
 interface Props {
 	config: Config
@@ -43,7 +44,9 @@ class EntitySelectionMenu extends SelectionMenu {
 
     render() {
         return <div className='content'>
-            <a className='alert' onClick={this.delete.bind(this)}>Delete</a>
+            <a className='action alert' title='Delete Entity(s)' onClick={this.delete.bind(this)}>
+                <Icons.Delete/>
+            </a>
         </div>
     }
 
@@ -57,7 +60,9 @@ class AssociationSelectionMenu extends SelectionMenu {
 
     render() {
         return <div className='content'>
-            <a className='alert' onClick={this.delete.bind(this)}>Delete</a>
+            <a className='action alert' title='Delete Association' onClick={this.delete.bind(this)}>
+                <Icons.Delete/>
+            </a>
         </div>
     }
 

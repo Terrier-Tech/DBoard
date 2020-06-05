@@ -65,11 +65,8 @@ class SchemaView extends React.Component<Props> {
 		.new-button rect {
 			fill: ${theme.hintBgColor};
 		}
-		.new-button text {
-			font: ${config.fontSize}px ${config.fontFamily};
+		.new-button svg g {
 			fill: ${theme.hintFgColor};
-			text-anchor: middle;
-			dominant-baseline: middle;
 		}
 		.association polyline.line {
 			stroke: ${theme.fgColor};

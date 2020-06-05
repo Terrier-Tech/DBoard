@@ -3,8 +3,9 @@ import { DOMElement } from 'react'
 
 class Config {
     fontSize: number = 15
-    lineHeight: number = 30
-    padding: number = 10
+    lineHeight: number = 32
+    padding: number = 12
+    iconSize: number = 48
 
     get gridSize(): number {
         return this.lineHeight / 2

@@ -95,7 +95,7 @@ class App extends React.Component<Props> {
     const { name } = this.props;
     return <div>
       <Viewport config={this.config} ui={this.ui} schema={this.schema}/>
-      <Topbar/>
+      <Topbar config={this.config} ui={this.ui} schema={this.schema}/>
       <SelectionMenu config={this.config} ui={this.ui} schema={this.schema}/>
     </div>;
   }
