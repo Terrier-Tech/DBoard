@@ -46,7 +46,6 @@ export class Interactor {
     }
 
     onCanvasDoubleClicked(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-        console.log(`canvas double clicked`)
         this.clearProxy()
         this.ui.selection.clear()
     }
@@ -142,7 +141,6 @@ export class Interactor {
     }
 
     onNewAssociationPressed(entity: Entity.Model) {
-        console.log(`new associated pressed for entity ${entity.id}`)
         this.clearProxy()
         this.proxy = new NewAssociation(this, entity)
     }

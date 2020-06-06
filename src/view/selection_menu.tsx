@@ -22,7 +22,6 @@ class SelectionMenu extends React.Component<Props> {
     }
 
 	render() {
-        console.log(`num entities: ${this.selection.numEntites()}`)
         let content: JSX.Element | null = null
         if (this.selection.numEntites()) {
             content = <EntitySelectionMenu {...this.props}/>
