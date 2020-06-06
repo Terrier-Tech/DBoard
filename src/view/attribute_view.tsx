@@ -22,7 +22,6 @@ class AttributeView extends React.Component<Props> {
 
 	render() {
         const config = this.props.config
-        const theme = config.theme
         const attr = this.props.attribute
         const width = this.props.width
         const state = attr.state
@@ -31,7 +30,7 @@ class AttributeView extends React.Component<Props> {
         this.props.attribute.position = new geom.Point(x, y)
         const yText = y + config.lineHeight/2 + 1 // need to bring it down just slightly
         const requiredClass = state.isRequired ? 'required' : ''
-        const bgColor = this.props.index % 2 == 0 ? theme.evenBgColor : theme.oddBgColor
+        const bgColor = this.props.index % 2 == 0 ? config.evenBgColor : config.oddBgColor
         
 		return <g className={`attribute ${requiredClass}`} id={attr.id} onClick={this.onClicked.bind(this)} onDoubleClick={this.onDoubleClicked.bind(this)}>
             <rect x={x} y={y} width={width} height={config.lineHeight} stroke='transparent' fill={bgColor}/>

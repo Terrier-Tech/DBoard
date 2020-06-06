@@ -5,9 +5,8 @@ import * as Association from '../model/association'
 import UI from './ui'
 import Selection from './selection'
 import * as Geom from "../util/geom"
-import Config from '../view/config'
+import {Config, ColorName} from '../view/config'
 import Icons from '../view/icons'
-import * as Themes from '../view/themes'
 import Schema from '../model/schema'
 import AssociationView from '../view/association_view'
 import * as Layout from '../view/layout'
@@ -193,6 +192,12 @@ export default Interactor
 // interface for interactor proxies that handle the interaction temporarily for the main interactor
 export abstract class InteractorProxy {
 
+    readonly config: Config
+
+    constructor(readonly interactor: Interactor) {
+        this.config = interactor.config
+    }
+
     // return true if the proxy is done handling interactions
     onMouseMove(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) : boolean {
         return false
@@ -226,8 +231,8 @@ class RubberBand extends InteractorProxy {
     private selection: Selection
     private hasMoved: boolean = false
 
-    constructor(readonly interactor: Interactor, evt: React.MouseEvent) {
-        super()
+    constructor(interactor: Interactor, evt: React.MouseEvent) {
+        super(interactor)
         this.selection = interactor.ui.selection
 
         if (!evt.shiftKey) {
@@ -286,8 +291,8 @@ class EntityDrag extends InteractorProxy {
 
     guides: Array<GuideProps> = []
 
-    constructor(readonly interactor: Interactor, evt: React.MouseEvent) {
-        super()
+    constructor(interactor: Interactor, evt: React.MouseEvent) {
+        super(interactor)
         this.selection = interactor.ui.selection
 
         this.selection.mapEntities(entity => {
@@ -378,8 +383,8 @@ class NewEntity extends InteractorProxy {
     private position?: Geom.Point
     private entity?: Entity.Model
 
-    constructor(private interactor: Interactor, private schema: Schema) {
-        super()
+    constructor(interactor: Interactor, private schema: Schema) {
+        super(interactor)
     }
 
     onMouseMove(evt: React.MouseEvent<HTMLElement, MouseEvent>) {
@@ -391,12 +396,11 @@ class NewEntity extends InteractorProxy {
         if (!this.position) {
             return true
         }
-        const config = this.interactor.config
         const state = {
             name: '',
-            x: config.snapNearest(this.position.x - config.minEntitySize/2),
-            y: config.snapNearest(this.position.y - config.minEntitySize/2),
-            color: Themes.ColorName.blue
+            x: this.config.snapNearest(this.position.x - this.config.minEntitySize/2),
+            y: this.config.snapNearest(this.position.y - this.config.minEntitySize/2),
+            color: 'blue' as ColorName
         }
         const action = new Entity.NewAction(this.schema, state)
         this.interactor.ui.history.pushAction(action)
@@ -431,8 +435,8 @@ abstract class TextField extends InteractorProxy {
 
     protected input = React.createRef<HTMLInputElement>()
 
-    constructor(readonly interactor: Interactor, readonly entity: Entity.Model) {
-        super()
+    constructor(interactor: Interactor, readonly entity: Entity.Model) {
+        super(interactor)
     }
 
     onKeyPress(evt: React.KeyboardEvent<HTMLInputElement>) {
@@ -657,13 +661,11 @@ class NewAttributeField extends TextField {
 class NewAssociation extends InteractorProxy {
     
     private position?: Geom.Point
-    private config: Config
     private schema: Schema
     private toEntity?: Entity.Model
 
-    constructor(private interactor: Interactor, private fromEntity: Entity.Model) {
-        super()
-        this.config = this.interactor.config
+    constructor(interactor: Interactor, private fromEntity: Entity.Model) {
+        super(interactor)
         this.schema = this.interactor.ui.schema
     }
 

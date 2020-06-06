@@ -24,7 +24,7 @@ class EntityView extends React.Component<Props> {
         const [width, height] = entity.size
         const state = entity.state
         const lineHeight = config.lineHeight
-        const color = config.theme.color(state.color)
+        const color = config.color(state.color)
         let index = 0
         let yAttr = state.y
         const yName = state.y + config.lineHeight/2 + 1 // need to bring it down just slightly

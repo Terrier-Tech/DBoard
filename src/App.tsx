@@ -4,7 +4,6 @@ import Config from './view/config'
 import Topbar from './view/topbar'
 import Viewport from './view/viewport'
 import Schema from './model/schema'
-import * as themes from './view/themes'
 import UI from './ui/ui'
 import SelectionMenu from './view/selection_menu'
 
@@ -29,7 +28,7 @@ class App extends React.Component<Props> {
       name: "Foo",
       x: 75,
       y: 60,
-      color: themes.ColorName.blue
+      color: 'blue'
     })
     foo.newAttribute("first name*")
     foo.newAttribute("last name")
@@ -41,7 +40,7 @@ class App extends React.Component<Props> {
       name: "Bar",
       x: 500,
       y: 60,
-      color: themes.ColorName.blue
+      color: 'blue'
     })
     bar.newAttribute("time : datetime")
     bar.newAttribute("number* : integer")
@@ -52,7 +51,7 @@ class App extends React.Component<Props> {
       name: "Baz",
       x: 75,
       y: 400,
-      color: themes.ColorName.green
+      color: 'green'
     })
     baz.newAttribute("name*")
     baz.newAttribute("width: integer")

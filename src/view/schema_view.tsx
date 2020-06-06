@@ -20,7 +20,6 @@ class SchemaView extends React.Component<Props> {
 
 	render() {
 		const config = this.props.config
-		const theme = config.theme
 		const schema = this.props.schema
 		const entities = schema.mapEntities(entity =>  {
 			entity.computeSize(config)
@@ -49,13 +48,13 @@ class SchemaView extends React.Component<Props> {
 		}
 		.attribute-name {
 			font: ${config.fontSize}px ${config.fontFamily};
-			fill: ${theme.fgColor};
+			fill: ${config.fgColor};
 			text-anchor: start;
 			dominant-baseline: middle;
 		}
 		.attribute-type {
 			font: ${config.fontSize}px ${config.fontFamily};
-			fill: ${theme.hintFgColor};
+			fill: ${config.hintFgColor};
 			text-anchor: end;
 			dominant-baseline: middle;
 		}
@@ -63,13 +62,13 @@ class SchemaView extends React.Component<Props> {
 			font: bold ${config.fontSize}px ${config.fontFamily};
 		}
 		.new-button rect {
-			fill: ${theme.hintBgColor};
+			fill: ${config.hintBgColor};
 		}
 		.new-button svg g {
-			fill: ${theme.hintFgColor};
+			fill: ${config.hintFgColor};
 		}
 		.association polyline.line {
-			stroke: ${theme.fgColor};
+			stroke: ${config.fgColor};
 		}
 		.association polyline.invisible {
 			stroke-width: ${config.lineHeight};

@@ -1,7 +1,9 @@
-import * as themes from '../view/themes'
+
 import { DOMElement } from 'react'
 
-class Config {
+export type ColorName = "blue" | "green" | "purple" | "cyan" | "magenta" | "gray" | "orange" | "red" | "yellow"
+
+export class Config {
     fontSize: number = 15
     lineHeight: number = 32
     padding: number = 12
@@ -11,8 +13,6 @@ class Config {
     get gridSize(): number {
         return this.lineHeight / 2
     }
-
-    theme: themes.Base = themes.Light
 
     readonly fontFamily = 'Verdana, Geneva, sans-serif'
 
@@ -44,7 +44,30 @@ class Config {
         return Math.ceil(n/(2*this.gridSize)) * this.gridSize * 2
     }
 
+    readonly colors: Record<ColorName,string> = {
+        blue: '#2980b9',
+        green: '#27ae60',
+        purple: '#8e44ad',
+        cyan: '#079992',
+        magenta: '#f368e0',
+        gray: '#bdc3c7',
+        orange: '#f39c12',
+        red: '#c0392b',
+        yellow: '#f1c40f'
+    }
+
+    color(name: ColorName) : string {
+        return this.colors[name]
+    }
+
+    readonly fgColor = '#333333'
+    readonly oddBgColor = '#f8f8f8'
+    readonly evenBgColor = '#ffffff'
+    readonly hintFgColor = '#aaa'
+    readonly hintBgColor = '#eee'
+
 }
+
 
 
 export default Config

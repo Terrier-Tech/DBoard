@@ -75,7 +75,7 @@ a.action {
     position: fixed;
     right: 0;
     min-width: $bar-height;
-    min-height: 100px;
+    min-height: $grid-size*6;
     top: 50%;
     transform: translate(100%, -50%);
     transition: transform 0.2s ease;

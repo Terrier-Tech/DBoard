@@ -1,9 +1,8 @@
 import Schema from "./schema"
 import ModelBase from "./model_base"
 import * as Attribute from "./attribute"
-import * as Themes from '../view/themes'
 import * as Geom from "../util/geom"
-import Config from "../view/config"
+import {Config, ColorName} from "../view/config"
 import * as Actions from "../ui/actions"
 
 export type PositionType = 'left' | 'right' | 'horizontalCenter' | 'top' | 'bottom' | 'verticalCenter'
@@ -165,7 +164,7 @@ export class State {
     readonly name: string = ""
     x: number = 0
     y: number = 0
-    readonly color: Themes.ColorName = Themes.ColorName.blue
+    color: ColorName = 'blue'
 }
 
 

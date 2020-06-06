@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as Arrays from '../util/arrays'
 import Config from './config'
 import UI from '../ui/ui'
 import Schema from '../model/schema'
@@ -42,6 +43,8 @@ export default SelectionMenu
 class EntitySelectionMenu extends SelectionMenu {
 
     render() {
+        const colors = Arrays.unique(this.selection.mapEntities(e => e.state.color))
+        
         return <div className='content'>
             <a className='action alert' title='Delete Entity(s)' onClick={this.delete.bind(this)}>
                 <Icons.Delete/>
