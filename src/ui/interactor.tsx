@@ -9,6 +9,8 @@ import Config from '../view/config'
 import Icons from '../view/icons'
 import * as Themes from '../view/themes'
 import Schema from '../model/schema'
+import AssociationView from '../view/association_view'
+import * as Layout from '../view/layout'
 
 export class Interactor {
     
@@ -141,6 +143,8 @@ export class Interactor {
 
     onNewAssociationPressed(entity: Entity.Model) {
         console.log(`new associated pressed for entity ${entity.id}`)
+        this.clearProxy()
+        this.proxy = new NewAssociation(this, entity)
     }
 
     onAssociationClicked(ass: Association.Model) {
@@ -233,12 +237,12 @@ class RubberBand extends InteractorProxy {
         }
 
         this.initialPos = this.interactor.eventRelativePosition(evt)
-        this.range = Geom.rectFromPoints(this.initialPos, this.initialPos)
+        this.range = Geom.rectFromPoints([this.initialPos])
     }
 
     private updateRange(evt: React.MouseEvent) {
         const pos = this.interactor.eventRelativePosition(evt)
-        this.range = Geom.rectFromPoints(pos, this.initialPos)
+        this.range = Geom.rectFromPoints([pos, this.initialPos])
     }
 
     onMouseMove(evt: React.MouseEvent<HTMLDivElement, MouseEvent>): boolean {
@@ -373,8 +377,8 @@ class Guide extends React.Component<GuideProps> {
 // allows the user to drag a new entity onto the canvas
 class NewEntity extends InteractorProxy {
 
-    private position: Geom.Point | null = null
-    private entity: Entity.Model | null = null
+    private position?: Geom.Point
+    private entity?: Entity.Model
 
     constructor(private interactor: Interactor, private schema: Schema) {
         super()
@@ -396,7 +400,8 @@ class NewEntity extends InteractorProxy {
             y: config.snapNearest(this.position.y - config.minEntitySize/2),
             color: Themes.ColorName.blue
         }
-        this.entity = this.schema.newEntity(state)
+        const action = new Entity.NewAction(this.schema, state)
+        this.interactor.ui.history.pushAction(action)
 
         return true
     }
@@ -646,6 +651,59 @@ class NewAttributeField extends TextField {
         else {
             this.interactor.clearProxy()
         }
+    }
+
+}
+
+
+class NewAssociation extends InteractorProxy {
+    
+    private position?: Geom.Point
+    private config: Config
+    private schema: Schema
+    private toEntity?: Entity.Model
+
+    constructor(private interactor: Interactor, private fromEntity: Entity.Model) {
+        super()
+        this.config = this.interactor.config
+        this.schema = this.interactor.ui.schema
+    }
+
+    onMouseMove(evt: React.MouseEvent<HTMLElement, MouseEvent>) {
+        this.position = this.interactor.eventRelativePosition(evt)
+        this.toEntity = this.schema.entityAt(this.position!!)
+        return false
+    }
+
+    onMouseUp(evt: React.MouseEvent<HTMLDivElement, MouseEvent>): boolean {
+        if (!this.position || !this.toEntity) {
+            return true
+        }
+
+        const state = new Association.State(
+            new Association.Side(this.fromEntity.id, 'one'),
+            new Association.Side(this.toEntity.id, 'many')
+        )
+        const action = new Association.NewAction(this.schema, state)
+        this.interactor.ui.history.pushAction(action)
+
+        return true
+    }
+
+    renderOverlay(): JSX.Element {
+        if (this.position) {
+            const fromSide = {arity: 'one'} as Association.ISide
+            const toSide = {arity: 'many'} as Association.ISide
+            const layout = new Layout.Lines(this.interactor.config)
+            const size = this.config.gridSize*2
+            const rect = new Geom.Rect(this.position.x-size/2, this.position.y-size/2, size, size)
+            layout.addLine('new-association', this.fromEntity.id, this.fromEntity, 'dangling', rect)
+            const paths = layout.layout()
+            if (paths.length) {
+                return <svg><AssociationView config={this.interactor.config} ui={this.interactor.ui} fromSide={fromSide} toSide={toSide} path={paths[0]}/></svg>
+            }
+        }
+        return <div></div>
     }
 
 }

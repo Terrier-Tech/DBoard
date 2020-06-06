@@ -30,7 +30,12 @@ export class Model extends ModelBase<State> {
 
 export type Arity = 'one' | 'many'
 
-export class Side {
+// side information without the entity
+export interface ISide {
+    arity: Arity
+}
+
+export class Side implements ISide {
     constructor(public entityId: string, public arity: Arity = 'one') {
         
     }

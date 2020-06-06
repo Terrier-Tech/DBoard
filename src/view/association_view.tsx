@@ -8,10 +8,10 @@ import * as Geom from '../util/geom'
 interface Props {
 	config: Config
     ui: UI
-    fromSide: Association.Side
-    toSide: Association.Side
+    fromSide: Association.ISide
+    toSide: Association.ISide
     path: Layout.LinePath
-    association: Association.Model | undefined
+    association?: Association.Model
 }
 
 class AssociationView extends React.Component<Props> {

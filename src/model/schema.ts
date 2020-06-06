@@ -1,6 +1,7 @@
 import ModelBase from "./model_base"
 import * as Entity from './entity';
 import * as Association from './association'
+import * as Geom from '../util/geom'
 
 
 class Schema extends ModelBase<SchemaState> {
@@ -45,6 +46,15 @@ class Schema extends ModelBase<SchemaState> {
         return Object.entries(this.entities).map(kv => {
             return fun(kv[1])
         })
+    }
+
+    entityAt(p: Geom.Point): Entity.Model | undefined {
+        for (let entity of this.allEntities()) {
+            if (Geom.rectContainsPoint(entity, p)) {
+                return entity
+            }
+        }
+        return undefined
     }
 
     private associations : Record<string,Association.Model> = {}

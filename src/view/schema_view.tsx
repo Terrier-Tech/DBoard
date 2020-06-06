@@ -31,7 +31,7 @@ class SchemaView extends React.Component<Props> {
 		const layout = new Layout.Lines(config)
 		schema.mapAssociations(ass =>  {
 			const entities = ass.entities
-			layout.addLine(ass.id, entities[0], entities[1])
+			layout.addLine(ass.id, entities[0].id, entities[0], entities[1].id, entities[1])
 		})
 		const assPaths = layout.layout()
 		const associations = assPaths.map((path) => {

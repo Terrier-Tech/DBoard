@@ -114,6 +114,13 @@
                     }
                 }
             }
+            svg { // use to render new associations
+                width: 100%;
+                height: 100%;
+                polyline {
+                    stroke: $overlay-color;
+                }
+            }
             .text-field {
                 position: absolute;
                 pointer-events: all;

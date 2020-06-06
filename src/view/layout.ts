@@ -29,10 +29,11 @@ export class LinePath {
     get lastPoint(): Geom.Point {
         return this.points[this.points.length-1]
     }
+
+    get bounds(): Geom.Rect {
+        return Geom.rectFromPoints(this.points)
+    }
 }
-
-type SideDef = Geom.IRect & IId
-
 
 export class Lines {
 
@@ -44,10 +45,10 @@ export class Lines {
 
     private lines: Array<LinePath> = []
 
-    addLine(id: string, from: SideDef, to: SideDef) {
-        this.rects[from.id] = from
-        this.rects[to.id] = to
-        this.lines.push(new LinePath(id, from.id, to.id))
+    addLine(id: string, fromId: string, fromRect: Geom.IRect, toId: string, toRect: Geom.IRect) {
+        this.rects[fromId] = fromRect
+        this.rects[toId] = toRect
+        this.lines.push(new LinePath(id, fromId, toId))
     }
 
     private findEdge(line: Geom.LineSegment, path: LinePath, rect: Geom.IRect, index: number): Dir | null {
@@ -77,25 +78,25 @@ export class Lines {
         return null
     }
 
-    squareOut(path: LinePath, fromRect: Geom.IRect, toRect: Geom.IRect) {
+    squareOut(line: LinePath, fromRect: Geom.IRect, toRect: Geom.IRect) {
         const d = this.config.gridSize
 
         // try to find a straight line directly between the ends
-        const dirs = [path.fromDir, path.toDir].sort().join('')
-        const xAvg = (path.points[0].x + path.points[1].x)/2
-        const yAvg = (path.points[0].y + path.points[1].y)/2
+        const dirs = [line.fromDir, line.toDir].sort().join('')
+        const xAvg = (line.points[0].x + line.points[1].x)/2
+        const yAvg = (line.points[0].y + line.points[1].y)/2
         if (dirs == 'ew') {
             if (yAvg >= fromRect.top + d && yAvg >= toRect.top + d && 
                 yAvg <= fromRect.bottom - d && yAvg <= toRect.bottom - d ) {
-                path.points[0] = {x: path.points[0].x, y: yAvg}
-                path.points[1] = {x: path.points[1].x, y: yAvg}
+                line.points[0] = {x: line.points[0].x, y: yAvg}
+                line.points[1] = {x: line.points[1].x, y: yAvg}
             }
             else { // need a jog
-                path.points = [
-                    path.points[0],
-                    {x: xAvg, y: path.points[0].y},
-                    {x: xAvg, y: path.points[1].y},
-                    path.points[1]
+                line.points = [
+                    line.points[0],
+                    {x: xAvg, y: line.points[0].y},
+                    {x: xAvg, y: line.points[1].y},
+                    line.points[1]
                 ]
             }
             return
@@ -103,15 +104,15 @@ export class Lines {
         if (dirs == 'ns') {
             if (xAvg >= fromRect.left + d && xAvg >= toRect.left + d && 
                 xAvg <= fromRect.right - d && xAvg <= toRect.right - d ) {
-                path.points[0] = {x: xAvg, y: path.points[0].y}
-                path.points[1] = {x: xAvg, y: path.points[1].y}
+                line.points[0] = {x: xAvg, y: line.points[0].y}
+                line.points[1] = {x: xAvg, y: line.points[1].y}
             }
             else { // need a jog
-                path.points = [
-                    path.points[0],
-                    {x: path.points[0].x, y: yAvg},
-                    {x: path.points[1].x, y: yAvg},
-                    path.points[1]
+                line.points = [
+                    line.points[0],
+                    {x: line.points[0].x, y: yAvg},
+                    {x: line.points[1].x, y: yAvg},
+                    line.points[1]
                 ]
             }
             return
@@ -120,29 +121,46 @@ export class Lines {
         // TODO: support en and es combinations
     }
 
-    layout(): Array<LinePath> {
+    layout(): LinePath[] {
+        let keepLines: LinePath[] = []
         
-        for (let path of this.lines) {
-            const fromRect = this.rects[path.fromId]
-            const toRect = this.rects[path.toId]
-            path.points = [
+        for (let line of this.lines) {
+            const fromRect = this.rects[line.fromId]
+            const toRect = this.rects[line.toId]
+            line.points = [
                 Geom.rectCenter(fromRect),
                 Geom.rectCenter(toRect)
             ]
-            const initialLine: Geom.LineSegment = [path.points[0], path.points[1]]
+            const initialLine: Geom.LineSegment = [line.points[0], line.points[1]]
            
             // attach the path to the edges of the rectangles and compute the edge directions
             let dir: Dir | null = null
-            if (dir = this.findEdge(initialLine, path, fromRect, 0)) {
-                path.fromDir = dir
+            let keepLine = true
+            if (dir = this.findEdge(initialLine, line, fromRect, 0)) {
+                line.fromDir = dir
             }
-            if (dir = this.findEdge(initialLine, path, toRect, 1)) {
-                path.toDir = dir
+            else {
+                keepLine = false
+            }
+            if (dir = this.findEdge(initialLine, line, toRect, 1)) {
+                line.toDir = dir
+            }
+            else {
+                keepLine = false
+            }
+            if (!keepLine) {
+                continue
             }
                
-            this.squareOut(path, fromRect, toRect)
+            this.squareOut(line, fromRect, toRect)
+
+            // only keep lines that go beyond a grid square
+            const bounds = line.bounds
+            if (bounds.width > this.config.gridSize || bounds.height > this.config.gridSize) {
+                keepLines.push(line)
+            }
         }
 
-        return this.lines
+        return keepLines
     }
 }

@@ -59,17 +59,6 @@ class App extends React.Component<Props> {
     baz.newAttribute("height: integer")
     baz.snapPosition(this.config)
 
-    const fizz = this.schema.newEntity({
-      name: "Fizz",
-      x: 500,
-      y: 400,
-      color: themes.ColorName.purple
-    })
-    fizz.newAttribute("name*")
-    fizz.newAttribute("width: integer")
-    fizz.newAttribute("height: integer")
-    fizz.snapPosition(this.config)
-
     this.schema.buildAssociation()
       .add(foo, 'one')
       .add(bar, 'many')
@@ -80,15 +69,6 @@ class App extends React.Component<Props> {
       .add(baz, 'many')
       .build()
 
-    this.schema.buildAssociation()
-      .add(bar, 'one')
-      .add(fizz, 'many')
-      .build()
-
-    this.schema.buildAssociation()
-      .add(baz, 'one')
-      .add(fizz, 'many')
-      .build()
   }
 
   render() {

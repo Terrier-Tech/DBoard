@@ -100,12 +100,25 @@ export function rectCenter(rect: IRect): Point {
     }
 }
 
-export function rectFromPoints(p1: Point, p2: Point): Rect {
-    const x = Math.min(p1.x, p2.x)
-    const y = Math.min(p1.y, p2.y)
-    const width = Math.abs(p1.x - p2.x)
-    const height = Math.abs(p1.y - p2.y)
-    return new Rect(x, y, width, height)
+export function rectFromPoints(points: Point[]): Rect {
+    if (!points.length) {
+        throw "Must provide at least one point for the rectangle!"
+    }
+    let xMin: number|null = null
+    let yMin: number|null = null
+    let xMax: number|null = null
+    let yMax: number|null = null
+    for (let p of points) {
+        xMin = xMin ? Math.min(xMin, p.x) : p.x
+        yMin = yMin ? Math.min(yMin, p.y) : p.y
+        xMax = xMax ? Math.max(xMax, p.x) : p.x
+        yMax = yMax ? Math.max(yMax, p.y) : p.y
+    }
+    return new Rect(xMin!, yMin!, xMax!-xMin!, yMax!-yMin!)
+}
+
+export function rectContainsPoint(rect: IRect, p: Point): boolean {
+    return p.x >= rect.left && p.x <= rect.right && p.y >= rect.top && p.y <= rect.bottom
 }
 
 
