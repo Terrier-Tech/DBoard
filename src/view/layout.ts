@@ -80,45 +80,79 @@ export class Lines {
 
     squareOut(line: LinePath, fromRect: Geom.IRect, toRect: Geom.IRect) {
         const d = this.config.gridSize
+        const points = line.points
 
-        // try to find a straight line directly between the ends
         const dirs = [line.fromDir, line.toDir].sort().join('')
-        const xAvg = (line.points[0].x + line.points[1].x)/2
-        const yAvg = (line.points[0].y + line.points[1].y)/2
-        if (dirs == 'ew') {
-            if (yAvg >= fromRect.top + d && yAvg >= toRect.top + d && 
-                yAvg <= fromRect.bottom - d && yAvg <= toRect.bottom - d ) {
-                line.points[0] = {x: line.points[0].x, y: yAvg}
-                line.points[1] = {x: line.points[1].x, y: yAvg}
-            }
-            else { // need a jog
+        const xAvg = (points[0].x + points[1].x)/2
+        const yAvg = (points[0].y + points[1].y)/2
+        switch (dirs) {
+            case'ew':
+                // try to find a straight line directly between the ends
+                if (yAvg >= fromRect.top + d && yAvg >= toRect.top + d && 
+                    yAvg <= fromRect.bottom - d && yAvg <= toRect.bottom - d ) {
+                    line.points[0] = {x: points[0].x, y: yAvg}
+                    line.points[1] = {x: points[1].x, y: yAvg}
+                }
+                else { // need a jog
+                    line.points = [
+                        points[0],
+                        {x: xAvg, y: points[0].y},
+                        {x: xAvg, y: points[1].y},
+                        points[1]
+                    ]
+                }
+                return
+            case 'ns':
+                // try to find a straight line directly between the ends
+                if (xAvg >= fromRect.left + d && xAvg >= toRect.left + d && 
+                    xAvg <= fromRect.right - d && xAvg <= toRect.right - d ) {
+                    line.points[0] = {x: xAvg, y: points[0].y}
+                    line.points[1] = {x: xAvg, y: points[1].y}
+                }
+                else { // need a jog
+                    line.points = [
+                        points[0],
+                        {x: points[0].x, y: yAvg},
+                        {x: points[1].x, y: yAvg},
+                        points[1]
+                    ]
+                }
+                return
+            case 'en':
+                // add one point in upper right
                 line.points = [
-                    line.points[0],
-                    {x: xAvg, y: line.points[0].y},
-                    {x: xAvg, y: line.points[1].y},
-                    line.points[1]
+                    points[0],
+                    {x: Math.max(points[0].x, points[1].x), y: Math.min(points[0].y, points[1].y)},
+                    points[1]
                 ]
-            }
-            return
-        }
-        if (dirs == 'ns') {
-            if (xAvg >= fromRect.left + d && xAvg >= toRect.left + d && 
-                xAvg <= fromRect.right - d && xAvg <= toRect.right - d ) {
-                line.points[0] = {x: xAvg, y: line.points[0].y}
-                line.points[1] = {x: xAvg, y: line.points[1].y}
-            }
-            else { // need a jog
+                return
+            case 'nw':
+                // add one point in upper left
                 line.points = [
-                    line.points[0],
-                    {x: line.points[0].x, y: yAvg},
-                    {x: line.points[1].x, y: yAvg},
-                    line.points[1]
+                    points[0],
+                    {x: Math.min(points[0].x, points[1].x), y: Math.min(points[0].y, points[1].y)},
+                    points[1]
                 ]
-            }
-            return
+                return
+            case 'es':
+                // add one point in lower right
+                line.points = [
+                    points[0],
+                    {x: Math.max(points[0].x, points[1].x), y: Math.max(points[0].y, points[1].y)},
+                    points[1]
+                ]
+                return
+            case 'es':
+                // add one point in lower left
+                line.points = [
+                    points[0],
+                    {x: Math.min(points[0].x, points[1].x), y: Math.max(points[0].y, points[1].y)},
+                    points[1]
+                ]
+                return
+            default: 
+                throw(`Don't know how to square out directions '${dirs}'`)
         }
-
-        // TODO: support en and es combinations
     }
 
     layout(): LinePath[] {
