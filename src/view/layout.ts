@@ -1,11 +1,32 @@
 import * as Geom from '../util/geom'
 import Config from './config'
 
-interface IId {
-    id: string
+export type Dir = 'n' | 's' | 'e' | 'w'
+
+const Dirs: Dir[] = ['n', 's', 'e', 'w']
+
+// returns the component of the point that is perpindicular to the direction
+function lateralValue(p: Geom.Point, dir: Dir): number {
+    if (dir == 's' || dir == 'n')
+        return p.x
+    else
+        return p.y
 }
 
-export type Dir = 'n' | 's' | 'e' | 'w'
+function setLateralValue(p: Geom.Point, dir: Dir, v: number): Geom.Point {
+    if (dir == 's' || dir == 'n')
+        return {x: v, y: p.y}
+    else
+        return {x: p.x, y: v}
+}
+
+// returns the min and max lateral value of the rectangle for the given side
+function lateraleRange(rect: Geom.IRect, dir: Dir): [number, number] {
+    if (dir == 's' || dir == 'n')
+        return [rect.left, rect.right]
+    else
+        return [rect.top, rect.bottom]
+}
 
 export class LinePath {
     public points: Array<Geom.Point> = []
@@ -155,6 +176,46 @@ export class Lines {
         }
     }
 
+    spreadSides(lines: LinePath[], id: string, rect: Geom.IRect, dir: Dir) {
+        const vRange = lateraleRange(rect, dir)
+        const d = this.config.gridSize
+
+        // find all line sides on this edge of the rect
+        const sides: {index: number, v: number, line: LinePath}[] = []
+        for (let line of lines) {
+            if (line.fromId == id && line.fromDir == dir) {
+                sides.push({
+                    index: 0,
+                    v: lateralValue(line.firstPoint, dir),
+                    line: line
+                })
+            }
+            if (line.toId == id && line.toDir == dir) {
+                sides.push({
+                    index: line.points.length-1,
+                    v: lateralValue(line.lastPoint, dir),
+                    line: line
+                })
+            }
+        }
+        
+        // spread the sides out across the edge of the rect
+        if (sides.length>1) {
+            sides.sort((s1,s2) => {return s1.v - s2.v})
+            let vMin = vRange[1] - vRange[0]
+            for (let i=0; i<sides.length-1; i++) {
+                vMin = Math.min(vMin, sides[i+1].v - sides[i].v)
+            }
+            if (vMin < d) {
+                const vStep = (vRange[1]-vRange[0])/sides.length
+                for (let i in sides) {
+                    const s = sides[i]
+                    s.line.points[s.index] = setLateralValue(s.line.points[s.index], dir, vRange[0] + (parseInt(i)+0.5)*vStep)
+                }
+            }
+        }
+    }
+
     layout(): LinePath[] {
         let keepLines: LinePath[] = []
         
@@ -185,14 +246,24 @@ export class Lines {
             if (!keepLine) {
                 continue
             }
-               
-            this.squareOut(line, fromRect, toRect)
 
             // only keep lines that go beyond a grid square
             const bounds = line.bounds
             if (bounds.width > this.config.gridSize || bounds.height > this.config.gridSize) {
                 keepLines.push(line)
             }
+        }
+
+        Object.entries(this.rects).forEach(record => {
+            for (let dir of Dirs) {
+                this.spreadSides(keepLines, record[0], record[1], dir)
+            }
+        })
+
+        for (let line of keepLines) {
+            const fromRect = this.rects[line.fromId]
+            const toRect = this.rects[line.toId]
+            this.squareOut(line, fromRect, toRect)
         }
 
         return keepLines
