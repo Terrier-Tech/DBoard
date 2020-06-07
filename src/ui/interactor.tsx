@@ -177,10 +177,8 @@ export class Interactor {
 
     clearProxy() {
         if (this.proxy) {
-            const clearedProxy = this.proxy
             this.proxy = undefined
             this.ui.requestRender(UI.RenderType.App)
-            clearedProxy.afterDone(this)
         }
     }
 
@@ -212,11 +210,6 @@ export abstract class InteractorProxy {
 
     // this will be called after each render
     afterRender() {
-
-    }
-
-    // this will be called once the proxy has been cleared by the interactor
-    afterDone(interactor: Interactor) {
 
     }
 }
@@ -381,7 +374,6 @@ class Guide extends React.Component<GuideProps> {
 class NewEntity extends InteractorProxy {
 
     private position?: Geom.Point
-    private entity?: Entity.Model
 
     constructor(interactor: Interactor, private schema: Schema) {
         super(interactor)
@@ -418,13 +410,6 @@ class NewEntity extends InteractorProxy {
             left: this.position.x-iconSize/2
         }
         return <div id='new-entity-proxy' style={style}><Icons.PlusEntity /></div>
-    }
-
-    afterDone(interactor: Interactor) {
-        if (this.entity) {
-            this.interactor.ui.selection.addEntity(this.entity, false)
-            this.interactor.editEntityName(this.entity)
-        }
     }
     
 }

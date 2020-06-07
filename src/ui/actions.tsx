@@ -35,14 +35,14 @@ class ActionHistory {
 
     private applySet(set: ActionSet) {
         set.forEach((a) => {
-            a.apply()
+            a.apply(this.config, this.ui)
         })
         this.ui.requestRender(UI.RenderType.App)
     }
 
     private unapplySet(set: ActionSet) {
         set.forEach((a) => {
-            a.unapply()
+            a.unapply(this.config, this.ui)
         })
         this.ui.requestRender(UI.RenderType.App)
     }
@@ -87,9 +87,9 @@ type ActionSet = Set<ActionBase>
 
 abstract class ActionBase {
 
-    abstract apply(): void
+    abstract apply(config: Config, ui: UI): void
 
-    abstract unapply(): void
+    abstract unapply(config: Config, ui: UI): void
 
 }
 

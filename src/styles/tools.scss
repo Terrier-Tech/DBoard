@@ -89,8 +89,18 @@ a.action {
     transform: translate(100%, -50%);
     transition: transform 0.2s ease;
     background: $secondary-color;
+    color: #fff;
+    text-align: center;
     &.show {
         transform: translate(0, -50%);
+    }
+    .one-name, .many-name, .arity {
+        font-size: 14px;
+        line-height: 1;
+        padding: 4px 8px;
+    }
+    .one-name, .many-name {
+        font-weight: bold;
     }
 }
 

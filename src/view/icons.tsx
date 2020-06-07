@@ -4,6 +4,7 @@ import PlusAssociation from "../resources/svg/icon-plus-association.svg"
 import Delete from "../resources/svg/icon-delete.svg"
 import Undo from "../resources/svg/icon-undo.svg"
 import Redo from "../resources/svg/icon-redo.svg"
+import SwapVertical from "../resources/svg/icon-swap-vertical.svg"
 
 const Icons = {
     PlusEntity: PlusEntity,
@@ -11,7 +12,8 @@ const Icons = {
     PlusAssociation: PlusAssociation,
     Delete: Delete,
     Undo: Undo,
-    Redo: Redo
+    Redo: Redo,
+    SwapVertical: SwapVertical
 }
 
 export default Icons

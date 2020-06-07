@@ -30,6 +30,10 @@ export class Model extends ModelBase<State> {
 
 export type Arity = 'one' | 'many'
 
+export function oppositeArity(arity: Arity): Arity {
+    return arity == 'one' ? 'many' : 'one'
+}
+
 // side information without the entity
 export interface ISide {
     arity: Arity
