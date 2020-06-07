@@ -97,7 +97,7 @@ export class NewAction extends Actions.Base {
         else {
             this.association = this.schema.newAssociation(this.state)
         }
-        ui.selection.addAssociation(this.association)
+        ui.selection.addAssociation(this.association, false)
     }
 
     unapply(config: Config, ui: UI): void {

@@ -93,7 +93,7 @@ class Selection {
 
     addAssociation(ass: Association.Model, append=false) {
         if (!append && this.mode == Mode.Replace) {
-            this.entities = {}
+            this.associations = {}
         }
         this.associations[ass.id] = ass
         this.ui.requestRender(UI.RenderType.App)

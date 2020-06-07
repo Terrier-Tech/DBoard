@@ -20,6 +20,34 @@ export function sum(p: Point): number {
     return p.x + p.y
 }
 
+export function minPoint(points: Point[]): Point {
+    if (!points.length) {
+        return {x: 0, y: 0}
+    }
+    let min = points[0]
+    for (let p of points) {
+        min = {
+            x: Math.min(p.x, min.x),
+            y: Math.min(p.y, min.y)
+        }
+    }
+    return min
+}
+
+export function maxPoint(points: Point[]): Point {
+    if (!points.length) {
+        return {x: 0, y: 0}
+    }
+    let min = points[0]
+    for (let p of points) {
+        min = {
+            x: Math.max(p.x, min.x),
+            y: Math.max(p.y, min.y)
+        }
+    }
+    return min
+}
+
 export function crossProduct(v1: Point, v2: Point): Point {
     return {
         x: v1.x*v2.y, 

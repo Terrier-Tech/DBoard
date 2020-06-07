@@ -32,7 +32,7 @@ class Schema extends ModelBase<SchemaState> {
         return new Entity.Model(this, state)
     }
 
-    allEntities() : Array<Entity.Model> {
+    get allEntities() : Array<Entity.Model> {
         return Object.entries(this.entities).map(kv => {return kv[1]})
     }
 
@@ -83,7 +83,7 @@ class Schema extends ModelBase<SchemaState> {
         return new Association.Builder(this)
     }
 
-    allAssociations() : Array<Association.Model> {
+    get allAssociations() : Array<Association.Model> {
         return Object.entries(this.associations).map(kv => {return kv[1]})
     }
 

@@ -6,6 +6,7 @@ import Viewport from './view/viewport'
 import Schema from './model/schema'
 import UI from './ui/ui'
 import SelectionMenu from './view/selection_menu'
+import * as Sources from './io/sources'
 
 interface Props {
    name: string
@@ -15,6 +16,7 @@ class App extends React.Component<Props> {
   config: Config
   ui: UI
   schema: Schema
+  source: Sources.Base
 
   constructor(props: Props) {
     super(props);
@@ -23,6 +25,8 @@ class App extends React.Component<Props> {
     this.schema = new Schema()
     this.ui = new UI(this, this.config, this.schema)
     this.ui.listenForRender(UI.RenderType.App, this)
+
+    this.source = new Sources.Download('untitled 2')
 
     const foo = this.schema.newEntity({
       name: "Foo",
@@ -74,7 +78,7 @@ class App extends React.Component<Props> {
     const { name } = this.props;
     return <div>
       <Viewport config={this.config} ui={this.ui} schema={this.schema}/>
-      <Topbar config={this.config} ui={this.ui} schema={this.schema}/>
+      <Topbar config={this.config} ui={this.ui} schema={this.schema} source={this.source}/>
       <SelectionMenu config={this.config} ui={this.ui} schema={this.schema}/>
     </div>;
   }

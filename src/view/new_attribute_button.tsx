@@ -31,7 +31,7 @@ class NewAttributeButton extends React.Component<Props> {
 
 		return <g className={`new-button`} id={`${entity.id}-new-attribute`} onMouseDown={this.onClicked.bind(this)}>
             <rect x={x} y={y} width={width} height={config.lineHeight} stroke='transparent'/>
-            <g style={buttonStyle}><Icons.PlusAttribute/></g>
+            <g className='icon-container' style={buttonStyle}><Icons.PlusAttribute/></g>
         </g>
 	}
     

@@ -43,14 +43,6 @@
                 }
             }
             g.entity {
-                .top-highlight {
-                    stroke: rgba(#fff, 0.3);
-                    stroke-width: 1px;
-                }
-                .bottom-highlight {
-                    stroke: rgba(#000, 0.1);
-                    stroke-width: 1px;
-                }
                 &:hover .entity-background {
                     stroke: $overlay-color-dark;
                     stroke-width: 2;
@@ -58,15 +50,6 @@
             }
             g.association {
                 cursor: pointer;
-                polyline {
-                    fill: none;
-                    &.line {
-                        stroke-width: 2px;
-                    }
-                    &.invisible {
-                        stroke: transparent;
-                    }
-                }
                 &.selected polyline.line {
                     stroke: $overlay-color-dark;
                     stroke-width: 4px;

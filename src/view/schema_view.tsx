@@ -46,6 +46,18 @@ class SchemaView extends React.Component<Props> {
 			text-anchor: middle;
 			dominant-baseline: middle;
 		}
+		.top-highlight {
+			stroke: rgba(255, 255, 255, 0.3);
+			stroke-width: 1px;
+		}
+		.bottom-highlight {
+			stroke: rgba(0, 0, 0, 0.1);
+			stroke-width: 1px;
+		}
+		.side-highlight {
+			stroke: rgba(128, 128, 128, 0.1);
+			stroke-width: 1px;
+		}
 		.attribute-name {
 			font: ${config.fontSize}px ${config.fontFamily};
 			fill: ${config.fgColor};
@@ -69,12 +81,16 @@ class SchemaView extends React.Component<Props> {
 		}
 		.association polyline.line {
 			stroke: ${config.fgColor};
+			fill: none;
+			stroke-width: 2px;
 		}
 		.association polyline.invisible {
 			stroke-width: ${config.lineHeight};
+			fill: none;
+			stroke: transparent;
 		}
 		`
-		return <svg xmlns="http://www.w3.org/2000/svg" width='3000' height='3000'>
+		return <svg xmlns="http://www.w3.org/2000/svg" width='3000' height='3000' id='document'>
 			<style>{style}</style>
 			<g id='associations'>
 				{associations}
