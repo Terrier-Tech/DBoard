@@ -22,10 +22,10 @@ export class Config {
     constructor() {
         this.utilCanvas = document.createElement("canvas")
         this.utilContext = this.utilCanvas.getContext('2d')!
-        this.utilContext.font = `${this.fontSize}px sans-serif`
     }
 
-    measureText(text: string) : TextMetrics {
+    measureText(text: string, weight: 'normal'|'bold' = 'normal') : TextMetrics {
+        this.utilContext.font = `${weight} ${this.fontSize}px sans-serif`
         return this.utilContext.measureText(text)
     }
 

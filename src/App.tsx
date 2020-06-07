@@ -29,51 +29,9 @@ class App extends React.Component<Props, State> {
 		const ui = new UI(config, schema)
 		ui.listenForRender(UI.RenderType.App, this)
 
-		const source = new Sources.Download('untitled 2')
+		const source = new Sources.Download('untitled')
 
-		const foo = schema.newEntity({
-			name: "Foo",
-			x: 75,
-			y: 60,
-			color: 'blue'
-		})
-		foo.newAttributeFromRaw("first name*")
-		foo.newAttributeFromRaw("last name")
-		foo.newAttributeFromRaw("created at : datetime")
-		foo.newAttributeFromRaw("address")
-		foo.snapPosition(config)
-
-		const bar = schema.newEntity({
-			name: "Bar",
-			x: 500,
-			y: 60,
-			color: 'cyan'
-		})
-		bar.newAttributeFromRaw("time : datetime")
-		bar.newAttributeFromRaw("number* : integer")
-		bar.newAttributeFromRaw("description")
-		bar.snapPosition(config)
-
-		const baz = schema.newEntity({
-			name: "Baz",
-			x: 75,
-			y: 400,
-			color: 'green'
-		})
-		baz.newAttributeFromRaw("name*")
-		baz.newAttributeFromRaw("width: integer")
-		baz.newAttributeFromRaw("height: integer")
-		baz.snapPosition(config)
-
-		schema.buildAssociation()
-			.add(foo, 'one')
-			.add(bar, 'many')
-			.build()
-
-		schema.buildAssociation()
-			.add(foo, 'one')
-			.add(baz, 'many')
-			.build()
+		schema.demo(config)
 
 		this.state = {
 			config: config,

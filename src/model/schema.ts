@@ -2,6 +2,7 @@ import ModelBase from "./model_base"
 import * as Entity from './entity';
 import * as Association from './association'
 import * as Geom from '../util/geom'
+import Config from "../view/config"
 
 
 class Schema extends ModelBase<SchemaState> {
@@ -53,7 +54,7 @@ class Schema extends ModelBase<SchemaState> {
     }
 
     entityAt(p: Geom.Point): Entity.Model | undefined {
-        for (let entity of this.allEntities {
+        for (let entity of this.allEntities) {
             if (Geom.rectContainsPoint(entity, p)) {
                 return entity
             }
@@ -101,6 +102,54 @@ class Schema extends ModelBase<SchemaState> {
         return Object.entries(this.associations).map(kv => {
             return fun(kv[1])
         })
+    }
+
+
+    demo(config: Config) {
+        
+		const foo = this.newEntity({
+			name: "Foo",
+			x: 75,
+			y: 60,
+			color: 'blue'
+		})
+		foo.newAttributeFromRaw("first name*")
+		foo.newAttributeFromRaw("last name")
+		foo.newAttributeFromRaw("created at : datetime")
+		foo.newAttributeFromRaw("address")
+		foo.snapPosition(config)
+
+		const bar = this.newEntity({
+			name: "A very long entity name",
+			x: 500,
+			y: 60,
+			color: 'cyan'
+		})
+		bar.newAttributeFromRaw("time : datetime")
+		bar.newAttributeFromRaw("number* : integer")
+		bar.newAttributeFromRaw("description")
+		bar.snapPosition(config)
+
+		const baz = this.newEntity({
+			name: "Baz",
+			x: 75,
+			y: 400,
+			color: 'green'
+		})
+		baz.newAttributeFromRaw("name*")
+		baz.newAttributeFromRaw("width: integer")
+		baz.newAttributeFromRaw("height: integer")
+		baz.snapPosition(config)
+
+		this.buildAssociation()
+			.add(foo, 'one')
+			.add(bar, 'many')
+			.build()
+
+        this.buildAssociation()
+			.add(foo, 'one')
+			.add(baz, 'many')
+			.build()
     }
 
 }

@@ -23,10 +23,10 @@ export class Model extends ModelBase<State> implements Geom.IRect {
 
     // computes the minimum width and height to render all attributes
     computeSize(config: Config): [number, number] {
-        let width = config.measureText(this.state.name).width + 2*config.padding
+        let width = config.measureText(this.state.name, 'bold').width + 2*config.padding
         this.mapAttributes(attr => {
             // one padding on each end and two between the name and type = 4*padding
-            let w = config.measureText(attr.state.name).width + config.measureText(attr.state.type).width + 4*config.padding
+            let w = config.measureText(attr.state.name, 'bold').width + config.measureText(attr.state.type).width + 4*config.padding
             width = Math.max(width, w)
         })
         const height = (this.numAttributes() + 2) *  config.lineHeight
