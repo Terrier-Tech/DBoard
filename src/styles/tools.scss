@@ -29,9 +29,18 @@ a.action {
         background: $hover-background;
     }
     &:active {
-        svg {
+        svg, .color-circle {
             transform: scale(0.96);
         }
+    }
+    &.color {
+        padding: $grid-size/2;
+    }
+    .color-circle {
+        width: $grid-size*2;
+        height: $grid-size*2;
+        border-radius: 50%;
+        border: 2px solid #fff;
     }
 }
 
@@ -82,5 +91,23 @@ a.action {
     background: $secondary-color;
     &.show {
         transform: translate(0, -50%);
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Color Menu
+////////////////////////////////////////////////////////////////////////////////
+
+.color-menu {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: $primary-color;
+    width: $bar-height*4;
+    left: -$bar-height*4;
+    top: 0;
+    a {
+        flex: 0 0 auto;
     }
 }

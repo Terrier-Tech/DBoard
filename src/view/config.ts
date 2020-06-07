@@ -1,7 +1,7 @@
 
 import { DOMElement } from 'react'
 
-export type ColorName = "blue" | "green" | "purple" | "cyan" | "magenta" | "gray" | "orange" | "red" | "yellow"
+export type ColorName = "blue" | "green" | "purple" | "cyan" | "gray" | "orange" | "red" | "yellow"
 
 export class Config {
     fontSize: number = 15
@@ -49,7 +49,6 @@ export class Config {
         green: '#27ae60',
         purple: '#8e44ad',
         cyan: '#079992',
-        magenta: '#f368e0',
         gray: '#bdc3c7',
         orange: '#f39c12',
         red: '#c0392b',

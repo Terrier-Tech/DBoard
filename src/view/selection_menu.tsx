@@ -1,8 +1,9 @@
 import * as React from 'react'
 import * as Arrays from '../util/arrays'
-import Config from './config'
+import Config, { ColorName } from './config'
 import UI from '../ui/ui'
 import Schema from '../model/schema'
+import * as Entity from '../model/entity'
 import Selection from '../ui/selection'
 import Icons from './icons'
 
@@ -13,7 +14,7 @@ interface Props {
 }
 
 
-class SelectionMenu extends React.Component<Props> {
+class SelectionMenu<T> extends React.Component<Props, T> {
 
     readonly selection: Selection
 
@@ -39,17 +40,82 @@ class SelectionMenu extends React.Component<Props> {
 
 export default SelectionMenu
 
+interface EntityState {
+    showColorMenu: boolean
+}
 
-class EntitySelectionMenu extends SelectionMenu {
+class EntitySelectionMenu extends SelectionMenu<EntityState> {
+
+    constructor(props: Props) {
+        super(props)
+
+        this.state = {showColorMenu: false}
+    }
+
+    // creates a CSS background gradient that shows the given colors
+    // as diagonal stripes
+    colorsToStripes(colors: ColorName[]): string {
+        const colorSize = this.props.config.gridSize * 2 - 4 // 2px border
+        const stripeSize = colorSize/colors.length
+        const gradientComps: string[] = []
+        let x = 0
+        for (let name of colors) {
+            const c = this.props.config.color(name)
+            gradientComps.push(`${c} ${x}px`)
+            x += stripeSize
+            gradientComps.push(`${c} ${x}px`)
+        }
+        return `repeating-linear-gradient(45deg, ${gradientComps.join(', ')})`
+    }
 
     render() {
-        const colors = Arrays.unique(this.selection.mapEntities(e => e.state.color))
+        const config = this.props.config
+        const colors = Arrays.unique(this.selection.mapEntities(e => e.state.color)).sort()
+        let colorStyle = {
+            background: `${config.color(colors[0])}`
+        }
+        if (colors.length > 1) {
+            colorStyle.background = this.colorsToStripes(colors)
+        }
+        
         
         return <div className='content'>
+            <a className='action color'>
+                <div className='color-circle' style={colorStyle} onClick={this.toggleColorMenu.bind(this)}></div>
+            </a>
             <a className='action alert' title='Delete Entity(s)' onClick={this.delete.bind(this)}>
                 <Icons.Delete/>
             </a>
+            {this.state?.showColorMenu && <ColorMenu config={this.props.config} onSelect={(name) => this.changeColor(name)}/> }
         </div>
+    }
+
+    toggleColorMenu() {
+        this.setState({showColorMenu: !this.state?.showColorMenu})
+    }
+
+    changeColor(name: ColorName) {
+        this.setState({showColorMenu: false})
+        const entities = this.selection.allEntities
+
+        // if the color isn't different, don't bother changing it
+        let isDifferent = false
+        for (let entity of entities) {
+            if (entity.state.color != name) {
+                isDifferent = true
+                break
+            }
+        }
+        if (!isDifferent) {
+            return
+        }
+
+        // create an action to change each color
+        const actions = entities.map(entity => {
+            const newState = {...entity.state, color: name}
+            return new Entity.UpdateAction(entity, entity.state, newState)
+        })
+        this.selection.ui.history.pushActions(actions)
     }
 
     delete() {
@@ -58,7 +124,32 @@ class EntitySelectionMenu extends SelectionMenu {
 
 }
 
-class AssociationSelectionMenu extends SelectionMenu {
+
+interface ColorMenuProps {
+    config: Config
+    onSelect: (name: ColorName) => void
+}
+
+class ColorMenu extends React.Component<ColorMenuProps> {
+
+    render() {
+        const config = this.props.config
+        const actions = Object.entries(config.colors).map(kv => {
+            const style = {
+                background: kv[1]
+            }
+            return <a className='action color' key={kv[0]} onClick={() => this.props.onSelect(kv[0] as ColorName)}><div className='color-circle' style={style}></div></a>
+        })
+        return <div className='color-menu'>{actions}</div>
+    }
+}
+
+
+interface AssociationState {
+
+}
+
+class AssociationSelectionMenu extends SelectionMenu<AssociationState> {
 
     render() {
         return <div className='content'>

@@ -40,7 +40,7 @@ class App extends React.Component<Props> {
       name: "Bar",
       x: 500,
       y: 60,
-      color: 'blue'
+      color: 'cyan'
     })
     bar.newAttribute("time : datetime")
     bar.newAttribute("number* : integer")
