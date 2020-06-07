@@ -4,6 +4,7 @@ import * as Attribute from "./attribute"
 import * as Geom from "../util/geom"
 import {Config, ColorName} from "../view/config"
 import * as Actions from "../ui/actions"
+import UI from "../ui/ui"
 
 export type PositionType = 'left' | 'right' | 'horizontalCenter' | 'top' | 'bottom' | 'verticalCenter'
 
@@ -176,16 +177,20 @@ export class NewAction extends Actions.Base {
         super()
     }
 
-    apply(): void {
+    apply(config: Config, ui: UI): void {
         if (this.entity) {
             this.schema.addEntity(this.entity)
         }
         else {
             this.entity = this.schema.newEntity(this.state)
         }
+        ui.selection.addEntity(this.entity)
+        if (!this.entity.state.name.length) {
+            ui.interactor.editEntityName(this.entity)
+        }
     }
 
-    unapply(): void {
+    unapply(config: Config, ui: UI): void {
         if (this.entity) {
             this.schema.removeEntity(this.entity.id)
         }
@@ -203,11 +208,11 @@ export class UpdateAction extends Actions.Base {
         super()
     }
 
-    apply(): void {
+    apply(config: Config, ui: UI): void {
         this.entity.state = this.toState
     }
 
-    unapply(): void {
+    unapply(config: Config, ui: UI): void {
         this.entity.state = this.fromState
     }
 
@@ -228,11 +233,11 @@ export class DeleteAction extends Actions.Base {
         this.schema = entity.schema
     }
 
-    apply(): void {
+    apply(config: Config, ui: UI): void {
         this.schema.removeEntity(this.entity.id)
     }
 
-    unapply(): void {
+    unapply(config: Config, ui: UI): void {
         this.schema.addEntity(this.entity)
     }
 

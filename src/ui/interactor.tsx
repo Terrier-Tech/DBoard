@@ -397,7 +397,7 @@ class NewEntity extends InteractorProxy {
         const action = new Entity.NewAction(this.schema, state)
         this.interactor.ui.history.pushAction(action)
 
-        return true
+        return false // let the editEntityName proxy take over
     }
     
     renderOverlay(): JSX.Element {

@@ -3,6 +3,8 @@ import ModelBase from './model_base'
 import Schema from './schema'
 import * as Layout from '../view/layout'
 import * as Actions from "../ui/actions"
+import Config from '../view/config'
+import UI from '../ui/ui'
 
 export class Model extends ModelBase<State> {
 
@@ -88,16 +90,17 @@ export class NewAction extends Actions.Base {
         super()
     }
 
-    apply(): void {
+    apply(config: Config, ui: UI): void {
         if (this.association) {
             this.schema.addAssociation(this.association)
         }
         else {
             this.association = this.schema.newAssociation(this.state)
         }
+        ui.selection.addAssociation(this.association)
     }
 
-    unapply(): void {
+    unapply(config: Config, ui: UI): void {
         if (this.association) {
             this.schema.removeAssociation(this.association.id)
         }
@@ -115,11 +118,11 @@ export class UpdateAction extends Actions.Base {
         super()
     }
 
-    apply(): void {
+    apply(config: Config, ui: UI): void {
         this.association.state = this.toState
     }
 
-    unapply(): void {
+    unapply(config: Config, ui: UI): void {
         this.association.state = this.fromState
     }
 
@@ -141,11 +144,11 @@ export class DeleteAction extends Actions.Base {
         this.schema = association.schema
     }
 
-    apply(): void {
+    apply(config: Config, ui: UI): void {
         this.schema.removeAssociation(this.association.id)
     }
 
-    unapply(): void {
+    unapply(config: Config, ui: UI): void {
         this.schema.addAssociation(this.association)
     }
 
