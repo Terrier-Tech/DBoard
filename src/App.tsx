@@ -9,79 +9,105 @@ import SelectionMenu from './view/selection_menu'
 import * as Sources from './io/sources'
 
 interface Props {
-   name: string
+
 }
 
-class App extends React.Component<Props> {
-  config: Config
-  ui: UI
-  schema: Schema
-  source: Sources.Base
+interface State {
+	config: Config
+	ui: UI
+	schema: Schema
+	source: Sources.Base
+}
 
-  constructor(props: Props) {
-    super(props);
+class App extends React.Component<Props, State> {
 
-    this.config = new Config()
-    this.schema = new Schema()
-    this.ui = new UI(this, this.config, this.schema)
-    this.ui.listenForRender(UI.RenderType.App, this)
+	constructor(props: Props) {
+		super(props)
 
-    this.source = new Sources.Download('untitled 2')
+		const config = new Config()
+		const schema = new Schema()
+		const ui = new UI(config, schema)
+		ui.listenForRender(UI.RenderType.App, this)
 
-    const foo = this.schema.newEntity({
-      name: "Foo",
-      x: 75,
-      y: 60,
-      color: 'blue'
-    })
-    foo.newAttribute("first name*")
-    foo.newAttribute("last name")
-    foo.newAttribute("created at : datetime")
-    foo.newAttribute("address")
-    foo.snapPosition(this.config)
+		const source = new Sources.Download('untitled 2')
 
-    const bar = this.schema.newEntity({
-      name: "Bar",
-      x: 500,
-      y: 60,
-      color: 'cyan'
-    })
-    bar.newAttribute("time : datetime")
-    bar.newAttribute("number* : integer")
-    bar.newAttribute("description")
-    bar.snapPosition(this.config)
+		const foo = schema.newEntity({
+			name: "Foo",
+			x: 75,
+			y: 60,
+			color: 'blue'
+		})
+		foo.newAttributeFromRaw("first name*")
+		foo.newAttributeFromRaw("last name")
+		foo.newAttributeFromRaw("created at : datetime")
+		foo.newAttributeFromRaw("address")
+		foo.snapPosition(config)
 
-    const baz = this.schema.newEntity({
-      name: "Baz",
-      x: 75,
-      y: 400,
-      color: 'green'
-    })
-    baz.newAttribute("name*")
-    baz.newAttribute("width: integer")
-    baz.newAttribute("height: integer")
-    baz.snapPosition(this.config)
+		const bar = schema.newEntity({
+			name: "Bar",
+			x: 500,
+			y: 60,
+			color: 'cyan'
+		})
+		bar.newAttributeFromRaw("time : datetime")
+		bar.newAttributeFromRaw("number* : integer")
+		bar.newAttributeFromRaw("description")
+		bar.snapPosition(config)
 
-    this.schema.buildAssociation()
-      .add(foo, 'one')
-      .add(bar, 'many')
-      .build()
+		const baz = schema.newEntity({
+			name: "Baz",
+			x: 75,
+			y: 400,
+			color: 'green'
+		})
+		baz.newAttributeFromRaw("name*")
+		baz.newAttributeFromRaw("width: integer")
+		baz.newAttributeFromRaw("height: integer")
+		baz.snapPosition(config)
 
-    this.schema.buildAssociation()
-      .add(foo, 'one')
-      .add(baz, 'many')
-      .build()
+		schema.buildAssociation()
+			.add(foo, 'one')
+			.add(bar, 'many')
+			.build()
 
-  }
+		schema.buildAssociation()
+			.add(foo, 'one')
+			.add(baz, 'many')
+			.build()
 
-  render() {
-    const { name } = this.props;
-    return <div>
-      <Viewport config={this.config} ui={this.ui} schema={this.schema}/>
-      <Topbar config={this.config} ui={this.ui} schema={this.schema} source={this.source}/>
-      <SelectionMenu config={this.config} ui={this.ui} schema={this.schema}/>
-    </div>;
-  }
+		this.state = {
+			config: config,
+			ui: ui,
+			schema: schema,
+			source: source
+		}
+	}
+
+	async reload(source: Sources.Base) {
+		const config = this.state.config
+		const schema = await source.load(config)
+		const ui = new UI(config, schema)
+		this.setState({
+			config: config,
+			ui: ui,
+			schema: schema,
+			source: source
+		})
+	}
+
+	open() {
+		const source = new Sources.Download('')
+		this.reload(source)
+	}
+
+	render() {
+		const {config, schema, ui, source} = this.state
+		return <div>
+			<Viewport key={`viewport-${schema.id}`} config={config} ui={ui} schema={schema}/>
+			<Topbar key={`topbar-${schema.id}`} config={config} ui={ui} schema={schema} source={source} onOpen={this.open.bind(this)}/>
+			<SelectionMenu key={`menu-${schema.id}`} config={config} ui={ui} schema={schema}/>
+		</div>;
+	}
 }
 
 export default App;

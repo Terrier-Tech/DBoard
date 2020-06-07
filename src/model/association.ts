@@ -11,8 +11,8 @@ export class Model extends ModelBase<State> {
     // this is computed during the layout phase
     linePath: Layout.LinePath | null = null
 
-    constructor(readonly schema: Schema, state: State) {
-        super('association', state)
+    constructor(readonly schema: Schema, state: State, id: string|null=null) {
+        super('association', state, id)
         schema.registerAssociation(this)
     }
 

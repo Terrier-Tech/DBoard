@@ -100,8 +100,11 @@
             svg { // use to render new associations
                 width: 100%;
                 height: 100%;
-                polyline {
+                polyline.line {
                     stroke: $overlay-color;
+                }
+                polyline.invisible {
+                    stroke: none;
                 }
             }
             .text-field {

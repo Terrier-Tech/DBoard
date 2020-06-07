@@ -35,7 +35,7 @@ class EntityView extends React.Component<Props> {
         })
         yAttr += lineHeight
         yAttr = Math.max(yAttr, state.y + height-config.lineHeight)
-		return <g className='entity' id={entity.id} onClick={this.onClicked.bind(this)} onDoubleClick={this.onDoubleClicked.bind(this)} onMouseDown={this.onMouseDown.bind(this)}>
+		return <g className='entity' id={entity.id} data-color={entity.state.color} onClick={this.onClicked.bind(this)} onDoubleClick={this.onDoubleClicked.bind(this)} onMouseDown={this.onMouseDown.bind(this)}>
 			<rect className='entity-background' x={state.x} y={state.y} width={width} height={height} stroke='transparent' fill='#ffffff'/>
             <rect className='entity-name-bar' x={state.x} y={state.y} width={width} height={lineHeight} stroke='transparent' fill={color}/>
             <text className='entity-name' x={state.x + width/2} y={yName}>{state.name}</text>

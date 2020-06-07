@@ -6,8 +6,8 @@ import * as Actions from "../ui/actions"
 
 export class Model extends ModelBase<State> {
 
-    constructor(public entity: Entity.Model, state: State) {
-        super("attribute", state)
+    constructor(public entity: Entity.Model, state: State, id: string|null=null) {
+        super("attribute", state, id)
         entity.registerAttribute(this)
     }
 
@@ -24,6 +24,7 @@ export class Model extends ModelBase<State> {
 }
 
 export class State {
+
     constructor(readonly name: string, readonly type: string = 'text', readonly isRequired: boolean = false) {
 
     }
@@ -77,7 +78,7 @@ export class NewAction extends Actions.Base {
     }
 
     apply(): void {
-        this.attribute = this.entity.newAttribute(this.raw)
+        this.attribute = this.entity.newAttributeFromRaw(this.raw)
     }
 
     unapply(): void {
@@ -105,7 +106,7 @@ export class DeleteAction extends Actions.Base {
     }
 
     unapply(): void {
-        this.attribute = this.entity.newAttribute(this.attribute.raw)
+        this.attribute = this.entity.newAttributeFromRaw(this.attribute.raw)
     }
 
     hasChanges(): boolean {

@@ -20,6 +20,7 @@ a.action {
     text-align: center;
     color: #fff;
     cursor: pointer;
+    user-select: none;
     &.inactive {
         svg {
             opacity: 0.5;
@@ -49,7 +50,7 @@ a.action {
 // Inputs
 ////////////////////////////////////////////////////////////////////////////////
 
-input[type=text] {
+#topbar input[type=text] {
     background-color: rgba(#fff, 0.1);
     padding: 6px 12px;
     font-size: 14px;
@@ -83,9 +84,12 @@ input[type=text] {
         font-weight: bold;
         line-height: 1;
     }
-    input.file-name {
-        flex: 0 0 auto;
-        margin: 9px;
+    .text-field {
+        flex: 0 1 200px;
+        padding: 8px;
+        input {
+            width: 100%;
+        }
     }
     .spacer {
         flex: 1 1 auto;
@@ -93,7 +97,6 @@ input[type=text] {
     a.action {
         flex: 0 0 $bar-height;
         height: $bar-height;
-        padding: 0 4px;
     }
 }
 

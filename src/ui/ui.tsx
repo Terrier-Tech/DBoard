@@ -1,5 +1,4 @@
 import Selection from './selection'
-import App from '../App'
 import Config from '../view/config'
 import Interactor from './interactor'
 import Schema from '../model/schema'
@@ -17,7 +16,7 @@ class UI {
     readonly history: Actions.History
     readonly keymap: Keymap
 
-    constructor(readonly app: App, private config: Config, public schema: Schema) {
+    constructor(private config: Config, public schema: Schema) {
         this.selection = new Selection(this)
 
         this.interactor = new Interactor(this, config)

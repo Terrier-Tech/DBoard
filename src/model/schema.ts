@@ -7,7 +7,7 @@ import * as Geom from '../util/geom'
 class Schema extends ModelBase<SchemaState> {
 
     constructor() {
-        super("schema", new SchemaState())
+        super("schema", new SchemaState(), null)
     }
 
     private entities : Record<string,Entity.Model> = {}
@@ -20,6 +20,10 @@ class Schema extends ModelBase<SchemaState> {
         return this.entities[id]
     }
 
+    hasEntity(id: string): boolean {
+        return !!this.entities[id]
+    }
+
     addEntity(entity: Entity.Model) {
         this.entities[entity.id] = entity
     }
@@ -28,8 +32,8 @@ class Schema extends ModelBase<SchemaState> {
         delete this.entities[id]
     }
 
-    newEntity(state: Entity.State) : Entity.Model {
-        return new Entity.Model(this, state)
+    newEntity(state: Entity.State, id: string|null=null) : Entity.Model {
+        return new Entity.Model(this, state, id)
     }
 
     get allEntities() : Array<Entity.Model> {
@@ -49,7 +53,7 @@ class Schema extends ModelBase<SchemaState> {
     }
 
     entityAt(p: Geom.Point): Entity.Model | undefined {
-        for (let entity of this.allEntities()) {
+        for (let entity of this.allEntities {
             if (Geom.rectContainsPoint(entity, p)) {
                 return entity
             }
@@ -75,8 +79,8 @@ class Schema extends ModelBase<SchemaState> {
         delete this.associations[id]
     }
 
-    newAssociation(state: Association.State) : Association.Model {
-        return new Association.Model(this, state)
+    newAssociation(state: Association.State, id: string|null=null) : Association.Model {
+        return new Association.Model(this, state, null)
     }
 
     buildAssociation(): Association.Builder {

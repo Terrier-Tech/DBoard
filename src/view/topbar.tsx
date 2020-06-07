@@ -11,6 +11,7 @@ interface Props {
     ui: UI
 	schema: Schema
 	source: Sources.Base
+	onOpen: () => void
 }
 
 interface State {
@@ -26,11 +27,21 @@ class Topbar extends React.Component<Props, State> {
 		}
 	}
 
+	componentDidMount() {
+		this.setState({
+			fileName: this.props.source.fileName
+		})
+	}
+
     render() {
         const history = this.props.ui.history
         return <div id='topbar'>
 			<a className='logo'><Logo/></a>
-			<input type='text' className='file-name' onChange={this.onFileNameChanged.bind(this)} value={this.state.fileName}/>
+			<div className='spacer'></div>
+			<a className='action' title='Open' onClick={() => this.props.onOpen()}><Icons.Open/></a>
+			<div className='text-field'>
+				<input type='text' className='file-name' onChange={this.onFileNameChanged.bind(this)} value={this.state.fileName}/>
+			</div>
 			<a className='action' title='Download' onClick={this.download.bind(this)}><Icons.Download/></a>
 			<div className='spacer'></div>
 			<a className={`action ${history.canUndo() ? '' : 'inactive'}`} onClick={() => history.undo()}><Icons.Undo/></a>
@@ -41,7 +52,7 @@ class Topbar extends React.Component<Props, State> {
 
     startNewEntity(evt: React.MouseEvent) {
         this.props.ui.interactor.beginNewEntity()
-    }
+	}
 
     download() {
         this.props.source.save(this.props.schema)

@@ -2,7 +2,7 @@
 <svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>icon-swap-vertical</title>
     <g id="icon-swap-vertical" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <polygon id="Path-8" fill="#FFFFFF" points="16 8 16 40 12 40 12 20 8 20"></polygon>
-        <polygon id="Path-8-Copy" fill="#FFFFFF" transform="translate(36.000000, 24.000000) rotate(180.000000) translate(-36.000000, -24.000000) " points="40 8 40 40 36 40 36 20 32 20"></polygon>
+        <polygon id="Path-8" fill="#FFFFFF" points="20 10 20 38 16 38 16 22 12 22"></polygon>
+        <polygon id="Path-8-Copy" fill="#FFFFFF" transform="translate(32.000000, 24.000000) rotate(180.000000) translate(-32.000000, -24.000000) " points="36 10 36 38 32 38 32 22 28 22"></polygon>
     </g>
 </svg>

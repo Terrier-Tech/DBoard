@@ -16,23 +16,26 @@ class Viewport extends React.Component<Props> {
 	constructor(props: Props) {
 		super(props)
 
+	}
+
+	componentDidMount() {
 		this.props.ui.listenForRender(UI.RenderType.Viewport, this)
 	}
 
 	render() {
-		const config = this.props.config
-		const schema = this.props.schema
+		const {config, schema, ui} = this.props
 		return <div id='viewport'>
 			<div className={`canvas grid-${config.gridSize}`} onMouseDown={this.onMouseDown.bind(this)} onMouseMove={this.onMouseMove.bind(this)} onMouseUp={this.onMouseUp.bind(this)} onDoubleClick={this.onDoubleClicked.bind(this)}>
-				<div className='document-plane'>
-					<SchemaView config={config} ui={this.props.ui} schema={schema} />
+				<div className='document-plane' key={`document-${schema.id}`}>
+					<SchemaView config={config} ui={ui} schema={schema} />
 				</div>
-				<Overlay config={config} ui={this.props.ui}/>
+				<Overlay key={`overlay-${schema.id}`} config={config} ui={ui}/>
 			</div>
 		</div>
 	}
 
 	onMouseDown(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+		console.log('on mouse down')
 		this.props.ui.interactor.onCanvasMouseDown(evt)
 	}
 
@@ -41,6 +44,7 @@ class Viewport extends React.Component<Props> {
 	}
 
 	onMouseUp(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+		console.log('on mouse up')
 		this.props.ui.interactor.onCanvasMouseUp(evt)
 	}
 

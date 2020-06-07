@@ -11,8 +11,8 @@ export type PositionType = 'left' | 'right' | 'horizontalCenter' | 'top' | 'bott
 export const PositionTypes: Array<PositionType> = ['left', 'right', 'horizontalCenter', 'top', 'bottom', 'verticalCenter']
 
 export class Model extends ModelBase<State> implements Geom.IRect {
-    constructor(readonly schema: Schema, state: State = new State()) {
-        super("entity", state)
+    constructor(readonly schema: Schema, state: State = new State(), id: string|null=null) {
+        super("entity", state, id)
         schema.registerEntity(this)
     }
 
@@ -107,7 +107,11 @@ export class Model extends ModelBase<State> implements Geom.IRect {
         return Object.entries(this.attributes).length
     }
 
-    newAttribute(raw: string) : Attribute.Model {
+    newAttribute(state: Attribute.State, id: string|null=null) : Attribute.Model {
+        return new Attribute.Model(this, state, id)
+    }
+
+    newAttributeFromRaw(raw: string) : Attribute.Model {
         return Attribute.Model.fromRaw(this, raw)
     }
 
