@@ -17,6 +17,7 @@ interface State {
 	ui: UI
 	schema: Schema
 	source: Sources.Base
+	pickSource: boolean
 }
 
 class App extends React.Component<Props, State> {
@@ -29,15 +30,14 @@ class App extends React.Component<Props, State> {
 		const ui = new UI(config, schema)
 		ui.listenForRender(UI.RenderType.App, this)
 
-		const source = new Sources.Download('untitled')
-
-		schema.demo(config)
+		const source = new Sources.NewDownload('untitled')
 
 		this.state = {
 			config: config,
 			ui: ui,
 			schema: schema,
-			source: source
+			source: source,
+			pickSource: true
 		}
 	}
 
@@ -49,21 +49,22 @@ class App extends React.Component<Props, State> {
 			config: config,
 			ui: ui,
 			schema: schema,
-			source: source
+			source: source,
+			pickSource: false
 		})
 	}
 
 	open() {
-		const source = new Sources.Download('')
-		this.reload(source)
+		this.setState({pickSource: true})
 	}
 
 	render() {
-		const {config, schema, ui, source} = this.state
+		const {config, schema, ui, source, pickSource} = this.state
 		return <div>
 			<Viewport key={`viewport-${schema.id}`} config={config} ui={ui} schema={schema}/>
 			<Topbar key={`topbar-${schema.id}`} config={config} ui={ui} schema={schema} source={source} onOpen={this.open.bind(this)}/>
 			<SelectionMenu key={`menu-${schema.id}`} config={config} ui={ui} schema={schema}/>
+			{pickSource && <Sources.Picker onPicked={(newSource) => this.reload(newSource)} onCanceled={() => this.setState({pickSource: false})}/>}
 		</div>;
 	}
 }

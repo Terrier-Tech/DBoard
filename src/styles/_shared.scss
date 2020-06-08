@@ -5,16 +5,15 @@ $grid-size: 16px;
 $line-height: 32px;
 
 $primary-color: #507c6b;
+$primary-color-highlight: lighten($primary-color, 42%);
+
 $secondary-color: #439676;
+$secondary-color-highlight: lighten($secondary-color, 42%);
 
 $overlay-color: #ffae3d;
 $overlay-color-dark: darken($overlay-color, 12%);
 $guide-color: #ffae3d;
 $hover-background: rgba(#000, 0.1);
 
-$theme-colors: (
-    "light": (
-        "canvas-bg": #f4f4f0,
-        "grid": #bbb
-    )
-)
+$canvas-bg: #f4f4f0;
+$grid-color: #bbb;

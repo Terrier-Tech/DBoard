@@ -8,12 +8,14 @@
         "downlevelIteration": true,
         "module": "es6",
         "moduleResolution": "node",
+        "resolveJsonModule": true,
         "target": "es5",
         "allowJs": true,
         "lib": ["ES2017", "DOM"],
         "jsx": "react",
     },
     "include": [
+        "./package.json",
         "./src/**/*"
     ]
 }

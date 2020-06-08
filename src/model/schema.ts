@@ -120,7 +120,7 @@ class Schema extends ModelBase<SchemaState> {
 		foo.snapPosition(config)
 
 		const bar = this.newEntity({
-			name: "A very long entity name",
+			name: "Bar",
 			x: 500,
 			y: 60,
 			color: 'cyan'

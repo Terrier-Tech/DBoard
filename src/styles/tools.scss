@@ -65,6 +65,91 @@ a.action {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Source Picker
+////////////////////////////////////////////////////////////////////////////////
+
+.source-picker-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(#aaa, 0.5);
+    overflow-y: scroll;
+}
+.source-picker {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+    margin: 5em auto;
+    padding: 1em;
+    background-color: $canvas-bg;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid rgba(#000, 0.2);
+    h1 {
+        text-align: center;
+        color: $primary-color;
+        font-size: 32px;
+    }
+    a.close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        cursor: pointer;
+        svg g {
+            fill: $secondary-color;
+        }
+        &:hover {
+            transform: scale(1.05);
+        }
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+    .sources {
+        display: flex;
+        a.source {
+            display: block;
+            flex: 0 0 33.3%;
+            padding: 1em;
+            border-right: 1px solid $grid-color;
+            text-align: center;
+            cursor: pointer;
+            h2 {
+                font-size: 20px;
+                color: $primary-color;
+            }
+            p {
+                font-size: 14px;
+            }
+            img {
+                width: 2*$bar-height;
+                height: 2*$bar-height;
+                margin: 0 auto;
+            }
+            svg {
+                display: block;
+                margin: 2em auto;
+                transform: scale(2);
+                g {
+                    fill: $secondary-color;
+                }
+            }
+            &:last-child {
+                border-right: none;
+            }
+            &:hover {
+                background-color: $secondary-color-highlight;
+            }
+            &:active {
+                transform: scale(0.95);
+            }
+        }
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Top Bar
 ////////////////////////////////////////////////////////////////////////////////
 
