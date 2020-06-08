@@ -82,10 +82,28 @@ a.action {
     width: 90%;
     max-width: 800px;
     margin: 5em auto;
-    padding: 1em;
     background-color: $canvas-bg;
-    border-top: 1px solid #fff;
-    border-bottom: 1px solid rgba(#000, 0.2);
+    border-bottom: 1px solid rgba(#000, 0.3);
+    .banner {
+        border-top: 1px solid rgba(#fff, 0.3);
+        text-align: center;
+        padding: 1em;
+        background-color: $primary-color;
+        color: #fff;
+        svg {
+            transform: scale(2);
+            margin: 1em 0;
+        }
+        .tagline {
+            font-size: 16px;
+            margin: 1em 0;
+        }
+        .version {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 1em 0;
+        }
+    }
     h1 {
         text-align: center;
         color: $primary-color;
@@ -96,9 +114,6 @@ a.action {
         right: 0;
         top: 0;
         cursor: pointer;
-        svg g {
-            fill: $secondary-color;
-        }
         &:hover {
             transform: scale(1.05);
         }
@@ -108,6 +123,7 @@ a.action {
     }
     .sources {
         display: flex;
+        padding: 1em;
         a.source {
             display: block;
             flex: 0 0 33.3%;
@@ -146,6 +162,33 @@ a.action {
             }
         }
     }
+    .footer {
+        padding: 1em;
+        color: $primary-color;
+        background-color: $hint-bg;
+        display: flex;
+        .column {
+            flex: 1 1 auto;
+            text-align: center;
+            a {
+                display: block;
+                text-decoration: none;
+                font-weight: bold;
+                color: $primary-color;
+                svg g, svg path {
+                    fill: $primary-color;
+                }
+                span {
+                    display: inline-block;
+                    vertical-align: top;
+                    padding: 14px 8px;
+                }
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
 }
 
 
@@ -168,6 +211,7 @@ a.action {
         font-size: 24px;
         font-weight: bold;
         line-height: 1;
+        cursor: pointer;
     }
     .text-field {
         flex: 0 1 200px;

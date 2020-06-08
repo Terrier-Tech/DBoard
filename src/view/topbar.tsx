@@ -36,7 +36,7 @@ class Topbar extends React.Component<Props, State> {
     render() {
         const history = this.props.ui.history
         return <div id='topbar'>
-			<a className='logo'><Logo/></a>
+			<a className='logo' onClick={() => this.props.onOpen()}><Logo/></a>
 			<div className='spacer'></div>
 			<a className='action' title='Open' onClick={() => this.props.onOpen()}><Icons.Open/></a>
 			<div className='text-field'>

@@ -35,7 +35,6 @@ class Viewport extends React.Component<Props> {
 	}
 
 	onMouseDown(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-		console.log('on mouse down')
 		this.props.ui.interactor.onCanvasMouseDown(evt)
 	}
 
@@ -44,7 +43,6 @@ class Viewport extends React.Component<Props> {
 	}
 
 	onMouseUp(evt: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-		console.log('on mouse up')
 		this.props.ui.interactor.onCanvasMouseUp(evt)
 	}
 

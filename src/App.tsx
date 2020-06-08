@@ -45,6 +45,7 @@ class App extends React.Component<Props, State> {
 		const config = this.state.config
 		const schema = await source.load(config)
 		const ui = new UI(config, schema)
+		ui.listenForRender(UI.RenderType.App, this)
 		this.setState({
 			config: config,
 			ui: ui,
@@ -60,7 +61,8 @@ class App extends React.Component<Props, State> {
 
 	render() {
 		const {config, schema, ui, source, pickSource} = this.state
-		return <div>
+		console.log(`rendering app with ${schema.id}`)
+		return <div id={`app-${schema.id}`}>
 			<Viewport key={`viewport-${schema.id}`} config={config} ui={ui} schema={schema}/>
 			<Topbar key={`topbar-${schema.id}`} config={config} ui={ui} schema={schema} source={source} onOpen={this.open.bind(this)}/>
 			<SelectionMenu key={`menu-${schema.id}`} config={config} ui={ui} schema={schema}/>

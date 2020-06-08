@@ -6,6 +6,7 @@ import Config from "../view/config"
 import * as packageData from '../../package.json'
 import Demo from '../resources/png/demo.png'
 import Icons from '../view/icons'
+import Logo from '../resources/svg/logo-white.svg'
 
 export abstract class Base {
 
@@ -158,12 +159,30 @@ export class Picker extends React.Component<PickerProps> {
         })
         return <div className='source-picker-bg'>
             <div className='source-picker'>
-                <h1>DBoard {packageData.version}</h1>
+                <div className='banner'>
+                    <Logo />
+                    <div className='tagline'>Open Source Data Modeler</div>
+                    <div className='version'>Version {packageData.version}</div>
+                </div>
                 <a className='close' onClick={() => this.props.onCanceled()}>
                     <Icons.Close />
                 </a>
                 <div className='sources'>
                     {sourceButtons}
+                </div>
+                <div className='footer'>
+                    <div className='column'>
+                        <a href='https://github.com/Terrier-Tech/DBoard' target='_blank'>
+                            <Icons.Github/>
+                            <span>Source Code</span>
+                        </a>
+                    </div>
+                    <div className='column'>
+                        <a href='http://terrier.tech' target='_blank'>
+                            <Icons.Terrier/>
+                            <span>&copy; {new Date().getFullYear()} Terrier Technologies</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
