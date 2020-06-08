@@ -163,7 +163,7 @@ export class Lines {
                     points[1]
                 ]
                 return
-            case 'es':
+            case 'sw':
                 // add one point in lower left
                 line.points = [
                     points[0],

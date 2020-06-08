@@ -13,7 +13,7 @@ https://terrier-tech.github.io/DBoard/
 Everything is done client-side, so there's no need to create an account or store you information with a third party. 
 
 
-## Building and running on localhost
+## Running on localhost
 
 First install dependencies:
 
@@ -27,9 +27,6 @@ To run in hot module reloading mode:
 npm start
 ```
 
-
-## Running
-
 Open http://localhost:1234/ in your browser
 
 
@@ -41,7 +38,7 @@ To create a production build:
 npm run build
 ```
 
-The production artifacts are created in the /docs directory. 
+The production artifacts are created in the /docs directory for Github Pages reasons.
 
 
 ## Credit
