@@ -7,8 +7,8 @@ import Config from "../view/config"
 
 class Schema extends ModelBase<SchemaState> {
 
-    constructor() {
-        super("schema", new SchemaState(), null)
+    constructor(id: string|null=null) {
+        super("schema", new SchemaState(), id)
     }
 
     private entities : Record<string,Entity.Model> = {}

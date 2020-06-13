@@ -42,6 +42,7 @@ class Topbar extends React.Component<Props, State> {
 			<div className='text-field'>
 				<input type='text' className='file-name' onChange={this.onFileNameChanged.bind(this)} value={this.state.fileName}/>
 			</div>
+			<a className='action' title='Save' onClick={this.save.bind(this)}><Icons.Save/></a>
 			<a className='action' title='Download' onClick={this.download.bind(this)}><Icons.Download/></a>
 			<div className='spacer'></div>
 			<a className={`action ${history.canUndo() ? '' : 'inactive'}`} onClick={() => history.undo()}><Icons.Undo/></a>
@@ -54,8 +55,12 @@ class Topbar extends React.Component<Props, State> {
         this.props.ui.interactor.beginNewEntity()
 	}
 
-    download() {
+    save() {
         this.props.source.save(this.props.schema)
+	}
+
+    download() {
+        this.props.source.export(this.props.schema)
 	}
 	
 	onFileNameChanged(evt: React.FormEvent<HTMLInputElement>) {

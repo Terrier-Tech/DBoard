@@ -8,9 +8,82 @@ import Demo from '../resources/png/demo.png'
 import Icons from '../view/icons'
 import Logo from '../resources/svg/logo-white.svg'
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Meta Storage
+////////////////////////////////////////////////////////////////////////////////
+
+interface DocumentMeta {
+    id: string
+    name: string
+    raw: string|undefined
+    updatedAt: number|undefined
+    origin: 'localStorage'
+}
+
+const MANIFEST_KEY = 'manifest'
+
+class LocalManifest {
+
+    items: Record<string, DocumentMeta> = {}
+
+    constructor() {
+        const raw = localStorage.getItem(MANIFEST_KEY)
+        if (raw && raw.length) {
+            try {
+                this.items = JSON.parse(raw) as Record<string,DocumentMeta>
+            }
+            catch(ex) {
+                console.log(`Error parsing raw manifest "${raw}"`, ex)
+            }
+        }
+    }
+
+    addItem(item: DocumentMeta) {
+        // copy the item and remove the raw since it's not needed in the manifest
+        const minItem = {...item, raw: undefined}
+        if (this.items[item.id]) {
+            console.log(`Replacing local manifest item`, minItem)
+        }
+        else {
+            console.log(`Adding local manifest item`, minItem)
+        }
+        this.items[item.id] = minItem
+    }
+
+    write() {
+        localStorage.setItem(MANIFEST_KEY, JSON.stringify(this.items))
+    }
+
+    get itemsInOrder(): DocumentMeta[] {
+        return Object.entries(this.items).map(kv => {return kv[1]}).sort((a,b) => {
+            return (b.updatedAt||0) - (a.updatedAt||0) // reverse chronological order
+        })
+    }
+
+    loadItem(item: DocumentMeta): DocumentMeta|null {
+        const raw = localStorage.getItem(item.id)
+        if (raw) {
+            try {
+                return JSON.parse(raw) as DocumentMeta
+            }
+            catch(ex) {
+                console.log(`error parsing raw localstorage item`, ex, raw)
+            }
+        }
+        return null
+    }
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Sources
+////////////////////////////////////////////////////////////////////////////////
+
 export abstract class Base {
 
-    constructor(public fileName: string) {
+    constructor(public meta: DocumentMeta) {
         
     }
 
@@ -18,10 +91,34 @@ export abstract class Base {
         const writer = new Writer(schema)
         const view = document.getElementById('document')
         const svg = writer.dump(view!)
-        this.saveRaw(svg)
+        this.saveRaw(schema.id, svg)
+    }
+
+    export(schema: Schema) {
+        const writer = new Writer(schema)
+        const view = document.getElementById('document')
+        const svg = writer.dump(view!)
+    }
+
+    protected exportRaw(svg: string) {
+        const a = document.createElement('a')
+        const file = new Blob([svg], {type: 'image/svg+xml'})
+        a.href = URL.createObjectURL(file)
+        a.download = this.nameWithExtension
+        a.click()
+        a.remove()
     }
     
-    protected abstract saveRaw(svg: string): void
+    protected abstract saveRaw(id: string, svg: string): void
+
+    get fileName(): string {
+        const comps = this.meta.name.split('/')
+        return comps[comps.length-1]
+    }
+
+    set fileName(name: string) {
+        this.meta.name = name
+    }
 
     get nameWithExtension(): string {
         if (this.fileName.indexOf('.svg') > 0) {
@@ -30,11 +127,15 @@ export abstract class Base {
         return this.fileName + '.svg'
     }
 
+    get nameWithoutExtension(): string {
+        return this.fileName.replace(/\.svg/i, '')
+    }
+
     async load(config: Config): Promise<Schema> {
         const raw = await this.loadRaw()
         console.log('raw: ', raw)
         const reader = new Reader(config)
-        return reader.read(raw)
+        return reader.read(raw, this.meta.id)
     }
 
     protected abstract async loadRaw(): Promise<string>
@@ -42,19 +143,44 @@ export abstract class Base {
     abstract renderButton(): JSX.Element
 }
 
-export class NewDownload extends Base {
+
+
+// persists the documents to the browser LocalStorage
+export class LocalStorage extends Base {
+
+    constructor(meta: DocumentMeta|string) {
+        if ((meta as DocumentMeta).id) {
+            super(meta as DocumentMeta)
+        }
+        else {
+            super({id: '', name: (meta as string), origin: 'localStorage', raw: undefined, updatedAt: 0})
+        }
+    }
     
-    protected saveRaw(svg: string) {
-        const a = document.createElement('a')
-        const file = new Blob([svg], {type: 'image/svg+xml'})
-        a.href = URL.createObjectURL(file)
-        a.download = this.nameWithExtension
-        a.click()
-        a.remove()
+    // write the raw svg directly to localStorage
+    protected saveRaw(id: string, svg: string) {
+        const item: DocumentMeta = {
+            id: id,
+            name: this.nameWithoutExtension,
+            raw: svg,
+            updatedAt: new Date().valueOf(),
+            origin: 'localStorage'
+        }
+        localStorage.setItem(id, JSON.stringify(item))
+        const manifest = new LocalManifest()
+        manifest.addItem(item)
+        manifest.write()
     }
 
     protected async loadRaw(): Promise<string> {
         return new Promise((resolve, reject) => {
+            if (this.meta.id.length) {
+                const fullItem = new LocalManifest().loadItem(this.meta)
+                if (fullItem && fullItem.raw) {
+                    resolve(fullItem.raw)
+                    return
+                }
+            }
             resolve('<svg></svg>')
         })
     }
@@ -68,7 +194,11 @@ export class NewDownload extends Base {
     }
 }
 
-export class UploadDownload extends NewDownload {
+export class UploadLocalStorage extends LocalStorage {
+
+    constructor() {
+        super({id: '', raw: undefined, name: '', origin: 'localStorage', updatedAt: 0})
+    }
 
     protected async loadRaw(): Promise<string> {
         const input = document.createElement('input')
@@ -82,8 +212,7 @@ export class UploadDownload extends NewDownload {
                 }
                 else if (files.length == 1) {
                     const file = files[0]
-                    this.fileName = file.name.replace(/\.svg/i, '')
-                    console.log(`fileName is ${this.fileName}`)
+                    this.meta.name = file.name
                     file.text().then(raw => {
                         resolve(raw)
                     })
@@ -106,7 +235,10 @@ export class UploadDownload extends NewDownload {
     }
 }
 
-export class DemoDownload extends NewDownload {
+export class DemoLocalStorage extends LocalStorage {
+    constructor() {
+        super({id: 'demo', raw: undefined, name: 'demo', origin: 'localStorage', updatedAt: 0})
+    }
 
     protected async loadRaw(): Promise<string> {
         return new Promise((resolve, reject) => {
@@ -131,6 +263,47 @@ export class DemoDownload extends NewDownload {
     }
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// View Components
+////////////////////////////////////////////////////////////////////////////////
+
+interface ManifestProps {
+    manifest: LocalManifest
+    onSourceSelected: (source: Base) => void
+}
+
+class ManifestView extends React.Component<ManifestProps> {
+
+    dataUri(svg: string): string {
+        const noSpaces = svg.replace(/\%09/g, '').replace(/\%0A/g, '')
+        return `data:image/svg+xml;base64,${btoa(noSpaces)}`
+    }
+
+    render() {
+        const items = this.props.manifest.itemsInOrder.map(item => {
+            const updatedAt = new Date(item.updatedAt || 0)
+            const fullItem = this.props.manifest.loadItem(item)
+            const previewSrc = (fullItem && fullItem.raw) ? this.dataUri(fullItem.raw) : ''
+            return <a key={item.id} className='item' onClick={() => this.onItemClicked(item)}>
+                <div className='name'>{item.name}</div>
+                {fullItem && fullItem.raw && <img className='preview' src={previewSrc}/>}
+                <div className='updated-at'>{updatedAt.toDateString()}</div>
+            </a>
+        })
+        return <div className='manifest'>
+            {items}
+        </div>
+    }
+
+    onItemClicked(item: DocumentMeta) {
+        this.props.onSourceSelected(new LocalStorage(item))
+    }
+
+}
+
+
+
 interface PickerProps {
     onPicked: (source: Base) => void
     onCanceled: () => void
@@ -144,9 +317,9 @@ export class Picker extends React.Component<PickerProps> {
         super(props)
 
         this.sources = [
-            new NewDownload('untitled'),
-            new UploadDownload(''),
-            new DemoDownload('demo')
+            new LocalStorage('untitled'),
+            new UploadLocalStorage(),
+            new DemoLocalStorage()
         ]
     }
 
@@ -170,6 +343,7 @@ export class Picker extends React.Component<PickerProps> {
                 <div className='sources'>
                     {sourceButtons}
                 </div>
+                <ManifestView manifest={new LocalManifest()} onSourceSelected={(s) => onPicked(s)}/>
                 <div className='footer'>
                     <div className='column'>
                         <a href='https://github.com/Terrier-Tech/DBoard' target='_blank'>

@@ -30,7 +30,7 @@ class App extends React.Component<Props, State> {
 		const ui = new UI(config, schema)
 		ui.listenForRender(UI.RenderType.App, this)
 
-		const source = new Sources.NewDownload('untitled')
+		const source = new Sources.LocalStorage('untitled')
 
 		this.state = {
 			config: config,
@@ -61,7 +61,6 @@ class App extends React.Component<Props, State> {
 
 	render() {
 		const {config, schema, ui, source, pickSource} = this.state
-		console.log(`rendering app with ${schema.id}`)
 		return <div id={`app-${schema.id}`}>
 			<Viewport key={`viewport-${schema.id}`} config={config} ui={ui} schema={schema}/>
 			<Topbar key={`topbar-${schema.id}`} config={config} ui={ui} schema={schema} source={source} onOpen={this.open.bind(this)}/>

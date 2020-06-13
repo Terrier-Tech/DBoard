@@ -43,7 +43,6 @@ class UI {
     }
 
     private onAnimationFrame() {
-        console.log(`render UI type ${this.nextRenderType} with ${this.renderListeners.length} listeners`)
         for (let listener of this.renderListeners) {
             if (listener.type <= this.nextRenderType) {
                 listener.component.forceUpdate()

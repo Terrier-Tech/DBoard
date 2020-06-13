@@ -10,6 +10,7 @@ import PlusAssociation from "../resources/svg/icon-plus-association.svg"
 import Undo from "../resources/svg/icon-undo.svg"
 import Upload from "../resources/svg/icon-upload.svg"
 import Redo from "../resources/svg/icon-redo.svg"
+import Save from "../resources/svg/icon-save.svg"
 import SwapVertical from "../resources/svg/icon-swap-vertical.svg"
 import Terrier from "../resources/svg/icon-terrier.svg"
 
@@ -26,6 +27,7 @@ const Icons = {
     Undo: Undo,
     Upload: Upload,
     Redo: Redo,
+    Save: Save,
     SwapVertical: SwapVertical,
     Terrier: Terrier
 }

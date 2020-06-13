@@ -1,6 +1,5 @@
 import Schema from '../model/schema'
 import * as Entity from '../model/entity'
-import * as Attribute from '../model/attribute'
 import * as Association from '../model/association'
 import Config, { ColorName } from '../view/config'
 
@@ -15,11 +14,13 @@ class Reader {
         console.log(`WARN [Reader]: ${message}`)
     }
 
-    read(svg: string): Schema {
-        const schema = new Schema()
-        
+    read(svg: string, id: string): Schema {
         const root = document.createElement('html')
         root.innerHTML = svg
+
+        // schema
+        const nullableId = id.length ? id : null
+        const schema = new Schema(nullableId)
 
         // entities
         root.querySelectorAll<SVGGElement>('g.entity').forEach(elem => {

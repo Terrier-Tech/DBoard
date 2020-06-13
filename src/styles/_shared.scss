@@ -5,6 +5,7 @@ $grid-size: 16px;
 $line-height: 32px;
 
 $primary-color: #507c6b;
+$primary-color-dark: darken($primary-color, 10%);
 $primary-color-highlight: lighten($primary-color, 42%);
 
 $secondary-color: #439676;

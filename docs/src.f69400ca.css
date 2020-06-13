@@ -1,0 +1,413 @@
+body {
+  font-family: Verdana, Geneva, sans-serif;
+}
+
+*, *::after, *::before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+a {
+  cursor: pointer;
+}
+
+a.action {
+  display: block;
+  font-size: 12px;
+  text-align: center;
+  color: #fff;
+  user-select: none;
+}
+a.action.inactive svg {
+  opacity: 0.5;
+}
+a.action:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+a.action:active svg, a.action:active .color-circle {
+  transform: scale(0.96);
+}
+a.action.color {
+  padding: 8px;
+}
+a.action .color-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+#topbar input[type=text] {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #fff;
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+#topbar input[type=text]:focus {
+  outline: none;
+}
+
+.source-picker-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(170, 170, 170, 0.5);
+  overflow-y: scroll;
+}
+
+.source-picker {
+  position: relative;
+  width: 90%;
+  max-width: 800px;
+  margin: 5em auto;
+  background-color: #f4f4f0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.source-picker .banner {
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  text-align: center;
+  padding: 1em;
+  background-color: #507c6b;
+  color: #fff;
+}
+.source-picker .banner svg {
+  transform: scale(2);
+  margin: 1em 0;
+}
+.source-picker .banner .tagline {
+  font-size: 16px;
+  margin: 1em 0;
+}
+.source-picker .banner .version {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 1em 0;
+}
+.source-picker h1 {
+  text-align: center;
+  color: #507c6b;
+  font-size: 32px;
+}
+.source-picker a.close {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.source-picker a.close:hover {
+  transform: scale(1.05);
+}
+.source-picker a.close:active {
+  transform: scale(0.95);
+}
+.source-picker .sources {
+  display: flex;
+  padding: 1em;
+}
+.source-picker .sources a.source {
+  display: block;
+  flex: 0 0 33.3%;
+  padding: 1em;
+  border-right: 1px solid #bbb;
+  text-align: center;
+}
+.source-picker .sources a.source h2 {
+  font-size: 20px;
+  color: #507c6b;
+}
+.source-picker .sources a.source p {
+  font-size: 14px;
+}
+.source-picker .sources a.source img {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto;
+}
+.source-picker .sources a.source svg {
+  display: block;
+  margin: 2em auto;
+  transform: scale(2);
+}
+.source-picker .sources a.source svg g {
+  fill: #439676;
+}
+.source-picker .sources a.source:last-child {
+  border-right: none;
+}
+.source-picker .sources a.source:hover {
+  background-color: #c9e7db;
+}
+.source-picker .sources a.source:active {
+  transform: scale(0.95);
+}
+.source-picker .manifest {
+  display: flex;
+  flex-wrap: wrap;
+}
+.source-picker .manifest a.item {
+  flex: 0 0 33.33%;
+  padding: 1em;
+  text-align: center;
+  display: block;
+}
+.source-picker .manifest a.item .preview {
+  width: 100%;
+  height: auto;
+  background-color: #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+}
+.source-picker .manifest a.item .name {
+  font-weight: bold;
+  font-size: 14px;
+  color: #507c6b;
+  padding: 4px;
+}
+.source-picker .manifest a.item .updated-at {
+  font-size: 14px;
+}
+.source-picker .manifest a.item:hover {
+  background-color: #c9e7db;
+}
+.source-picker .manifest a.item:active {
+  transform: scale(0.95);
+}
+.source-picker .footer {
+  padding: 1em;
+  color: #507c6b;
+  background-color: #eee;
+  display: flex;
+}
+.source-picker .footer .column {
+  flex: 1 1 auto;
+  text-align: center;
+}
+.source-picker .footer .column a {
+  display: block;
+  text-decoration: none;
+  font-weight: bold;
+  color: #507c6b;
+}
+.source-picker .footer .column a svg g, .source-picker .footer .column a svg path {
+  fill: #507c6b;
+}
+.source-picker .footer .column a span {
+  display: inline-block;
+  vertical-align: top;
+  padding: 14px 8px;
+}
+.source-picker .footer .column a:hover span {
+  text-decoration: underline;
+}
+.source-picker .footer .column a:active {
+  color: #3c5d50;
+}
+
+#topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: #507c6b;
+  color: #fff;
+  display: flex;
+}
+#topbar a.logo {
+  display: block;
+  flex: 0 0 auto;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1;
+}
+#topbar .text-field {
+  flex: 0 1 200px;
+  padding: 8px;
+}
+#topbar .text-field input {
+  width: 100%;
+}
+#topbar .spacer {
+  flex: 1 1 auto;
+}
+#topbar a.action {
+  flex: 0 0 48px;
+  height: 48px;
+}
+
+#selection-menu {
+  position: fixed;
+  right: 0;
+  min-width: 48px;
+  min-height: 96px;
+  top: 50%;
+  transform: translate(100%, -50%);
+  transition: transform 0.2s ease;
+  background: #439676;
+  color: #fff;
+  text-align: center;
+}
+#selection-menu.show {
+  transform: translate(0, -50%);
+}
+#selection-menu .one-name, #selection-menu .many-name, #selection-menu .arity {
+  font-size: 14px;
+  line-height: 1;
+  padding: 4px 8px;
+}
+#selection-menu .one-name, #selection-menu .many-name {
+  font-weight: bold;
+}
+
+.color-menu {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #507c6b;
+  width: 192px;
+  left: -192px;
+  top: 0;
+}
+.color-menu a {
+  flex: 0 0 auto;
+}
+
+#viewport {
+  position: fixed;
+  top: 48px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+#viewport .canvas {
+  width: 3000px;
+  height: 3000px;
+}
+#viewport .canvas .document-plane {
+  font-size: 0;
+  line-height: 0;
+}
+#viewport .canvas svg text {
+  user-select: none;
+  cursor: default;
+}
+#viewport .canvas svg .new-button {
+  cursor: pointer;
+}
+#viewport .canvas svg .new-button svg g {
+  cursor: pointer;
+}
+#viewport .canvas svg .new-button:hover rect {
+  fill: #ffae3d;
+}
+#viewport .canvas svg .new-button:hover svg g {
+  fill: #fff;
+}
+#viewport .canvas svg .new-button:active rect {
+  fill: #ff9400;
+}
+#viewport .canvas svg .new-button:active svg g {
+  fill: #fff;
+}
+#viewport .canvas svg g.entity:hover .entity-background {
+  stroke: #ff9400;
+  stroke-width: 2;
+}
+#viewport .canvas svg g.association {
+  cursor: pointer;
+}
+#viewport .canvas svg g.association.selected polyline.line {
+  stroke: #ff9400;
+  stroke-width: 4px;
+}
+#viewport .canvas svg g.association:hover polyline.line {
+  stroke: #ffae3d;
+}
+#viewport .canvas .overlay-plane {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+#viewport .canvas .overlay-plane .entity-overlay {
+  position: absolute;
+  border: 2px solid #ff9400;
+}
+#viewport .canvas .overlay-plane .rubber-band {
+  position: absolute;
+  border: 2px dashed #ffae3d;
+}
+#viewport .canvas .overlay-plane .guide {
+  background-color: #ffae3d;
+  position: absolute;
+}
+#viewport .canvas .overlay-plane .guide.top, #viewport .canvas .overlay-plane .guide.bottom, #viewport .canvas .overlay-plane .guide.verticalCenter {
+  height: 1px;
+  left: 0;
+  right: 0;
+}
+#viewport .canvas .overlay-plane .guide.left, #viewport .canvas .overlay-plane .guide.right, #viewport .canvas .overlay-plane .guide.horizontalCenter {
+  width: 1px;
+  top: 0;
+  bottom: 0;
+}
+#viewport .canvas .overlay-plane #new-entity-proxy {
+  position: absolute;
+}
+#viewport .canvas .overlay-plane #new-entity-proxy svg {
+  transform: scale(2);
+}
+#viewport .canvas .overlay-plane #new-entity-proxy svg g {
+  fill: #ffae3d;
+}
+#viewport .canvas .overlay-plane svg {
+  width: 100%;
+  height: 100%;
+}
+#viewport .canvas .overlay-plane svg polyline.line {
+  stroke: #ffae3d;
+}
+#viewport .canvas .overlay-plane svg polyline.invisible {
+  stroke: none;
+}
+#viewport .canvas .overlay-plane .text-field {
+  position: absolute;
+  pointer-events: all;
+}
+#viewport .canvas .overlay-plane .text-field input:focus {
+  border: 2px solid #ffae3d;
+  outline: none;
+  background: #ffeed6;
+}
+#viewport .canvas .overlay-plane .text-field input[type=text] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  display: block;
+  padding: 0 8px;
+  font-size: 15px;
+}
+#viewport .canvas .overlay-plane .text-field.entity-name-field input[type=text] {
+  text-align: center;
+  font-weight: bold;
+}
+
+.canvas {
+  background-color: #f4f4f0;
+  background-image: radial-gradient(#bbb 1px, transparent 0);
+  background-size: 16px 16px;
+  background-position: 8px 8px;
+}
+
+/*# sourceMappingURL=/src.f69400ca.css.map */

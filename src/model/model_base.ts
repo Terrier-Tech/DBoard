@@ -2,7 +2,18 @@
 abstract class ModelBase<StateType> {
     private static idCounts: {[type: string]: number;} = {}
 
+    static newGuid() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = Math.random() * 16 | 0,
+            v = c == 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+        });
+      }
+
     static getId(type: string) {
+        if (type == 'schema') { // generate guids for schemas
+            return this.newGuid()
+        }
         if (this.idCounts[type]) {
             this.idCounts[type] += 1
         }

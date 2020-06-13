@@ -8,6 +8,9 @@ body {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
+a {
+    cursor: pointer;
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -19,7 +22,6 @@ a.action {
     font-size: 12px;
     text-align: center;
     color: #fff;
-    cursor: pointer;
     user-select: none;
     &.inactive {
         svg {
@@ -84,6 +86,7 @@ a.action {
     margin: 5em auto;
     background-color: $canvas-bg;
     border-bottom: 1px solid rgba(#000, 0.3);
+    box-shadow: 0 2px 8px rgba(#000, 0.2);
     .banner {
         border-top: 1px solid rgba(#fff, 0.3);
         text-align: center;
@@ -113,7 +116,6 @@ a.action {
         position: absolute;
         right: 0;
         top: 0;
-        cursor: pointer;
         &:hover {
             transform: scale(1.05);
         }
@@ -130,7 +132,6 @@ a.action {
             padding: 1em;
             border-right: 1px solid $grid-color;
             text-align: center;
-            cursor: pointer;
             h2 {
                 font-size: 20px;
                 color: $primary-color;
@@ -162,6 +163,37 @@ a.action {
             }
         }
     }
+    .manifest {
+        display: flex;
+        flex-wrap: wrap;
+        a.item {
+            flex: 0 0 33.33%;
+            padding: 1em;
+            text-align: center;
+            display: block;
+            .preview {
+                width: 100%;
+                height: auto;
+                background-color: #fff;
+                box-shadow: 0 1px 6px rgba(#000, 0.15);
+            }
+            .name {
+                font-weight: bold;
+                font-size: 14px;
+                color: $primary-color;
+                padding: 4px;
+            }
+            .updated-at {
+                font-size: 14px;
+            }
+            &:hover {
+                background-color: $secondary-color-highlight;
+            }
+            &:active {
+                transform: scale(0.95);
+            }
+        }
+    }
     .footer {
         padding: 1em;
         color: $primary-color;
@@ -183,8 +215,11 @@ a.action {
                     vertical-align: top;
                     padding: 14px 8px;
                 }
-                &:hover {
+                &:hover span {
                     text-decoration: underline;
+                }
+                &:active {
+                    color: $primary-color-dark;
                 }
             }
         }
@@ -211,7 +246,6 @@ a.action {
         font-size: 24px;
         font-weight: bold;
         line-height: 1;
-        cursor: pointer;
     }
     .text-field {
         flex: 0 1 200px;
