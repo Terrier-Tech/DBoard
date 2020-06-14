@@ -55,6 +55,10 @@ class LocalManifest {
         delete this.items[item.id]
     }
 
+    getItem(id: string): DocumentMeta|undefined {
+        return this.items[id]
+    }
+
     write() {
         localStorage.setItem(MANIFEST_KEY, JSON.stringify(this.items))
     }
@@ -89,6 +93,22 @@ export abstract class Base {
 
     constructor(public meta: DocumentMeta) {
         
+    }
+
+    static existingById(id: string): Base {
+        const manifest = new LocalManifest()
+        const item = manifest.getItem(id)
+        if (item) {
+            switch (item.origin) {
+                case 'localStorage':
+                    return new LocalStorage(item)
+                default: 
+                    throw `Unknown origin '${item.origin}'`
+            }
+        }
+        else {
+            return new LocalStorage('')
+        }
     }
 
     save(schema: Schema) {

@@ -13,7 +13,6 @@ interface Props {
 }
 
 interface State {
-	config: Config
 	ui: UI
 	schema: Schema
 	source: Sources.Base
@@ -22,18 +21,26 @@ interface State {
 
 class App extends React.Component<Props, State> {
 
+	config: Config
+
 	constructor(props: Props) {
 		super(props)
 
-		const config = new Config()
+		this.config = new Config()
 		const schema = new Schema()
-		const ui = new UI(config, schema)
+		const ui = new UI(this.config, schema)
 		ui.listenForRender(UI.RenderType.App, this)
 
-		const source = new Sources.LocalStorage('untitled')
-
+		const path = location.pathname
+		let source: Sources.Base = new Sources.LocalStorage('untitled')
+		console.log(`path: ${path}`)
+		if (path.length > 1) {
+			const id = path.substring(1)
+			source = Sources.Base.existingById(id)
+			this.reload(source)
+		}
+		
 		this.state = {
-			config: config,
 			ui: ui,
 			schema: schema,
 			source: source,
@@ -42,12 +49,11 @@ class App extends React.Component<Props, State> {
 	}
 
 	async reload(source: Sources.Base) {
-		const config = this.state.config
-		const schema = await source.load(config)
-		const ui = new UI(config, schema)
+		const schema = await source.load(this.config)
+		const ui = new UI(this.config, schema)
 		ui.listenForRender(UI.RenderType.App, this)
+		history.pushState(null, '', `/${schema.id}`)
 		this.setState({
-			config: config,
 			ui: ui,
 			schema: schema,
 			source: source,
@@ -60,11 +66,11 @@ class App extends React.Component<Props, State> {
 	}
 
 	render() {
-		const {config, schema, ui, source, pickSource} = this.state
+		const {schema, ui, source, pickSource} = this.state
 		return <div id={`app-${schema.id}`}>
-			<Viewport key={`viewport-${schema.id}`} config={config} ui={ui} schema={schema}/>
-			<Topbar key={`topbar-${schema.id}`} config={config} ui={ui} schema={schema} source={source} onOpen={this.open.bind(this)}/>
-			<SelectionMenu key={`menu-${schema.id}`} config={config} ui={ui} schema={schema}/>
+			<Viewport key={`viewport-${schema.id}`} config={this.config} ui={ui} schema={schema}/>
+			<Topbar key={`topbar-${schema.id}`} config={this.config} ui={ui} schema={schema} source={source} onOpen={this.open.bind(this)}/>
+			<SelectionMenu key={`menu-${schema.id}`} config={this.config} ui={ui} schema={schema}/>
 			{pickSource && <Sources.Picker onPicked={(newSource) => this.reload(newSource)} onCanceled={() => this.setState({pickSource: false})}/>}
 		</div>;
 	}
