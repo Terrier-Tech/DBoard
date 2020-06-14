@@ -51,6 +51,10 @@ class LocalManifest {
         this.items[item.id] = minItem
     }
 
+    removeItem(item: DocumentMeta) {
+        delete this.items[item.id]
+    }
+
     write() {
         localStorage.setItem(MANIFEST_KEY, JSON.stringify(this.items))
     }
@@ -273,7 +277,18 @@ interface ManifestProps {
     onSourceSelected: (source: Base) => void
 }
 
-class ManifestView extends React.Component<ManifestProps> {
+interface ManifestState {
+    items: DocumentMeta[]
+}
+
+class ManifestView extends React.Component<ManifestProps, ManifestState> {
+
+    constructor(props: ManifestProps) {
+        super(props)
+        this.state = {
+            items: this.props.manifest.itemsInOrder
+        }
+    }
 
     dataUri(svg: string): string {
         const noSpaces = svg.replace(/\%09/g, '').replace(/\%0A/g, '')
@@ -281,7 +296,7 @@ class ManifestView extends React.Component<ManifestProps> {
     }
 
     render() {
-        const items = this.props.manifest.itemsInOrder.map(item => {
+        const items = this.state.items.map(item => {
             const updatedAt = new Date(item.updatedAt || 0)
             const fullItem = this.props.manifest.loadItem(item)
             const previewSrc = (fullItem && fullItem.raw) ? this.dataUri(fullItem.raw) : ''
@@ -289,6 +304,9 @@ class ManifestView extends React.Component<ManifestProps> {
                 <div className='name'>{item.name}</div>
                 {fullItem && fullItem.raw && <img className='preview' src={previewSrc}/>}
                 <div className='updated-at'>{updatedAt.toDateString()}</div>
+                <div className='close' onClick={(evt) => {this.onRemoveItem(item); evt.stopPropagation()}}>
+                    <Icons.Close/>
+                </div>
             </a>
         })
         return <div className='manifest'>
@@ -298,6 +316,17 @@ class ManifestView extends React.Component<ManifestProps> {
 
     onItemClicked(item: DocumentMeta) {
         this.props.onSourceSelected(new LocalStorage(item))
+    }
+
+    onRemoveItem(item: DocumentMeta) {
+        const manifest = this.props.manifest
+        if (confirm("Remove this document from the recent list?")) {
+            manifest.removeItem(item)
+            manifest.write()
+            this.setState({
+                items: manifest.itemsInOrder
+            })
+        }
     }
 
 }

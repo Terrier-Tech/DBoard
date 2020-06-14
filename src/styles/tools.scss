@@ -168,9 +168,10 @@ a.action {
         flex-wrap: wrap;
         a.item {
             flex: 0 0 33.33%;
-            padding: 1em;
+            padding: 0.5em 1em;
             text-align: center;
             display: block;
+            position: relative;
             .preview {
                 width: 100%;
                 height: auto;
@@ -191,6 +192,25 @@ a.action {
             }
             &:active {
                 transform: scale(0.95);
+            }
+            .close {
+                position: absolute;
+                right: 0;
+                top: -4px;
+                svg {
+                    width: $bar-height;
+                    height: $bar-height;
+                    transform: scale(0.5);
+                    g {
+                        fill: $secondary-color;
+                    }
+                }
+                &:hover svg {
+                    transform: scale(0.6);
+                }
+                &:active svg {
+                    transform: scale(0.4);
+                }
             }
         }
     }
