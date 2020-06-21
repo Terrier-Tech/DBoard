@@ -31,11 +31,11 @@ class App extends React.Component<Props, State> {
 		const ui = new UI(this.config, schema)
 		ui.listenForRender(UI.RenderType.App, this)
 
-		const path = location.pathname
+		const hash = location.hash
 		let source: Sources.Base = new Sources.LocalStorage('untitled')
-		console.log(`path: ${path}`)
-		if (path.length > 1) {
-			const id = path.substring(1)
+		console.log(`hash: ${hash}`)
+		if (hash.length > 1) {
+			const id = hash.substring(1)
 			source = Sources.Base.existingById(id)
 			this.reload(source)
 		}
@@ -52,7 +52,7 @@ class App extends React.Component<Props, State> {
 		const schema = await source.load(this.config)
 		const ui = new UI(this.config, schema)
 		ui.listenForRender(UI.RenderType.App, this)
-		history.pushState(null, '', `/${schema.id}`)
+		history.pushState(null, '', `#${schema.id}`)
 		this.setState({
 			ui: ui,
 			schema: schema,
