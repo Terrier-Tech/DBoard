@@ -9,6 +9,7 @@
   "repository": {
     "url": "https://github.com/Terrier-Tech/DBoard"
   },
+  "homepage": "./",
   "scripts": {
     "clean": "rm -r docs/*",
     "start": "parcel src/index.html --out-dir docs",
