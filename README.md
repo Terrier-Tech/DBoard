@@ -1,6 +1,6 @@
 # DBoard
 
-DBoard is a simple, web-based data modeling application.
+DBoard is a simple, web-based data modeling application for creating [Entity-Relationship Diagrams](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model).
 It lets you draw entities, their attributes, and their relationships with each other.
 Documents are stored in annotated SVG files, so they can be viewed in regalar web browesers and easily embedded into other documents.
 

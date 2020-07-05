@@ -2,6 +2,7 @@
 
 body {
     font-family: Verdana, Geneva, sans-serif;
+    background-color: $primary-color;
 }
 *, *::after, *::before {
 	-webkit-box-sizing: border-box;
@@ -69,6 +70,12 @@ a.action {
 ////////////////////////////////////////////////////////////////////////////////
 // Source Picker
 ////////////////////////////////////////////////////////////////////////////////
+
+.with-modal {
+    #viewport, #topbar {
+        filter: blur(8px);
+    }
+}
 
 .source-picker-bg {
     position: fixed;

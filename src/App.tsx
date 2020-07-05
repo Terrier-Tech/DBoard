@@ -67,7 +67,8 @@ class App extends React.Component<Props, State> {
 
 	render() {
 		const {schema, ui, source, pickSource} = this.state
-		return <div id={`app-${schema.id}`}>
+		const appClass = pickSource ? 'with-modal' : ''
+		return <div id={`app-${schema.id}`} className={appClass}>
 			<Viewport key={`viewport-${schema.id}`} config={this.config} ui={ui} schema={schema}/>
 			<Topbar key={`topbar-${schema.id}`} config={this.config} ui={ui} schema={schema} source={source} onOpen={this.open.bind(this)}/>
 			<SelectionMenu key={`menu-${schema.id}`} config={this.config} ui={ui} schema={schema}/>
