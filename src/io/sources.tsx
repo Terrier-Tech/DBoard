@@ -227,6 +227,7 @@ export class UploadLocalStorage extends LocalStorage {
     protected async loadRaw(): Promise<string> {
         const input = document.createElement('input')
         input.setAttribute('type', 'file')
+        input.setAttribute('accept', '.svg')
         return new Promise((resolve, reject) => {
             input.addEventListener("change", () => {
                 const files = input.files
