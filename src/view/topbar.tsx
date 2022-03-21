@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Logo from '../resources/svg/logo-white.svg'
+import {ReactComponent as Logo} from '../resources/svg/logo-white.svg'
 import Icons from './icons'
 import Config from './config'
 import UI from '../ui/ui'

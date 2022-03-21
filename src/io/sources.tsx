@@ -6,7 +6,7 @@ import Config from "../view/config"
 import * as packageData from '../../package.json'
 import Demo from '../resources/png/demo.png'
 import Icons from '../view/icons'
-import Logo from '../resources/svg/logo-white.svg'
+import {ReactComponent as Logo} from '../resources/svg/logo-white.svg'
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -162,7 +162,7 @@ export abstract class Base {
         return reader.read(raw, this.meta.id)
     }
 
-    protected abstract async loadRaw(): Promise<string>
+    protected abstract loadRaw(): Promise<string>
 
     abstract renderButton(): JSX.Element
 }

@@ -11,34 +11,18 @@
   },
   "homepage": "./",
   "scripts": {
+    "dev": "vite",
     "clean": "rm -r docs/*",
     "start": "parcel src/index.html --out-dir docs",
-    "build": "rm -r docs/* ; parcel build src/index.html --out-dir docs --public-url ./",
-    "desktop": "electron .",
-    "electron-build": "electron-builder -mwl"
+    "build": "rm -r docs/* && tsc && vite build"
   },
   "build": {
     "appId": "tech.terrer.dboard",
     "files": [
-      "src/electron.js",
       "docs/**/*"
-    ],
-    "mac": {
-      "target": "dmg",
-      "icon": "src/resources/png/app-icon.png"
-    },
-    "win": {
-      "target": "nsis",
-      "icon": "src/resources/png/app-icon.png"
-    },
-    "linux": {
-      "target": "deb",
-      "icon": "src/resources/png/app-icon.png",
-      "category": "Development"
-    }
+    ]
   },
   "dependencies": {
-    "@svgr/parcel-plugin-svgr": "^5.4.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "ui": "^0.2.4"
@@ -46,10 +30,9 @@
   "devDependencies": {
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
-    "electron": "^9.0.4",
-    "electron-builder": "^22.7.0",
-    "parcel-bundler": "^1.12.4",
     "sass": "^1.26.5",
-    "typescript": "^3.9.3"
+    "typescript": "^4.5",
+    "vite": "^2.7.2",
+    "vite-plugin-svgr": "^1.0.1"
   }
 }

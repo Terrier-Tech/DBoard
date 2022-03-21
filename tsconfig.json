@@ -6,13 +6,14 @@
         "noImplicitReturns": true,
         "noImplicitAny": true,
         "downlevelIteration": true,
-        "module": "es6",
+        "module": "ES6",
         "moduleResolution": "node",
         "resolveJsonModule": true,
-        "target": "es5",
+        "target": "ES6",
         "allowJs": true,
-        "lib": ["ES2017", "DOM"],
+        "lib": ["ESNext", "DOM"],
         "jsx": "react",
+        "types": ["vite-plugin-svgr/client"]
     },
     "include": [
         "./package.json",
