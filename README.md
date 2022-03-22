@@ -24,10 +24,10 @@ npm install
 To run in hot module reloading mode:
 
 ```sh
-npm start
+npm run dev
 ```
 
-Open http://localhost:1234/ in your browser
+Open http://localhost:3000/DBoard/ in your browser
 
 
 ## Building 

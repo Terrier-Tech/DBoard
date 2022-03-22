@@ -44,8 +44,6 @@ class EntityView extends React.Component<Props> {
             <NewAssociationButton config={config} ui={this.props.ui} y={yAttr} entity={entity}/>
             <line className='top-highlight' x1={entity.left} y1={entity.top+0.5} x2={entity.right} y2={entity.top+0.5}/>
             <line className='bottom-highlight' x1={entity.left} y1={entity.bottom-0.5} x2={entity.right} y2={entity.bottom-0.5}/>
-            <line className='side-highlight' x1={entity.left+0.5} y1={entity.top+0.5} x2={entity.left+0.5} y2={entity.bottom-0.5}/>
-            <line className='side-highlight' x1={entity.right-0.5} y1={entity.top+0.5} x2={entity.right-0.5} y2={entity.bottom-0.5}/>
         </g>
     }
     

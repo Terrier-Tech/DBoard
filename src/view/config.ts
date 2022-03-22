@@ -59,11 +59,11 @@ export class Config {
         return this.colors[name]
     }
 
-    readonly fgColor = '#333333'
-    readonly oddBgColor = '#f8f8f8'
+    readonly fgColor = '#362b21'
+    readonly oddBgColor = '#f6f2f0'
     readonly evenBgColor = '#ffffff'
-    readonly hintFgColor = '#aaa'
-    readonly hintBgColor = '#eee'
+    readonly hintFgColor = '#d9d0c7'
+    readonly hintBgColor = '#f2e9df'
 
 }
 

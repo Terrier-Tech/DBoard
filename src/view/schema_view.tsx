@@ -40,22 +40,22 @@ class SchemaView extends React.Component<Props> {
 			return <AssociationView key={ass.id} config={this.props.config} ui={this.props.ui} path={path} fromSide={sides[0]} toSide={sides[1]} association={ass}/>
 		})
 		const style = `
+		.entity {
+		}
 		.entity-name {
 			font: bold ${config.fontSize}px ${config.fontFamily};
 			fill: #ffffff;
 			text-anchor: middle;
 			dominant-baseline: middle;
 		}
+		.entity-background {
+		}
 		.top-highlight {
-			stroke: rgba(255, 255, 255, 0.3);
+			stroke: rgba(255, 255, 255, 0.2);
 			stroke-width: 1px;
 		}
 		.bottom-highlight {
 			stroke: rgba(0, 0, 0, 0.1);
-			stroke-width: 1px;
-		}
-		.side-highlight {
-			stroke: rgba(128, 128, 128, 0.1);
 			stroke-width: 1px;
 		}
 		.attribute-name {
@@ -73,10 +73,10 @@ class SchemaView extends React.Component<Props> {
 		.attribute.required .attribute-name {
 			font: bold ${config.fontSize}px ${config.fontFamily};
 		}
-		.new-button rect {
+		.new-button > rect {
 			fill: ${config.hintBgColor};
 		}
-		.new-button svg g {
+		.new-button svg g rect, .new-button svg g path {
 			fill: ${config.hintFgColor};
 		}
 		.association polyline.line {

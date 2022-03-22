@@ -4,11 +4,11 @@ $tool-pad: 12px;
 $grid-size: 16px;
 $line-height: 32px;
 
-$primary-color: #507c6b;
+$primary-color: #7e7367;
 $primary-color-dark: darken($primary-color, 10%);
 $primary-color-highlight: lighten($primary-color, 42%);
 
-$secondary-color: #439676;
+$secondary-color: #d69338;
 $secondary-color-highlight: lighten($secondary-color, 42%);
 
 $overlay-color: #ffae3d;
@@ -16,9 +16,11 @@ $overlay-color-dark: darken($overlay-color, 12%);
 $guide-color: #ffae3d;
 $hover-background: rgba(#000, 0.1);
 
-$canvas-bg: #f4f4f0;
-$footer-bg: darken($canvas-bg, 10%);
-$grid-color: #bbb;
+$bg: #f6f2f0;
 
-$hint-fg: #aaa;
-$hint-bg: #eee;
+$canvas-bg: #ffffff;
+$footer-bg: darken($canvas-bg, 10%);
+$grid-color: #d9d0c7;
+
+$hint-fg: #d9d0c7;
+$hint-bg: #f2e9df;

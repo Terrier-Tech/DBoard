@@ -29,16 +29,20 @@
                     rect {
                         fill: $overlay-color;
                     }
-                    svg g {
-                        fill: #fff;
+                    svg {
+                        rect, path, polygon {
+                            fill: #fff;
+                        }
                     }
                 }
                 &:active {
                     rect {
                         fill: $overlay-color-dark;
                     }
-                    svg g {
-                        fill: #fff;
+                    svg {
+                        rect, path, polygon {
+                            fill: #fff;
+                        }
                     }
                 }
             }
@@ -92,7 +96,7 @@
                 position: absolute;
                 svg {
                     transform: scale(2);
-                    g {
+                    g, path, rect {
                         fill: $overlay-color;
                     }
                 }

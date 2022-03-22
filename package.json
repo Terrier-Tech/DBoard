@@ -1,6 +1,6 @@
 {
   "name": "dboard",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "keywords": [],
   "author": "Andy Selvig <ajselvig@gmail.com>",
@@ -12,7 +12,6 @@
   "scripts": {
     "dev": "vite",
     "clean": "rm -r docs/*",
-    "start": "parcel src/index.html --out-dir docs",
     "build": "rm -r docs/* && tsc && vite build"
   },
   "build": {

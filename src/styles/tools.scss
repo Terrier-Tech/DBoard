@@ -1,7 +1,7 @@
 @import "_shared";
 
 body {
-    font-family: Verdana, Geneva, sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
     background-color: $primary-color;
 }
 *, *::after, *::before {
@@ -156,7 +156,9 @@ a.action {
                 margin: 2em auto;
                 transform: scale(2);
                 g {
-                    fill: $secondary-color;
+                    rect, path, polygon {
+                        fill: $secondary-color;
+                    }
                 }
             }
             &:last-child {
@@ -303,7 +305,7 @@ a.action {
     top: 50%;
     transform: translate(100%, -50%);
     transition: transform 0.2s ease;
-    background: $secondary-color;
+    background: $primary-color;
     color: #fff;
     text-align: center;
     &.show {
@@ -328,7 +330,7 @@ a.action {
     position: absolute;
     display: flex;
     flex-wrap: wrap;
-    background-color: $primary-color;
+    background-color: $primary-color-dark;
     width: $bar-height*4;
     left: -$bar-height*4;
     top: 0;
