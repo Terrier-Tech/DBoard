@@ -47,14 +47,14 @@ class SchemaView extends React.Component<Props> {
 			fill: #ffffff;
 			text-anchor: middle;
 			dominant-baseline: middle;
-			text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+			text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
 		}
 		.entity-background {
 			rx: ${config.entityRadius};
 		}
 		.attributes-background {
 			fill: ${config.evenBgColor};
-			rx: 2;
+			rx: ${config.entityRadius-config.borderSize};
 		}
 		.attribute-name {
 			font: ${config.fontSize}px ${config.fontFamily};

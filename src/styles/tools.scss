@@ -303,13 +303,20 @@ a.action {
     position: fixed;
     right: 0;
     min-width: $bar-height;
-    min-height: $grid-size*6;
+    min-height: $bar-height*2 + $entity-radius*2;
     top: 50%;
     transform: translate(100%, -50%);
     transition: transform 0.2s ease;
     background: $primary-color;
+    padding: $entity-radius 0;
     color: #fff;
     text-align: center;
+    border-top-left-radius: $entity-radius;
+    border-bottom-left-radius: $entity-radius;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 1;
     &.show {
         transform: translate(0, -50%);
     }
@@ -334,9 +341,20 @@ a.action {
     flex-wrap: wrap;
     background-color: $primary-color-dark;
     width: $bar-height*4;
-    left: -$bar-height*4;
-    top: 0;
+    left: -$bar-height*4+$entity-radius;
+    top: $entity-radius;
+    border-radius: $entity-radius;
     a {
         flex: 0 0 auto;
     }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Common Highlighting
+////////////////////////////////////////////////////////////////////////////////
+
+#topbar, #selection-menu, .color-menu {
+    border-bottom: 1px solid rgba(#000, 0.1);
+    box-shadow: 0 1px 4px rgba($primary-color, 0.5);
 }

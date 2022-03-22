@@ -10,7 +10,7 @@ export class Config {
     iconSize: number = 48
     minEntitySize: number = 8 * this.gridSize
     readonly borderSize = 2
-    readonly entityRadius = 4
+    readonly entityRadius = 6
 
     get gridSize(): number {
         return this.lineHeight / 2

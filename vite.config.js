@@ -9,7 +9,7 @@ export default defineConfig({
     plugins: [
         svgrPlugin({
             svgrOptions: {
-              svgo: false
+              svgo: true
             }
         })
     ]
