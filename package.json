@@ -1,8 +1,7 @@
 {
   "name": "dboard",
-  "version": "0.9.1",
+  "version": "1.0.0",
   "description": "",
-  "main": "src/electron.js",
   "keywords": [],
   "author": "Andy Selvig <ajselvig@gmail.com>",
   "license": "GPL-3.0-or-later",
