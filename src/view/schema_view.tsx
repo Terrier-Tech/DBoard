@@ -49,14 +49,11 @@ class SchemaView extends React.Component<Props> {
 			dominant-baseline: middle;
 		}
 		.entity-background {
+			rx: ${config.entityRadius};
 		}
-		.top-highlight {
-			stroke: rgba(255, 255, 255, 0.2);
-			stroke-width: 1px;
-		}
-		.bottom-highlight {
-			stroke: rgba(0, 0, 0, 0.1);
-			stroke-width: 1px;
+		.attributes-background {
+			fill: ${config.evenBgColor};
+			rx: 2;
 		}
 		.attribute-name {
 			font: ${config.fontSize}px ${config.fontFamily};
@@ -74,7 +71,8 @@ class SchemaView extends React.Component<Props> {
 			font: bold ${config.fontSize}px ${config.fontFamily};
 		}
 		.new-button > rect {
-			fill: ${config.hintBgColor};
+			fill: transparent;
+			rx: ${config.entityRadius};
 		}
 		.new-button svg g rect, .new-button svg g path {
 			fill: ${config.hintFgColor};

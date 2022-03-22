@@ -4,11 +4,13 @@ import { DOMElement } from 'react'
 export type ColorName = "blue" | "green" | "purple" | "cyan" | "gray" | "orange" | "red" | "yellow"
 
 export class Config {
-    fontSize: number = 15
+    fontSize: number = 14
     lineHeight: number = 32
     padding: number = 12
     iconSize: number = 48
     minEntitySize: number = 8 * this.gridSize
+    readonly borderSize = 2
+    readonly entityRadius = 4
 
     get gridSize(): number {
         return this.lineHeight / 2

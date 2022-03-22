@@ -26,37 +26,32 @@
                     cursor: pointer;
                 }
                 &:hover {
-                    rect {
-                        fill: $overlay-color;
-                    }
                     svg {
                         rect, path, polygon {
                             fill: #fff;
+                            fill: $overlay-color;
                         }
                     }
                 }
                 &:active {
-                    rect {
-                        fill: $overlay-color-dark;
-                    }
                     svg {
                         rect, path, polygon {
-                            fill: #fff;
+                            fill: $overlay-color-dark;
                         }
                     }
                 }
             }
             g.entity {
                 &:hover .entity-background {
-                    stroke: $overlay-color-dark;
+                    stroke: $overlay-color;
                     stroke-width: 2;
                 }
             }
             g.association {
                 cursor: pointer;
                 &.selected polyline.line {
-                    stroke: $overlay-color-dark;
-                    stroke-width: 4px;
+                    stroke: $overlay-color;
+                    stroke-width: 4;
                 }
                 &:hover polyline.line {
                     stroke: $overlay-color;
@@ -72,7 +67,7 @@
             pointer-events: none;
             .entity-overlay {
                 position: absolute;
-                border: 2px solid $overlay-color-dark;
+                border: 3px solid $overlay-color;
             }
             .rubber-band {
                 position: absolute;
