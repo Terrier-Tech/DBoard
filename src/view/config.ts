@@ -61,6 +61,7 @@ export class Config {
         return this.colors[name]
     }
 
+    readonly primaryColor = '#7e7367'
     readonly fgColor = '#362b21'
     readonly oddBgColor = '#f6f2f0'
     readonly evenBgColor = '#ffffff'

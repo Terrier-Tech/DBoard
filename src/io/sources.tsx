@@ -122,6 +122,7 @@ export abstract class Base {
         const writer = new Writer(schema)
         const view = document.getElementById('document')
         const svg = writer.dump(view!)
+        this.exportRaw(svg)
     }
 
     protected exportRaw(svg: string) {
