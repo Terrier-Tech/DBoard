@@ -40,7 +40,7 @@ class EntityView extends React.Component<Props> {
 			<rect className='entity-background' x={state.x} y={state.y} width={width} height={height} stroke='transparent' fill={color}/>
             <rect className='entity-name-bar' x={state.x} y={state.y} width={width} height={lineHeight} stroke='transparent' fill='transparent'/> {/* this currently just stores the position */}
             <text className='entity-name' x={state.x + width/2} y={yName}>{state.name}</text>
-            <rect className='attributes-background' width={width-2*b} x={state.x+b} y={state.y+lineHeight} height={config.minEntitySize-lineHeight-b}/>
+            <rect className='attributes-background' width={width-2*b} x={state.x+b} y={state.y+lineHeight} height={yAttr-state.y-b}/>
             {attributes}
             <NewAttributeButton config={config} ui={this.props.ui} y={yAttr} entity={entity}/>
             <NewAssociationButton config={config} ui={this.props.ui} y={yAttr} entity={entity}/>
