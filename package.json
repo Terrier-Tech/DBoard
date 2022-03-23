@@ -1,14 +1,14 @@
 {
   "name": "dboard",
   "version": "1.0.6",
-  "description": "",
+  "description": "DBoard is an Open Source entity-relational diagram editor that runs in the browser.",
   "keywords": [],
   "author": "Andy Selvig <ajselvig@gmail.com>",
   "license": "GPL-3.0-or-later",
   "repository": {
     "url": "https://github.com/Terrier-Tech/DBoard"
   },
-  "homepage": "./",
+  "homepage": "https://github.com/Terrier-Tech/DBoard",
   "scripts": {
     "dev": "vite",
     "clean": "rm -r docs/*",
