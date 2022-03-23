@@ -73,6 +73,7 @@ class App extends React.Component<Props, State> {
 			<Topbar key={`topbar-${schema.id}`} config={this.config} ui={ui} schema={schema} source={source} onOpen={this.open.bind(this)}/>
 			<SelectionMenu key={`menu-${schema.id}`} config={this.config} ui={ui} schema={schema}/>
 			{pickSource && <Sources.Picker onPicked={(newSource) => this.reload(newSource)} onCanceled={() => this.setState({pickSource: false})}/>}
+			<div id='toasts'></div>
 		</div>;
 	}
 }

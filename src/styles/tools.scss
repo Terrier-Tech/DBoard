@@ -358,3 +358,38 @@ a.action {
     border-bottom: 1px solid rgba(#000, 0.1);
     box-shadow: 0 1px 4px rgba($primary-color, 0.5);
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Toast
+////////////////////////////////////////////////////////////////////////////////
+
+#toasts {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+    .toast {
+        border-radius: $entity-radius;
+        padding: 1em 2em;
+        text-align: center;
+        color: #fff;
+        text-shadow: 0 -1px 0 rgba(#000, 0.2);
+        font-weight: bold;
+        transform: translate(0, 500px);
+        transition: transform 0.2s ease;
+        &.secondary {
+            background-color: $secondary-color;
+        }
+        &.alert {
+            background-color: $alert-color;
+        }
+        &.show {
+            transform: translate(0, 0);
+        }
+    }
+}

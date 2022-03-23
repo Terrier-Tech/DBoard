@@ -7,6 +7,7 @@ import * as packageData from '../../package.json'
 import Demo from '../resources/png/demo.png'
 import Icons from '../view/icons'
 import {ReactComponent as Logo} from '../resources/svg/logo-white.svg'
+import { showToast } from '../ui/toast'
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -123,6 +124,7 @@ export abstract class Base {
         const view = document.getElementById('document')
         const svg = writer.dump(view!)
         this.exportRaw(svg)
+        showToast(`Downloaded '${this.nameWithExtension}'`)
     }
 
     protected exportRaw(svg: string) {
@@ -195,6 +197,7 @@ export class LocalStorage extends Base {
         const manifest = new LocalManifest()
         manifest.addItem(item)
         manifest.write()
+        showToast(`Saved '${this.nameWithExtension}' to local storage` )
     }
 
     protected async loadRaw(): Promise<string> {
