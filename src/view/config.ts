@@ -11,6 +11,7 @@ export class Config {
     minEntitySize: number = 8 * this.gridSize
     readonly borderSize = 2
     readonly entityRadius = 6
+    readonly attributeRadius = this.entityRadius - this.borderSize
 
     get gridSize(): number {
         return this.lineHeight / 2
@@ -63,8 +64,8 @@ export class Config {
 
     readonly primaryColor = '#7e7367'
     readonly fgColor = '#362b21'
-    readonly oddBgColor = '#f6f2f0'
-    readonly evenBgColor = '#ffffff'
+    readonly oddBgColor = 'transparent'
+    readonly evenBgColor = '#f6f2f0'
     readonly hintFgColor = '#d9d0c7'
     readonly hintBgColor = '#f2e9df'
 
