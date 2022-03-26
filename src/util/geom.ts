@@ -1,7 +1,12 @@
 
 // no methods here so that we can create them with object literals
-export class Point {
-    constructor(readonly x: number, readonly y: number) {}
+export type Point = {
+    readonly x: number
+    readonly y: number
+}
+
+export function makePoint(x: number|null, y: number|null): Point {
+    return {x: x||0, y: y||0}
 }
 
 export function addPoints(p1: Point, p2: Point) {

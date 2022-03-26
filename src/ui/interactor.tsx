@@ -170,7 +170,7 @@ export class Interactor {
     eventRelativePosition(evt: React.MouseEvent) : Geom.Point {
         const target = evt.currentTarget as HTMLElement
         const rect = target.getBoundingClientRect()
-        return new Geom.Point(evt.clientX - rect.left,
+        return Geom.makePoint(evt.clientX - rect.left,
             evt.clientY - rect.top
         )
     }
@@ -292,7 +292,7 @@ class EntityDrag extends InteractorProxy {
             this.initialStates[entity.id] = {...entity.state}
         })
 
-        this.diffPos = new Geom.Point(0, 0)
+        this.diffPos = Geom.makePoint(0, 0)
     }
 
     onMouseMove(evt: React.MouseEvent<HTMLDivElement, MouseEvent>): boolean {
@@ -470,8 +470,11 @@ abstract class TextField extends InteractorProxy {
         }
         return <div className={this.className} key={this.key} style={style}>
             <input type='text' ref={this.input} defaultValue={this.defaultValue} placeholder={this.placeholder} style={inputStyle} onKeyPress={this.onKeyPress.bind(this)} onKeyDown={this.onKeyDown.bind(this)}/>
+            {this.renderTip()}
         </div>
     }
+
+    abstract renderTip(): JSX.Element
 
     abstract commit(newName: string): void
 
@@ -497,7 +500,7 @@ class EntityNameField extends TextField {
     }
 
     get position(): Geom.Point {
-        return new Geom.Point(this.entity.left, this.entity.top)
+        return {x: this.entity.left, y: this.entity.top}
     }
 
     get className(): string {
@@ -514,6 +517,16 @@ class EntityNameField extends TextField {
 
     get placeholder(): string {
         return 'Entity Name'
+    }
+
+    renderTip(): JSX.Element {
+        return <div className='tip'>
+            <div className='line'>
+                <div className='required'>
+                    Table or Class
+                </div>
+            </div>
+        </div>
     }
 
     onUp() {
@@ -537,15 +550,37 @@ class EntityNameField extends TextField {
 
 }
 
+// Common base class for EditAttributeField and NewAttributeField
+abstract class AttributeField extends TextField {
+
+    get placeholder(): string {
+        return 'name: type'
+    }
+
+    renderTip(): JSX.Element {
+        return <div className='tip'>
+            <div className='line'>
+                <span className='required'>required*</span>: type
+            </div> 
+            <div className='line'>
+                optional: type
+            </div> 
+        </div>
+    }
+}
+
 // allows the user to edit an attribute
-class EditAttributeField extends TextField {
+class EditAttributeField extends AttributeField {
 
 	constructor(interactor: Interactor, readonly attribute: Attribute.Model) {
 		super(interactor, attribute.entity)
     }
 
     get position(): Geom.Point {
-        return this.attribute.position
+        return {
+            x: this.attribute.position.x-this.config.borderSize,
+            y: this.attribute.position.y
+        }
     }
 
     get className(): string {
@@ -558,10 +593,6 @@ class EditAttributeField extends TextField {
 
     get defaultValue(): string {
         return this.attribute.raw
-    }
-
-    get placeholder(): string {
-        return 'name: type'
     }
 
     onUp() {
@@ -591,7 +622,7 @@ class EditAttributeField extends TextField {
 }
 
 // allows the user to enter a new attribute
-class NewAttributeField extends TextField {
+class NewAttributeField extends AttributeField {
 
 	constructor(interactor: Interactor, readonly entity: Entity.Model) {
 		super(interactor, entity)
@@ -615,10 +646,6 @@ class NewAttributeField extends TextField {
 
     get defaultValue(): string {
         return ''
-    }
-
-    get placeholder(): string {
-        return 'name: type'
     }
 
     onUp() {

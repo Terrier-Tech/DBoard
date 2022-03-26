@@ -1,5 +1,7 @@
 @import "_shared";
 
+$field-radius: 6px;
+
 #viewport {
     position: fixed;
     top: $bar-height;
@@ -68,6 +70,7 @@
             .entity-overlay {
                 position: absolute;
                 border: 3px solid $overlay-color;
+                border-radius: $entity-radius + 1px;
             }
             .rubber-band {
                 position: absolute;
@@ -123,11 +126,39 @@
                     display: block;
                     padding: 0 8px;
                     font-size: 15px;
+                    border-radius: $field-radius;
+                }
+                .tip {
+                    position: absolute;
+                    top: 110%;
+                    left: $field-radius;
+                    right: $field-radius;
+                    background-color: $hint-bg;
+                    border-radius: $field-radius;
+                    border: 1px solid $hint-fg;
+                    box-shadow: 0 2px 6px rgba($primary-color, 0.2);
+                    pointer-events: visible;
+                    opacity: 0.9;
+                    &:hover {
+                        opacity: 0;
+                    }
+                    .line {
+                        line-height: 1;
+                        padding: 4px 8px;
+                        font-size: 15px;
+                        color: $fg;
+                    }
+                    .required {
+                        font-weight: bold;
+                    }
                 }
                 &.entity-name-field {
                     input[type=text] {
                         text-align: center;
                         font-weight: bold;
+                    }
+                    .tip .line {
+                        text-align: center;
                     }
                 }
             }

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Config from './config'
 import * as Attribute from '../model/attribute'
-import * as geom from '../util/geom'
+import * as Geom from "../util/geom"
 import UI from '../ui/ui'
 
 interface Props {
@@ -27,7 +27,7 @@ class AttributeView extends React.Component<Props> {
         const state = attr.state
         const x = this.props.x
         const y = this.props.y
-        this.props.attribute.position = new geom.Point(x, y)
+        this.props.attribute.position = Geom.makePoint(x, y)
         const yText = y + config.lineHeight/2 + 1 // need to bring it down just slightly
         const requiredClass = state.isRequired ? 'required' : ''
         const bgColor = this.props.index % 2 == 0 ? config.evenBgColor : config.oddBgColor

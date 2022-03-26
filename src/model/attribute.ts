@@ -20,7 +20,7 @@ export class Model extends ModelBase<State> {
         return State.toRaw(this.state)
     }
 
-    position: Geom.Point = new Geom.Point(0,0) // computed when rendered, not part of the state
+    position: Geom.Point = Geom.makePoint(0,0) // computed when rendered, not part of the state
 }
 
 export class State {
