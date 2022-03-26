@@ -13,6 +13,9 @@ a {
     cursor: pointer;
 }
 
+$tool-radius: $entity-radius; // for rounded corners
+$tool-border-size: 4px; // for decorative borders
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Actions
@@ -92,16 +95,20 @@ a.action {
     position: relative;
     width: 90%;
     max-width: 800px;
-    margin: 5em auto;
+    margin: 3em auto;
     background-color: $canvas-bg;
     border-bottom: 1px solid rgba(#000, 0.3);
     box-shadow: 0 2px 8px rgba(#000, 0.2);
+    border-radius: $tool-radius;
     .banner {
         border-top: 1px solid rgba(#fff, 0.3);
         text-align: center;
         padding: 1em;
         background-color: $primary-color;
         color: #fff;
+        border-bottom: 4px solid $secondary-color;
+        border-top-left-radius: $tool-radius;
+        border-top-right-radius: $tool-radius;
         svg {
             transform: scale(2);
             margin: 1em 0;
@@ -177,6 +184,7 @@ a.action {
     .manifest {
         display: flex;
         flex-wrap: wrap;
+        margin-bottom: 1em;
         a.item {
             flex: 0 0 33.33%;
             padding: 0.5em 1em;
@@ -229,7 +237,10 @@ a.action {
         padding: 1em;
         color: $primary-color;
         background-color: $hint-bg;
+        border-top: $tool-border-size solid $hint-fg;
         display: flex;
+        border-bottom-left-radius: $tool-radius;
+        border-bottom-right-radius: $tool-radius;
         .column {
             flex: 1 1 auto;
             text-align: center;
@@ -303,16 +314,16 @@ a.action {
     position: fixed;
     right: 0;
     min-width: $bar-height;
-    min-height: $bar-height*2 + $entity-radius*2;
+    min-height: $bar-height*2 + $tool-radius*2;
     top: 50%;
     transform: translate(100%, -50%);
     transition: transform 0.2s ease;
     background: $primary-color;
-    padding: $entity-radius 0;
+    padding: $tool-radius 0;
     color: #fff;
     text-align: center;
-    border-top-left-radius: $entity-radius;
-    border-bottom-left-radius: $entity-radius;
+    border-top-left-radius: $tool-radius;
+    border-bottom-left-radius: $tool-radius;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -341,9 +352,9 @@ a.action {
     flex-wrap: wrap;
     background-color: $primary-color-dark;
     width: $bar-height*4;
-    left: -$bar-height*4+$entity-radius;
-    top: $entity-radius;
-    border-radius: $entity-radius;
+    left: -$bar-height*4+$tool-radius;
+    top: $tool-radius;
+    border-radius: $tool-radius;
     a {
         flex: 0 0 auto;
     }
@@ -364,7 +375,7 @@ a.action {
     gap: 12px;
     padding: 12px;
     .toast {
-        border-radius: $entity-radius;
+        border-radius: $tool-radius;
         padding: 1em 2em;
         text-align: center;
         color: #fff;
