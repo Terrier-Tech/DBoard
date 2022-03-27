@@ -4,11 +4,12 @@ import { DOMElement } from 'react'
 export type ColorName = "blue" | "green" | "purple" | "cyan" | "gray" | "orange" | "red" | "yellow"
 
 export class Config {
-    fontSize: number = 14
-    lineHeight: number = 32
-    padding: number = 12
-    iconSize: number = 48
-    minEntitySize: number = 8 * this.gridSize
+    fontSize = 14
+    lineHeight = 32
+    padding = 12
+    iconSize = 48
+    minEntitySize = 8 * this.gridSize
+    planeSize = 3000 // maximum size of the document, currently
     readonly borderSize = 2
     readonly entityRadius = 6
     readonly attributeRadius = this.entityRadius - this.borderSize

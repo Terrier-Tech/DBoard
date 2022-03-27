@@ -1,6 +1,6 @@
 {
   "name": "dboard",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "DBoard is an Open Source entity-relational diagram editor that runs in the browser.",
   "keywords": [],
   "author": "Andy Selvig <ajselvig@gmail.com>",

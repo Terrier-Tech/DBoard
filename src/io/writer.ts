@@ -26,6 +26,11 @@ class Writer {
             elem.remove()
         })
 
+        // set the background rectangle to white
+        for (let bg of Array.from(view.getElementsByClassName('plane-background'))) {
+            bg.setAttribute("fill", "#ffffff")
+        }
+
         return view.outerHTML
     }
 

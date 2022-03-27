@@ -92,8 +92,10 @@ class SchemaView extends React.Component<Props> {
 			stroke-dasharray: ${config.dashSize} ${config.dashSize};
 		}
 		`
-		return <svg xmlns="http://www.w3.org/2000/svg" width='3000' height='3000' id='document'>
+		return <svg xmlns="http://www.w3.org/2000/svg" width={config.planeSize} height={config.planeSize} id='document'>
 			<style>{style}</style>
+			<rect className='plane-background' fill='transparent'
+				 x="0" y="0" width={config.planeSize} height={config.planeSize}/>
 			<g id='associations'>
 				{associations}
 			</g>
