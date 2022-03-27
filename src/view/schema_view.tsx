@@ -88,6 +88,9 @@ class SchemaView extends React.Component<Props> {
 			fill: none;
 			stroke: transparent;
 		}
+		.association.optional polyline {
+			stroke-dasharray: ${config.dashSize} ${config.dashSize};
+		}
 		`
 		return <svg xmlns="http://www.w3.org/2000/svg" width='3000' height='3000' id='document'>
 			<style>{style}</style>

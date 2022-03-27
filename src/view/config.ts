@@ -12,6 +12,7 @@ export class Config {
     readonly borderSize = 2
     readonly entityRadius = 6
     readonly attributeRadius = this.entityRadius - this.borderSize
+    readonly dashSize = this.lineHeight / 5 * 1.414 // so that there are exactly 3 dashes on a chicken foot
 
     get gridSize(): number {
         return this.lineHeight / 2

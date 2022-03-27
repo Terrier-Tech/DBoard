@@ -125,7 +125,11 @@ class Reader {
             this.warn(`No entity ${toSide.entityId}`)
             return
         }
-        const state = new Association.State(fromSide, toSide)
+        let isRequired = true
+        if (elem.classList.contains('optional')) {
+            isRequired = false
+        }
+        const state = new Association.State(fromSide, toSide, isRequired)
         schema.newAssociation(state, id)
     }
 

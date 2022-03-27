@@ -27,6 +27,7 @@ class AssociationView extends React.Component<Props> {
             toId: '',
             toArity: ''
         }
+        const classes = ['association']
         if (this.props.association) {
             isSelected = this.props.ui.selection.isAssociationSelected(this.props.association)
             const sides = this.props.association.sides
@@ -36,8 +37,14 @@ class AssociationView extends React.Component<Props> {
                 toId: sides[1].entityId,
                 toArity: sides[1].arity
             }
+            if (isSelected) {
+                classes.push('selected')
+            }
+            if (!this.props.association.state.isRequired) {
+                classes.push('optional')
+            }
         }
-        return <g className={`association ${isSelected ? 'selected' : ''}`} id={this.props.association?.id} data-from-id={data.fromId} data-from-arity={data.fromArity} data-to-id={data.toId} data-to-arity={data.toArity} onMouseDown={this.onClicked.bind(this)}>
+        return <g className={classes.join(' ')} id={this.props.association?.id} data-from-id={data.fromId} data-from-arity={data.fromArity} data-to-id={data.toId} data-to-arity={data.toArity} onMouseDown={this.onClicked.bind(this)}>
             <polyline className='main invisible' points={path.svgPoints}/>
             <polyline className='main line' points={path.svgPoints}/>
             {fromSide.arity == 'many' && this.renderChickenFoot(path.firstPoint, path.fromDir)}

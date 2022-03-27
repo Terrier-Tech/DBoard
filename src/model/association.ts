@@ -6,6 +6,7 @@ import * as Actions from "../ui/actions"
 import Config from '../view/config'
 import UI from '../ui/ui'
 
+
 export class Model extends ModelBase<State> {
 
     // this is computed during the layout phase
@@ -23,9 +24,7 @@ export class Model extends ModelBase<State> {
     }
 
     get sides(): Array<Side> {
-        return Object.entries(this.state.sides).map(kv => {
-            return kv[1]
-        })
+        return Object.values(this.state.sides)
     }
 
 }
@@ -51,7 +50,7 @@ export class State {
 
     sides: Record<string, Side> = {}
 
-    constructor(fromSide: Side, toSide: Side) {
+    constructor(fromSide: Side, toSide: Side, readonly isRequired: boolean = true) {
         this.sides[fromSide.entityId] = fromSide
         this.sides[toSide.entityId] = toSide
     }
@@ -61,6 +60,8 @@ export class State {
 export class Builder {
 
     private sides: Array<Side> = []
+
+    isRequired: boolean = true
 
     constructor(private schema: Schema) {
 
@@ -75,7 +76,7 @@ export class Builder {
         if (this.sides.length != 2) {
             throw "Must call add() twice!"
         }
-        return new Model(this.schema, new State(this.sides[0], this.sides[1]))
+        return new Model(this.schema, new State(this.sides[0], this.sides[1], this.isRequired))
     }
 
 }
@@ -130,7 +131,8 @@ export class UpdateAction extends Actions.Base {
         const {fromFirstSide, fromLastSide} = this.fromState.sides
         const {toFirstSide, toLastSide} = this.toState.sides
         return fromFirstSide.arity != toFirstSide.arity || 
-            fromLastSide.arity != toLastSide.arity
+            fromLastSide.arity != toLastSide.arity || 
+            this.fromState.isRequired != this.toState.isRequired
     }
 }
 

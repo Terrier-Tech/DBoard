@@ -334,10 +334,18 @@ a.action {
     .one-name, .many-name, .arity {
         font-size: 14px;
         line-height: 1;
-        padding: 4px 8px;
+        padding: 2px 8px;
     }
     .one-name, .many-name {
         font-weight: bold;
+    }
+    .action.requirement {
+        font-weight: bold;
+        font-size: 16px;
+        padding: 8px 0;
+    }
+    .header {
+        padding: 8px 0;
     }
 }
 

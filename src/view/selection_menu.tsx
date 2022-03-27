@@ -155,15 +155,21 @@ class AssociationSelectionMenu extends SelectionMenu<AssociationState> {
     render() {
         const ass = this.selection.allAssociations[0]
         const sides = ass.sides
+        const isRequired = ass.state.isRequired
         const entities = ass.entities
         const oneName = sides[0].arity=='many' ? entities[1].state.name : entities[0].state.name
         const manyName = sides[0].arity=='many' ? entities[0].state.name : entities[1].state.name
         return <div className='content'>
-            <div className='one-name'>{oneName}</div>
-            <div className='arity'>Has Many</div>
-            <div className='many-name'>{manyName}</div>
+            <div className='header'>
+                <div className='one-name'>{oneName}</div>
+                <div className='arity'>Has Many</div>
+                <div className='many-name'>{manyName}</div>
+            </div>
             <a className='action swap' title='Swap Sides' onClick={() => this.swapSides(ass)}>
                 <Icons.SwapVertical/>
+            </a>
+            <a className='action requirement' title={ass.state.isRequired ? 'Required' : 'Optional'} onClick={() => this.toggleRequired(ass)}>
+                {ass.state.isRequired ? '1' : '0'}:Many
             </a>
             <a className='action alert' title='Delete Association' onClick={this.delete.bind(this)}>
                 <Icons.Delete/>
@@ -176,6 +182,12 @@ class AssociationSelectionMenu extends SelectionMenu<AssociationState> {
         const fromSide = {...sides[0], arity: Association.oppositeArity(sides[0].arity)}
         const toSide = {...sides[1], arity: Association.oppositeArity(sides[1].arity)}
         const newState = new Association.State(fromSide, toSide)
+        const action = new Association.UpdateAction(ass, ass.state, newState)
+        this.selection.ui.history.pushAction(action)
+    }
+
+    toggleRequired(ass: Association.Model) {
+        const newState = new Association.State(ass.sides[0], ass.sides[1], !ass.state.isRequired)
         const action = new Association.UpdateAction(ass, ass.state, newState)
         this.selection.ui.history.pushAction(action)
     }
